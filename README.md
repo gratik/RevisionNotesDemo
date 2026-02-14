@@ -6,6 +6,8 @@
 
 > **A complete, production-quality demonstration of modern C#, OOP principles, design patterns, and .NET best practices.**
 
+**Front-End UI guide expanded:** comparisons, decision tree, validation table, migration notes, and testing stack.
+
 ---
 
 ## 🎯 Quick Start
@@ -27,46 +29,55 @@ dotnet run
 This project is extensively documented. Choose your learning path:
 
 ### 🏗️ **Fundamentals**
+
 - **[OOP Principles](Learning/docs/OOP-Principles.md)** - SOLID, KISS, DRY, YAGNI, Tell Don't Ask
 - **[Core C# Features](Learning/docs/Core-CSharp.md)** - Generics, Delegates, Extension Methods, Polymorphism
 - **[Modern C# Features](Learning/docs/Modern-CSharp.md)** - Records, Pattern Matching, Nullable Reference Types
 
 ### 🎨 **Design Patterns**
-- **[Creational Patterns](Learning/docs/Design-Patterns.md#creational)** - Singleton, Factory, Builder, Prototype  
+
+- **[Creational Patterns](Learning/docs/Design-Patterns.md#creational)** - Singleton, Factory, Builder, Prototype
 - **[Structural Patterns](Learning/docs/Design-Patterns.md#structural)** - Adapter, Decorator, Facade, Proxy, CQRS
 - **[Behavioral Patterns](Learning/docs/Design-Patterns.md#behavioral)** - Observer, Strategy, Command, State
 
 ### 🌐 **Web Development**
+
 - **[Web API & MVC](Learning/docs/Web-API-MVC.md)** - Minimal APIs, Controllers, MVC, Middleware
+- **[Front-End .NET UI](Learning/docs/Front-End-DotNet-UI.md)** - MVC, Razor Pages, Blazor, MAUI, WPF, WinForms, Web Forms
 - **[API Documentation](Learning/docs/API-Documentation.md)** - Swagger/OpenAPI, XML Docs, Versioning
 - **[Real-Time Communication](Learning/docs/RealTime.md)** - SignalR, WebSockets, Hubs
 - **[Security](Learning/docs/Security.md)** - Authentication (JWT, OAuth), Authorization, Encryption
 - **[Resilience](Learning/docs/Resilience.md)** - Polly, Circuit Breaker, Retry Patterns
 
 ### 💾 **Data & Performance**
+
 - **[Entity Framework](Learning/docs/Entity-Framework.md)** - Best Practices, Relationships, Performance
 - **[Data Access](Learning/docs/Data-Access.md)** - EF Core, Dapper, ADO.NET, Transactions
 - **[Memory Management](Learning/docs/Memory-Management.md)** - Stack vs Heap, GC, IDisposable
 - **[Performance](Learning/docs/Performance.md)** - Span<T>, Benchmarking, Zero-Allocation
 
 ### 🔨 **Quality & Testing**
+
 - **[Testing](Learning/docs/Testing.md)** - xUnit, NUnit, MSTest, Mocking, Integration Tests
 - **[Logging & Observability](Learning/docs/Logging-Observability.md)** - ILogger, Serilog, Structured Logging
 - **[Health Checks](Learning/docs/HealthChecks.md)** - Liveness, Readiness, Custom Checks
 
 ### ⚡ **Advanced Topics**
+
 - **[Async & Multithreading](Learning/docs/Async-Multithreading.md)** - Task, async/await, Deadlock Prevention
 - **[LINQ & Queries](Learning/docs/LINQ-Queries.md)** - Query Operators, IQueryable vs IEnumerable
 - **[Advanced C#](Learning/docs/Advanced-CSharp.md)** - Reflection, Attributes, Metadata
 - **[Practical Patterns](Learning/docs/Practical-Patterns.md)** - Caching, Validation, Mapping, Background Services
 
 ### ⚙️ **Configuration & Infrastructure**
+
 - **[.NET Concepts](Learning/docs/DotNet-Concepts.md)** - Dependency Injection, Service Lifetimes
 - **[Configuration](Learning/docs/Configuration.md)** - Options Pattern, Settings, Feature Flags
 - **[Deployment & DevOps](Learning/docs/Deployment-DevOps.md)** - Docker, Kubernetes, CI/CD
 - **[Message Architecture](Learning/docs/Message-Architecture.md)** - RabbitMQ, Service Bus, Event-Driven
 
 ### 🎓 **Career Development**
+
 - **[Interview Preparation](Learning/docs/Interview-Preparation.md)** - Questions, Coding Challenges, System Design
 
 ---
@@ -93,6 +104,7 @@ RevisionNotesDemo/
 │   │   ├── MVC/                  Server-rendered views
 │   │   ├── Middleware/           Pipeline, CORS, rate limiting
 │   │   └── Versioning/           API versioning patterns
+│   ├── 🖥️ FrontEnd/               MVC, Razor Pages, Blazor, MAUI, WPF, WinForms (7 files)
 │   ├── 🔐 Security/               Auth, encryption (4 files)
 │   ├── 🏃 Performance/            Optimization techniques (3 files)
 │   ├── 🔄 Resilience/             Polly patterns (3 files)
@@ -107,7 +119,7 @@ RevisionNotesDemo/
 │   ├── 🛠️ PracticalPatterns/      Real-world patterns (8 files)
 │   ├── 📦 Models/                 Shared domain models (1 file)
 │   ├── 📎 Appendices/             Overviews and quick reference (3 files)
-│   └── 📖 docs/                   Detailed documentation (16 files)
+│   └── 📖 docs/                   Detailed documentation (26 files)
 │
 ├── Program.cs                      Application entry point
 ├── README.md                       This file
@@ -115,26 +127,29 @@ RevisionNotesDemo/
 
 ```
 
-**Total:** 107+ example files organized into 23 topic areas, ~18,000 lines of code
+**Total:** 114+ example files organized into 24 topic areas, ~19,000 lines of code
 
 ---
 
 ## ✨ Organization Principles
 
 **Logical Grouping:**
+
 - **Fundamentals** (OOP, Core C#, Memory) - Foundation concepts
-- **Patterns** (Design + Practical) - Reusable solutions  
+- **Patterns** (Design + Practical) - Reusable solutions
 - **Data & Performance** (DataAccess, Performance, Resilience) - Speed and reliability
 - **Web Development** (WebAPI, Security, RealTime) - Building services
 - **Advanced** (Async, LINQ, Modern C#, Reflection) - Advanced features
 - **Quality** (Testing, Logging, Configuration) - Production readiness
 
 **Clear Hierarchy:**
+
 - Top-level folders = major topic areas
 - Subfolders only when needed (DesignPatterns, DataAccess, WebAPI)
 - Consistent naming (plural for categories, singular for implementations)
 
 **Easy Navigation:**
+
 - Emojis for quick visual scanning
 - Related topics grouped together
 - Consistent folder and file naming
@@ -145,18 +160,21 @@ RevisionNotesDemo/
 ## ✨ What Makes This Project Special
 
 ### 🎓 **Educational Excellence**
+
 - **Every file is self-contained** - No need for external references
 - **Bad vs Good examples** - See what NOT to do and why
 - **Real-world scenarios** - Not just toy examples
 - **Comprehensive comments** - THE PROBLEM / THE SOLUTION / WHY IT MATTERS format
 
 ### 💼 **Production Quality**
+
 - **Modern .NET 10** - Latest framework features
 - **Industry best practices** - SOLID, Clean Code, Security
 - **Performance-focused** - Async, caching, optimization
 - **Test coverage** - Unit, integration, mocking examples
 
 ### 📦 **Complete Coverage**
+
 - **100% of revision notes implemented**
 - **All major design patterns**
 - **3 testing frameworks** (xUnit, NUnit, MSTest)
@@ -168,6 +186,7 @@ RevisionNotesDemo/
 ## 🎯 Learning Paths
 
 ### **Beginner** (Start here if new to C#)
+
 1. [OOP Principles](Learning/docs/OOP-Principles.md) - Foundation
 2. [Core C# Features](Learning/docs/Core-CSharp.md) - Language basics
 3. [Testing](Learning/docs/Testing.md) - Write reliable code
@@ -175,14 +194,17 @@ RevisionNotesDemo/
 5. [Configuration](Learning/docs/Configuration.md) - App settings and options
 
 ### **Intermediate** (Solidify your skills)
+
 1. [Design Patterns](Learning/docs/Design-Patterns.md) - Reusable solutions
 2. [Entity Framework](Learning/docs/Entity-Framework.md) - Data access
 3. [Async & Multithreading](Learning/docs/Async-Multithreading.md) - Scalable apps
 4. [Security](Learning/docs/Security.md) - Protect your applications
 5. [API Documentation](Learning/docs/API-Documentation.md) - Document with Swagger
 6. [Practical Patterns](Learning/docs/Practical-Patterns.md) - Real-world solutions
+7. [Front-End .NET UI](Learning/docs/Front-End-DotNet-UI.md) - UI frameworks and tradeoffs
 
 ### **Advanced** (Master modern .NET)
+
 1. [Performance](Learning/docs/Performance.md) - Optimize for speed
 2. [Resilience](Learning/docs/Resilience.md) - Handle failures gracefully
 3. [Modern C#](Learning/docs/Modern-CSharp.md) - Latest language features
@@ -191,6 +213,7 @@ RevisionNotesDemo/
 6. [Deployment & DevOps](Learning/docs/Deployment-DevOps.md) - Docker, Kubernetes, CI/CD
 
 ### **Interview Preparation** (Land your dream job)
+
 1. [Interview Preparation Guide](Learning/docs/Interview-Preparation.md) - Complete prep guide
 2. Review all documentation - Build comprehensive knowledge
 3. Practice coding challenges - Algorithmic thinking
@@ -201,6 +224,7 @@ RevisionNotesDemo/
 ## 🚀 Quick Examples
 
 ### RESTful API Endpoint (Minimal API)
+
 ```csharp
 app.MapGet("/api/products/{id}", async (int id, IProductService service) =>
 {
@@ -214,11 +238,12 @@ app.MapGet("/api/products/{id}", async (int id, IProductService service) =>
 ```
 
 ### Repository Pattern with EF Core
+
 ```csharp
 public class Repository<T> : IRepository<T> where T : class
 {
     private readonly DbContext _context;
-    
+
     public async Task<T?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         return await _context.Set<T>()
@@ -229,6 +254,7 @@ public class Repository<T> : IRepository<T> where T : class
 ```
 
 ### Polly Resilience Pattern
+
 ```csharp
 var retryPolicy = Policy
     .Handle<HttpRequestException>()
@@ -241,15 +267,15 @@ await retryPolicy.ExecuteAsync(() => httpClient.GetAsync(url));
 
 ## 📊 Statistics
 
-| Category | Count | Description |
-|----------|-------|-------------|
-| **Source Files** | 107+ | Implementation examples |
-| **Documentation** | 25 | Comprehensive guides |
-| **Design Patterns** | 26 | Creational, Structural, Behavioral |
-| **Lines of Code** | 18,000+ | Fully commented |
-| **Test Examples** | 36+ | xUnit, NUnit, MSTest |
-| **API Styles** | 3 | Minimal, Controller, MVC |
-| **Topics Covered** | 60+ | All major .NET concepts |
+| Category            | Count   | Description                        |
+| ------------------- | ------- | ---------------------------------- |
+| **Source Files**    | 114+    | Implementation examples            |
+| **Documentation**   | 26      | Comprehensive guides               |
+| **Design Patterns** | 26      | Creational, Structural, Behavioral |
+| **Lines of Code**   | 19,000+ | Fully commented                    |
+| **Test Examples**   | 36+     | xUnit, NUnit, MSTest               |
+| **API Styles**      | 3       | Minimal, Controller, MVC           |
+| **Topics Covered**  | 61+     | All major .NET concepts            |
 
 ---
 
@@ -313,4 +339,4 @@ Based on **C# and OO Revision Notes** by Barry Compuesto (February 13, 2026)
 
 **Status:** ✅ Production Ready | 🎓 Educational Complete | 📚 Fully Documented
 
-*Last Updated: February 14, 2026*
+_Last Updated: February 14, 2026_

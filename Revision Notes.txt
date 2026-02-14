@@ -4,7 +4,7 @@ COMPREHENSIVE C# AND OOP REVISION NOTES
 Subject: C#, Object-Oriented Programming, Design Patterns, and .NET Framework
 Author: Barry Compuesto
 Date: 14/02/2026
-Version: 3.0 - Complete Edition with Comprehensive Documentation
+Version: 3.1 - Complete Edition with Front-End UI Documentation
 
 This document serves as a complete reference for C# development, OOP principles,
 design patterns, memory management, async programming, and .NET framework concepts.
@@ -12,9 +12,12 @@ design patterns, memory management, async programming, and .NET framework concep
 Reference Project: RevisionNotesDemo
 Location: c:\Users\barry\OneDrive\LearningProjects\RevisionNotes\RevisionNotesDemo
 
-This project contains 107+ working code examples demonstrating every concept in
-these notes, plus 25 comprehensive documentation guides totaling 18,000+ lines.
+This project contains 114+ working code examples demonstrating every concept in
+these notes, plus 26 comprehensive documentation guides totaling 19,000+ lines.
 All files are fully documented with comprehensive headers.
+
+Front-End UI guide expanded with comparisons, decision tree, validation table,
+migration notes, and testing stack.
 
 ===============================================================================
 TABLE OF CONTENTS
@@ -101,6 +104,7 @@ PART 9: PRACTICAL PATTERNS & BEST PRACTICES
   9.5 Options Pattern
   9.6 Security Best Practices
   9.7 Performance Optimization
+  9.8 Background Services
 
 PART 10: COMPREHENSIVE DOCUMENTATION GUIDES
   10.1 OOP Principles Guide (SOLID, KISS, DRY, YAGNI)
@@ -128,7 +132,7 @@ PART 10: COMPREHENSIVE DOCUMENTATION GUIDES
   10.23 Deployment & DevOps Guide (Docker, Kubernetes, CI/CD)
   10.24 Message Architecture Guide (RabbitMQ, Service Bus, Events)
   10.25 Interview Preparation Guide (Questions, Challenges, System Design)
-  9.6 Background Services
+  10.26 Front-End .NET UI Guide (MVC, Razor Pages, Blazor, MAUI, WPF, WinForms, Web Forms)
 
 APPENDIX A: Patterns That Are Overrated Now
 APPENDIX B: Quick Reference Tables
