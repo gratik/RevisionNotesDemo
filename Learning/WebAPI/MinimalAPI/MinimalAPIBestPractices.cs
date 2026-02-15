@@ -34,6 +34,8 @@
 
 namespace RevisionNotesDemo.WebAPI.MinimalAPI;
 
+using System.Globalization;
+
 /// <summary>
 /// EXAMPLE 1: BASIC ENDPOINT DEFINITION
 /// 
@@ -126,6 +128,12 @@ public static class BasicEndpointExamples
 /// </summary>
 public static class DependencyInjectionExamples
 {
+    private static readonly Action<Microsoft.Extensions.Logging.ILogger, string, Exception?> CreatingOrderForCustomer =
+        Microsoft.Extensions.Logging.LoggerMessage.Define<string>(
+            Microsoft.Extensions.Logging.LogLevel.Information,
+            new Microsoft.Extensions.Logging.EventId(721, nameof(CreatingOrderForCustomer)),
+            "Creating order for customer {CustomerId}");
+
     public static void MapDIEndpoints(this WebApplication app)
     {
         // ❌ BAD: Manual instantiation, tight coupling
@@ -150,7 +158,7 @@ public static class DependencyInjectionExamples
             ILogger<Program> logger,
             CancellationToken ct) =>
         {
-            logger.LogInformation("Creating order for customer {CustomerId}", order.CustomerId);
+            CreatingOrderForCustomer(logger, order.CustomerId, null);
 
             var created = await orderService.CreateOrderAsync(order, ct);
             return Results.Created($"/api/orders/{created.Id}", created);
@@ -243,7 +251,7 @@ public static class ValidationExamples
         {
             try
             {
-                var user = userService.GetUserById(id.ToString());
+                var user = userService.GetUserById(id.ToString(CultureInfo.InvariantCulture));
                 return user is not null
                     ? Results.Ok(user)
                     : Results.NotFound();

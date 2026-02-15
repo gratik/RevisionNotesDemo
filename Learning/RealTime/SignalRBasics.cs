@@ -378,11 +378,11 @@ public class ConnectionManagementExamples
         {
             lock (_lock)
             {
-                if (_userConnections.ContainsKey(userId))
+                if (_userConnections.TryGetValue(userId, out var connections))
                 {
-                    _userConnections[userId].Remove(connectionId);
+                    connections.Remove(connectionId);
 
-                    if (_userConnections[userId].Count == 0)
+                    if (connections.Count == 0)
                         _userConnections.Remove(userId);
                 }
             }

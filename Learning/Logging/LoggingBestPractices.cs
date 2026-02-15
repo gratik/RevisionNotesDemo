@@ -187,7 +187,7 @@ public static class PerformanceLoggingExamples
             }
         }
 
-        private Task<List<Product>> FetchFromDatabase() => Task.FromResult(new List<Product>());
+        private static Task<List<Product>> FetchFromDatabase() => Task.FromResult(new List<Product>());
     }
 
     // ✅ BETTER: Disposable timing helper
@@ -210,6 +210,7 @@ public static class PerformanceLoggingExamples
         {
             _stopwatch.Stop();
             _logger.Log(_level, "{Operation} completed in {ElapsedMs}ms", _operation, _stopwatch.ElapsedMilliseconds);
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -234,9 +235,9 @@ public static class PerformanceLoggingExamples
             // Logs: "ProcessOrder completed in 1234ms"
         }
 
-        private Task ValidateOrder(int orderId) => Task.CompletedTask;
-        private Task ChargePayment(int orderId) => Task.CompletedTask;
-        private Task SendConfirmation(int orderId) => Task.CompletedTask;
+        private static Task ValidateOrder(int orderId) => Task.CompletedTask;
+        private static Task ChargePayment(int orderId) => Task.CompletedTask;
+        private static Task SendConfirmation(int orderId) => Task.CompletedTask;
     }
 
     // ✅ GOOD: Activity/DiagnosticSource for distributed tracing
@@ -331,7 +332,7 @@ public static class SensitiveDataExamples
             // Output: "Processing payment: Card=****-****-****-1234"
         }
 
-        private string MaskCardNumber(string cardNumber)
+        private static string MaskCardNumber(string cardNumber)
         {
             if (cardNumber.Length < 4) return "****";
             return "****-****-****-" + cardNumber.Substring(cardNumber.Length - 4);
@@ -472,9 +473,9 @@ public static class ExceptionLoggingExamples
             }
         }
 
-        private Task ChargeCard(decimal amount) => Task.CompletedTask;
-        private Task UpdateOrderStatus(int orderId, string status) => Task.CompletedTask;
-        private Task ProcessRefund(int orderId, decimal amount) => Task.CompletedTask;
+        private static Task ChargeCard(decimal amount) => Task.CompletedTask;
+        private static Task UpdateOrderStatus(int orderId, string status) => Task.CompletedTask;
+        private static Task ProcessRefund(int orderId, decimal amount) => Task.CompletedTask;
     }
 }
 
@@ -551,9 +552,9 @@ public static class LogLevelStrategy
             _logger.LogTrace("Exiting ProcessData");
         }
 
-        private Task<byte[]> FetchData(int id) => Task.FromResult(new byte[0]);
-        private Task<byte[]> FetchFromDatabase(int id) => Task.FromResult(new byte[0]);
-        private Task ProcessInternal(byte[] data) => Task.CompletedTask;
+        private static Task<byte[]> FetchData(int id) => Task.FromResult(new byte[0]);
+        private static Task<byte[]> FetchFromDatabase(int id) => Task.FromResult(new byte[0]);
+        private static Task ProcessInternal(byte[] data) => Task.CompletedTask;
     }
 
     // PRODUCTION MINIMUM LEVELS:
@@ -657,7 +658,8 @@ public class AntiPatterns
     public static void BadTemplating(int userId, string action)
     {
         // ❌ Not structured!
-        _logger.LogInformation($"User {userId} performed {action}");
+        var badMessage = $"User {userId} performed {action}";
+        _logger.LogInformation("{Message}", badMessage);
     }
 
     // ✅ GOOD: Use templates

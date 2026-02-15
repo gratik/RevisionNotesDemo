@@ -32,6 +32,39 @@ using Microsoft.Extensions.Logging;
 
 namespace RevisionNotesDemo.Resilience;
 
+internal static class TimeoutAndBulkheadLogs
+{
+    internal static readonly Action<ILogger, double, Exception?> OperationTimedOutAfterSeconds =
+        LoggerMessage.Define<double>(
+            LogLevel.Warning,
+            new EventId(101, nameof(OperationTimedOutAfterSeconds)),
+            "Operation timed out after {Timeout}s");
+
+    internal static readonly Action<ILogger, int, Exception?> RequestTimedOutRetry =
+        LoggerMessage.Define<int>(
+            LogLevel.Warning,
+            new EventId(102, nameof(RequestTimedOutRetry)),
+            "Request timed out, retry {RetryCount}");
+
+    internal static readonly Action<ILogger, Exception?> RequestRejectedByBulkhead =
+        LoggerMessage.Define(
+            LogLevel.Warning,
+            new EventId(103, nameof(RequestRejectedByBulkhead)),
+            "Request rejected by bulkhead - system overloaded");
+
+    internal static readonly Action<ILogger, Exception?> ServiceOverloadedTryAgain =
+        LoggerMessage.Define(
+            LogLevel.Warning,
+            new EventId(104, nameof(ServiceOverloadedTryAgain)),
+            "Service overloaded, please try again");
+
+    internal static readonly Action<ILogger, int, Exception?> BulkheadRejectionCount =
+        LoggerMessage.Define<int>(
+            LogLevel.Warning,
+            new EventId(105, nameof(BulkheadRejectionCount)),
+            "Bulkhead rejection count: {Count}");
+}
+
 /// <summary>
 /// EXAMPLE 1: TIMEOUT POLICY - Preventing Indefinite Waits
 /// 
@@ -114,7 +147,7 @@ public static class TimeoutExamples
                 onTimeoutAsync: (context, timespan, task) =>
                 {
                     // ✅ Log timeout events
-                    logger.LogWarning("Operation timed out after {Timeout}s", timespan.TotalSeconds);
+                    TimeoutAndBulkheadLogs.OperationTimedOutAfterSeconds(logger, timespan.TotalSeconds, null);
                     return Task.CompletedTask;
                 });
 
@@ -176,7 +209,7 @@ public static class TimeoutExamples
                     sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(1),
                     onRetry: (exception, timespan, retryCount, context) =>
                     {
-                        logger.LogWarning("Request timed out, retry {RetryCount}", retryCount);
+                        TimeoutAndBulkheadLogs.RequestTimedOutRetry(logger, retryCount, null);
                     });
 
             // ✅ Wrap timeout with retry
@@ -317,7 +350,7 @@ public static class TimeoutExamples
                     onBulkheadRejectedAsync: context =>
                     {
                         // ✅ Log rejections
-                        logger.LogWarning("Request rejected by bulkhead - system overloaded");
+                        TimeoutAndBulkheadLogs.RequestRejectedByBulkhead(logger, null);
                         return Task.CompletedTask;
                     });
 
@@ -333,7 +366,7 @@ public static class TimeoutExamples
             catch (BulkheadRejectedException)
             {
                 // ✅ Handle rejection gracefully
-                logger.LogWarning("Service overloaded, please try again");
+                TimeoutAndBulkheadLogs.ServiceOverloadedTryAgain(logger, null);
                 throw new InvalidOperationException("Service temporarily unavailable");
             }
         }
@@ -405,7 +438,7 @@ public static class TimeoutExamples
                     onBulkheadRejectedAsync: context =>
                     {
                         Interlocked.Increment(ref _rejectionCount);
-                        _logger.LogWarning("Bulkhead rejection count: {Count}", _rejectionCount);
+                        TimeoutAndBulkheadLogs.BulkheadRejectionCount(_logger, _rejectionCount, null);
                         return Task.CompletedTask;
                     });
         }

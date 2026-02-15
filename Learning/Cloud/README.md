@@ -1,49 +1,43 @@
-# ☁️ Cloud-Native & Azure Patterns
+# Cloud Guide
 
-**Section 12 - Cloud & Azure Implementation Patterns**
+## Learning goals
 
-This folder contains comprehensive examples of cloud-native architectures and Azure services in production environments.
+- Understand the main concepts covered in Cloud.
+- Compare baseline and recommended implementation approaches.
+- Apply the patterns in runnable project examples.
 
-## 📂 Contents
+## Prerequisites
 
-- **AzureAppServicePatterns.cs** - Deployment slots, auto-scaling, zero-downtime deployments
-- **AzureFunctionsServerless.cs** - Event triggers, durable functions, consumption plans
-- **AzureStoragePatterns.cs** - Blob storage, Queue storage, Table storage, tiering strategies
-- **AzureCosmosDBPatterns.cs** - Consistency models, partitioning, global distribution
-- **AzureKeyVaultSecrets.cs** - Secret management, RBAC, automatic rotation
+- Container and deployment basics
+- Core Azure service awareness
 
-## 🎯 Key Concepts
+## Runnable examples
 
-### What You'll Learn
-- Cloud deployment patterns and best practices
-- Azure service selection criteria
-- Serverless architecture design
-- Global distribution and disaster recovery
-- Cost optimization strategies
+- AzureAppServicePatterns.cs - Topic implementation and demonstration code
+- AzureCosmosDBPatterns.cs - Topic implementation and demonstration code
+- AzureDeploymentAndDevOps.cs - Topic implementation and demonstration code
+- AzureDockerHostingPatterns.cs - Topic implementation and demonstration code
+- AzureFunctionsServerless.cs - Topic implementation and demonstration code
+- AzureFunctionsWithDocker.cs - Topic implementation and demonstration code
+- AzureKeyVaultSecrets.cs - Topic implementation and demonstration code
+- AzureMicroservicesHosting.cs - Topic implementation and demonstration code
+- AzureStorageAndDataHosting.cs - Topic implementation and demonstration code
+- AzureStoragePatterns.cs - Topic implementation and demonstration code
 
-### Real-World Scenarios
-- E-commerce platform scaling on Black Friday
-- Globally distributed mobile app
-- IoT sensor data ingestion
+Run examples from the project root:
 
-## 💡 Usage
-
-Each file is self-contained with:
-- WHAT: Technology explanation
-- WHY: Business and technical benefits
-- WHEN: Appropriate use cases
-- REAL-WORLD: Production examples
-
-Run demonstrations:
 ```bash
 dotnet run
-# Select Cloud patterns from menu
 ```
 
-## 🔗 Related Sections
-- [Microservices](../Microservices/README.md) - Distributed system patterns
-- [DevOps](../DevOps/README.md) - Infrastructure and deployment
-- [Observability](../Observability/README.md) - Monitoring cloud services
+## Bad vs good examples summary
 
----
-_Updated: February 15, 2026_
+- Bad: brittle or overly coupled approach that reduces maintainability.
+- Good: clear, testable, and production-oriented implementation pattern.
+- Why it matters: consistent patterns improve readability, reliability, and onboarding speed.
+
+## Related docs
+
+- [Primary](../docs/Azure-Hosting.md)
+- [Related](../docs/Deployment-DevOps.md)
+

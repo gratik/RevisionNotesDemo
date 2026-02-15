@@ -2,9 +2,20 @@
 // ENTITY FRAMEWORK CORE - BEST PRACTICES & ANTI-PATTERNS  
 // Reference: Revision Notes - Entity Framework Core (Section 8.6.5)
 // ==============================================================================
-// PURPOSE: Your essential guide to avoiding the most common and costly EF Core
-//          mistakes. Each example shows the WRONG way (❌) vs the RIGHT way (✅)
-//          with performance metrics and real-world impact.
+// WHAT IS THIS?
+// -------------
+// A practical EF Core guide that contrasts common anti-patterns against
+// production-ready approaches, with concrete performance and behavior impact.
+//
+// WHY IT MATTERS
+// --------------
+// These are the top mistakes that create most EF Core performance and
+// correctness incidents in production systems.
+//
+// WHEN TO USE
+// -----------
+// Use this file during implementation reviews and when diagnosing slow or
+// inconsistent data-access behavior.
 //
 // WHY THIS FILE EXISTS:
 //   These are the top 8 mistakes that cause 90% of EF Core performance problems

@@ -536,7 +536,7 @@ public static class VersionSpecificValidationExamples
             });
         }
 
-        private string GenerateRandomPassword() => "TempPassword123!";
+        private static string GenerateRandomPassword() => "TempPassword123!";
     }
 }
 
@@ -635,17 +635,23 @@ public static class AntiPatterns
 // - Support more than 3 versions simultaneously
 
 // Fact attribute for testing examples
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class FactAttribute : Attribute { }
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class RequiredAttribute : Attribute { }
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class EmailAddressAttribute : Attribute { }
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class StringLengthAttribute : Attribute
 {
     public StringLengthAttribute(int max) { }
     public int MinimumLength { get; set; }
 }
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class RegularExpressionAttribute : Attribute
 {
     public RegularExpressionAttribute(string pattern) { }
     public string ErrorMessage { get; set; } = string.Empty;
 }
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class PhoneAttribute : Attribute { }

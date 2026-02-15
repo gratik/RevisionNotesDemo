@@ -193,8 +193,8 @@ public class EncryptionDecorator : DataStreamDecorator
         return decrypted;
     }
 
-    private string Encrypt(string data) => Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(data));
-    private string Decrypt(string data) => System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(data));
+    private static string Encrypt(string data) => Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(data));
+    private static string Decrypt(string data) => System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(data));
 }
 
 // Concrete decorator - Compression
@@ -220,8 +220,8 @@ public class CompressionDecorator : DataStreamDecorator
         return decompressed;
     }
 
-    private string Compress(string data) => $"[COMPRESSED:{data}]";
-    private string Decompress(string data) => data.Replace("[COMPRESSED:", "").TrimEnd(']');
+    private static string Compress(string data) => $"[COMPRESSED:{data}]";
+    private static string Decompress(string data) => data.Replace("[COMPRESSED:", "").TrimEnd(']');
 }
 
 // Concrete decorator - Logging

@@ -27,6 +27,7 @@
 
 // GOTCHA: Nullable context can be enabled per-file, per-project, or globally
 #nullable enable  // Enable for this file
+using System.Globalization;
 
 namespace RevisionNotesDemo.ModernCSharp;
 
@@ -60,7 +61,7 @@ public static class NullableBasicsExamples
         public static string GetFullName(string firstName, string lastName)
         {
             // No warning! Could throw NullReferenceException
-            return firstName.ToUpper() + " " + lastName.ToUpper();
+            return firstName.ToUpper(CultureInfo.InvariantCulture) + " " + lastName.ToUpper(CultureInfo.InvariantCulture);
         }
 
         public static int GetLength(string value)
@@ -79,7 +80,7 @@ public static class NullableBasicsExamples
         public static string GetFullName(string firstName, string lastName)
         {
             // ✅ Compiler knows these are never null
-            return firstName.ToUpper() + " " + lastName.ToUpper();
+            return firstName.ToUpper(CultureInfo.InvariantCulture) + " " + lastName.ToUpper(CultureInfo.InvariantCulture);
         }
 
         // Nullable parameter - must handle null
@@ -169,7 +170,7 @@ public static class FlowAnalysisExamples
             throw new ArgumentNullException(nameof(input));
 
         // ✅ Compiler knows input is non-null (throw exits flow)
-        return input.ToUpper();
+        return input.ToUpper(CultureInfo.InvariantCulture);
     }
 
     // ✅ GOOD: Flow analysis with null-coalescing
@@ -177,7 +178,7 @@ public static class FlowAnalysisExamples
     {
         // ✅ After null-coalescing, userName is never null
         string userName = user?.Name ?? "Guest";
-        return userName.ToUpper(); // No warning
+        return userName.ToUpper(CultureInfo.InvariantCulture); // No warning
     }
 
     // ✅ GOOD: Pattern matching affects flow
@@ -186,7 +187,7 @@ public static class FlowAnalysisExamples
         if (obj is string text)
         {
             // ✅ Compiler knows 'text' is non-null string
-            return $"String: {text.ToUpper()}";
+            return $"String: {text.ToUpper(CultureInfo.InvariantCulture)}";
         }
 
         return "Not a string";
@@ -293,14 +294,14 @@ public static class NullForgivingExamples
     public static string BadProcessUser(int id)
     {
         var user = FindUserById(id); // Returns User?
-        return user!.Name.ToUpper(); // 💥 Could throw if not found!
+        return user!.Name.ToUpper(CultureInfo.InvariantCulture); // 💥 Could throw if not found!
     }
 
     // ✅ GOOD: Proper null handling
     public static string GoodProcessUser(int id)
     {
         var user = FindUserById(id);
-        return user?.Name.ToUpper() ?? "Unknown";
+        return user?.Name.ToUpper(CultureInfo.InvariantCulture) ?? "Unknown";
     }
 
     private static User? FindUserById(int id) => null; // Stub
@@ -350,7 +351,7 @@ public static class NullableCollectionExamples
         {
             if (name != null) // ✅ Must check each item
             {
-                Console.WriteLine(name.ToUpper());
+                Console.WriteLine(name.ToUpper(CultureInfo.InvariantCulture));
             }
         }
     }
@@ -446,7 +447,7 @@ public static class NullableAttributeExamples
     {
         ThrowIfNull(input, nameof(input));
         // ✅ Compiler knows we don't return if null
-        return input.ToUpper(); // No warning
+        return input.ToUpper(CultureInfo.InvariantCulture); // No warning
     }
 }
 
@@ -488,7 +489,7 @@ public static class MigrationExamples
     public static string LegacyMethod(string input)
     {
         // No warnings here during migration
-        return input.ToUpper();
+        return input.ToUpper(CultureInfo.InvariantCulture);
     }
 #nullable restore warnings
 

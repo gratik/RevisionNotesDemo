@@ -254,6 +254,8 @@ public class UnitOfWork : IUnitOfWork
     {
         if (!_committed)
             Rollback();
+
+        GC.SuppressFinalize(this);
     }
 }
 

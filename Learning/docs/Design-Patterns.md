@@ -1,6 +1,28 @@
 # Design Patterns (Creational, Structural, Behavioral)
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: OOP principles and class design
+- Related examples: Learning/DesignPatterns/Behavioral/StrategyPattern.cs, Learning/DesignPatterns/Structural/DecoratorPattern.cs
+
+
 > Part of: [C# & OOP Revision Notes - Comprehensive Demonstration Project](../../README.md)
+
+## Module Metadata
+
+- **Prerequisites**: OOP Principles
+- **When to Study**: After fundamentals; before architecture decisions.
+- **Related Files**: `../DesignPatterns/**/*.cs`
+- **Estimated Time**: 150-180 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Design-Patterns.md)
+- **Next Step**: [Domain-Driven-Design.md](Domain-Driven-Design.md)
+<!-- STUDY-NAV-END -->
+
 
 ## Overview
 
@@ -668,3 +690,35 @@ Behavioral:
 ---
 
 Generated: 2026-02-14
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [Domain-Driven-Design.md](Domain-Driven-Design.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: Design patterns are reusable communication tools for recurring design problems, not mandatory templates.
+- 2-minute deep dive: I choose patterns when they reduce coupling or clarify intent under real constraints, and I validate fit by comparing complexity added vs change-risk reduced.
+- Common follow-up: Most overused pattern?
+- Strong response: Singleton and repository abstractions are often applied by default without a concrete problem.
+- Tradeoff callout: Pattern overuse can hide simple solutions and increase cognitive load.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know Design Patterns and I would just follow best practices."
+- Strong answer: "For Design Patterns, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply Design Patterns in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

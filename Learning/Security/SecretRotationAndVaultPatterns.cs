@@ -1,65 +1,80 @@
-// ==============================================================================
-// Automated credential rotation
-// ==============================================================================
+// ============================================================================
+// SECRET ROTATION AND VAULT PATTERNS
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// Managing credentials in external secret stores with automated rotation,
+// versioning, and controlled runtime access.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Limits blast radius when credentials leak
+// ✅ Reduces outages from expired keys/passwords
+// ✅ Removes secrets from source control and images
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ Any system storing API keys, DB passwords, or certificates
+// ✅ Environments with compliance requirements for key lifecycle
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ Never store long-lived production secrets in appsettings/source code
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// App reads DB credentials from vault, rotates monthly, and re-authenticates
+// connection pools without manual redeployment.
+// ============================================================================
 
 namespace RevisionNotesDemo.Security;
 
-public class SecretRotationAndVaultPatterns
+public static class SecretRotationAndVaultPatterns
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  Automated credential rotation");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  Secret Rotation and Vault Patterns                  ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowVaultAccessModel();
+        ShowRotationCadence();
+        ShowZeroDowntimeRotation();
+        ShowFailureModes();
     }
 
-    private static void DisplayOverview()
+    private static void ShowVaultAccessModel()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers automated credential rotation\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) VAULT ACCESS MODEL");
+        Console.WriteLine("- Prefer workload identity over static vault credentials");
+        Console.WriteLine("- Use least-privilege secret paths per service");
+        Console.WriteLine("- Cache secrets briefly with automatic refresh\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowRotationCadence()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) ROTATION CADENCE");
+
+        var rotationDays = 30;
+        Console.WriteLine($"- Baseline rotation period: {rotationDays} days");
+        Console.WriteLine("- Rotate faster for high-risk credentials");
+        Console.WriteLine("- Track last rotated timestamp and owner\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowZeroDowntimeRotation()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) ZERO-DOWNTIME ROTATION");
+        Console.WriteLine("- Create new secret version before revoking old one");
+        Console.WriteLine("- Roll applications to pick up new version");
+        Console.WriteLine("- Revoke old version after confirmation window\n");
+    }
+
+    private static void ShowFailureModes()
+    {
+        Console.WriteLine("4) FAILURE MODES");
+        Console.WriteLine("- Shared secret reused across multiple apps");
+        Console.WriteLine("- No observability for failed secret refresh");
+        Console.WriteLine("- Rotation job succeeds but consumers never reload");
+        Console.WriteLine("- Break-glass secrets without expiration policy\n");
     }
 }

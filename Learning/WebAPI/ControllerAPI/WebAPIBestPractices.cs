@@ -34,6 +34,7 @@
 // ==============================================================================
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -65,6 +66,18 @@ namespace RevisionNotesDemo.WebAPI.ControllerAPI;
 [Produces("application/json")]
 public class ProductsController : ControllerBase
 {
+    private static readonly Action<ILogger, Exception?> GettingAllProducts =
+        LoggerMessage.Define(
+            LogLevel.Information,
+            new EventId(731, nameof(GettingAllProducts)),
+            "Getting all products");
+
+    private static readonly Action<ILogger, int, Exception?> ProductNotFound =
+        LoggerMessage.Define<int>(
+            LogLevel.Warning,
+            new EventId(732, nameof(ProductNotFound)),
+            "Product {ProductId} not found");
+
     private readonly IProductService _productService;
     private readonly ILogger<ProductsController> _logger;
 
@@ -84,7 +97,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(List<Product>), StatusCodes.Status200OK)]
     public ActionResult<List<Product>> GetAll()
     {
-        _logger.LogInformation("Getting all products");
+        GettingAllProducts(_logger, null);
         var products = _productService.GetAllProducts();
         return Ok(products);
     }
@@ -98,7 +111,7 @@ public class ProductsController : ControllerBase
         var product = _productService.GetProductById(id);
         if (product == null)
         {
-            _logger.LogWarning("Product {ProductId} not found", id);
+            ProductNotFound(_logger, id, null);
             return NotFound($"Product {id} not found");
         }
 
@@ -222,10 +235,10 @@ public class ValidationExamplesController : ControllerBase
         return Ok(orders);
     }
 
-    private User CreateUserFromDto(CreateUserDto dto) =>
+    private static User CreateUserFromDto(CreateUserDto dto) =>
         new User { Id = 1, Name = dto.Name, Email = dto.Email };
 
-    private List<object> GetOrders(int id, int page, int pageSize) => new();
+    private static List<object> GetOrders(int id, int page, int pageSize) => new();
 }
 
 /// <summary>
@@ -279,8 +292,8 @@ public class OrdersController : ControllerBase
         return order != null ? Ok(order) : NotFound();
     }
 
-    private Order CreateOrder(CreateOrderDto dto) => new Order(1);
-    private async Task<Order?> GetOrderAsync(int id, CancellationToken ct)
+    private static Order CreateOrder(CreateOrderDto dto) => new Order(1);
+    private static async Task<Order?> GetOrderAsync(int id, CancellationToken ct)
     {
         await Task.Delay(10, ct);
         return new Order(id);
@@ -362,9 +375,9 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
     }
 
-    private User? GetUserById(int id) => null;
-    private bool UserExists(string email) => false;
-    private User CreateUserInternal(CreateUserDto dto) =>
+    private static User? GetUserById(int id) => null;
+    private static bool UserExists(string email) => false;
+    private static User CreateUserInternal(CreateUserDto dto) =>
         new User { Id = 1, Name = dto.Name, Email = dto.Email };
 }
 
@@ -469,6 +482,7 @@ public interface IDataService
 }
 
 // Custom filter attributes (example definitions)
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class RequirePermissionAttribute : Attribute
 {
     public RequirePermissionAttribute(string permission) { }
@@ -476,6 +490,7 @@ public class RequirePermissionAttribute : Attribute
 
 public class ValidateModelAttribute : ActionFilterAttribute { }
 public class LogPerformanceAttribute : ActionFilterAttribute { }
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class RequestTimeoutAttribute : Attribute
 {
     public RequestTimeoutAttribute(int milliseconds) { }

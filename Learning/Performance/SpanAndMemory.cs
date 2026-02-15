@@ -27,6 +27,7 @@
 
 using System;
 using System.Buffers;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -73,7 +74,7 @@ public class SpanBasicsExamples
         var sum2 = Sum(secondHalf);
     }
 
-    private int Sum(Span<int> span)
+    private static int Sum(Span<int> span)
     {
         int total = 0;
         foreach (var item in span)  // ✅ Efficient iteration
@@ -91,8 +92,8 @@ public class SpanBasicsExamples
         var hoursSpan = span[..colonIndex];        // ✅ Slice, no allocation
         var minutesSpan = span[(colonIndex + 1)..]; // ✅ Slice, no allocation
 
-        int hours = int.Parse(hoursSpan);      // ✅ Parse span directly (C# 8+)
-        int minutes = int.Parse(minutesSpan);
+        int hours = int.Parse(hoursSpan, CultureInfo.InvariantCulture);      // ✅ Parse span directly (C# 8+)
+        int minutes = int.Parse(minutesSpan, CultureInfo.InvariantCulture);
 
         return (hours, minutes);
     }
@@ -101,8 +102,8 @@ public class SpanBasicsExamples
     public (int hours, int minutes) ParseTime_Traditional(string time)
     {
         var parts = time.Split(':');  // ❌ Allocates array
-        int hours = int.Parse(parts[0]);    // ❌ Each string is allocation
-        int minutes = int.Parse(parts[1]);
+        int hours = int.Parse(parts[0], CultureInfo.InvariantCulture);    // ❌ Each string is allocation
+        int minutes = int.Parse(parts[1], CultureInfo.InvariantCulture);
         return (hours, minutes);
     }
 }
@@ -168,7 +169,7 @@ public class StackallocExamples
         var sb = new StringBuilder();
         for (int i = 0; i < count; i++)
         {
-            if (i.TryFormat(buffer, out int written))  // ✅ Format to span
+            if (i.TryFormat(buffer, out int written, provider: CultureInfo.InvariantCulture))  // ✅ Format to span
             {
                 sb.Append(buffer[..written]);
                 sb.Append(", ");
@@ -188,7 +189,7 @@ public class StackallocExamples
         ProcessNumbers(stackalloc int[] { 10, 20, 30 });
     }
 
-    private void ProcessNumbers(Span<int> numbers)
+    private static void ProcessNumbers(Span<int> numbers)
     {
         foreach (var num in numbers)
             Console.WriteLine(num);
@@ -227,7 +228,7 @@ public class MemoryExamples
         ProcessData(span);
     }
 
-    private void ProcessData(Span<byte> data)
+    private static void ProcessData(Span<byte> data)
     {
         // Synchronous processing with Span
         for (int i = 0; i < data.Length; i++)
@@ -253,7 +254,7 @@ public class MemoryExamples
             ProcessChunk(_buffer.Span[..bytesRead]);
         }
 
-        private void ProcessChunk(Span<byte> chunk)
+        private static void ProcessChunk(Span<byte> chunk)
         {
             // Process data
         }
@@ -284,7 +285,7 @@ public class StringManipulationExamples
 
             if (parts.Length == 2)
             {
-                results.Add((parts[0].Trim(), int.Parse(parts[1].Trim())));  // ❌ More allocations
+                results.Add((parts[0].Trim(), int.Parse(parts[1].Trim(), CultureInfo.InvariantCulture)));  // ❌ More allocations
             }
         }
 
@@ -406,13 +407,13 @@ public class SpanConversionExamples
         int position = 0;
 
         // Format multiple values into same buffer
-        if (DateTime.Now.TryFormat(buffer[position..], out int written1, "yyyy-MM-dd"))
+        if (DateTime.Now.TryFormat(buffer[position..], out int written1, "yyyy-MM-dd", CultureInfo.InvariantCulture))
         {
             position += written1;
             buffer[position++] = ' ';
         }
 
-        if (123.456.TryFormat(buffer[position..], out int written2, "F2"))
+        if (123.456.TryFormat(buffer[position..], out int written2, "F2", CultureInfo.InvariantCulture))
         {
             position += written2;
         }

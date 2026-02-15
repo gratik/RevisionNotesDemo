@@ -1,5 +1,27 @@
 # Domain-Driven Design (DDD) Tactical Patterns
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: Entity and aggregate modeling basics
+- Related examples: Learning/DomainDrivenDesign/AggregateRootExamples.cs, Learning/DomainDrivenDesign/EntityValueObjectExamples.cs
+
+
+## Module Metadata
+
+- **Prerequisites**: OOP Principles, Design Patterns
+- **When to Study**: When domain complexity starts driving architecture.
+- **Related Files**: `../DomainDrivenDesign/*.cs`, `../Architecture/*.cs`
+- **Estimated Time**: 90-120 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Design-Patterns.md)
+- **Next Step**: [Resilience.md](Resilience.md)
+<!-- STUDY-NAV-END -->
+
+
 ## Overview
 
 Domain-Driven Design (DDD) is an approach to software development that focuses on modeling software to match the business domain. This guide covers **tactical patterns** - the building blocks for implementing rich domain models.
@@ -275,3 +297,35 @@ public class OrderSubmittedHandler
 - [Domain-Driven Design by Eric Evans](https://www.domainlanguage.com/ddd/)
 - [Implementing DDD by Vaughn Vernon](https://vaughnvernon.com/books/)
 - [Microsoft DDD Guide](https://learn.microsoft.com/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/)
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [Resilience.md](Resilience.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: This topic covers Domain Driven Design and focuses on clear decisions, practical tradeoffs, and production-safe defaults.
+- 2-minute deep dive: Start with the core problem, explain the implementation boundary, show one failure mode, and describe the mitigation or optimization strategy.
+- Common follow-up: How would you apply this in a real system with constraints?
+- Strong response: State assumptions, compare at least two approaches, and justify the chosen option with reliability, maintainability, and performance impact.
+- Tradeoff callout: Over-engineering this area too early can increase complexity without measurable delivery or runtime benefit.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know Domain Driven Design and I would just follow best practices."
+- Strong answer: "For Domain Driven Design, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply Domain Driven Design in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

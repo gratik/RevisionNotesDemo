@@ -34,6 +34,7 @@ using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Environments;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Globalization;
 
 namespace RevisionNotesDemo.Performance;
 
@@ -68,7 +69,7 @@ public class StringConcatBenchmarks
         string result = "";
         for (int i = 0; i < Iterations; i++)
         {
-            result += i.ToString();  // ❌ Creates new string each time
+            result += i.ToString(CultureInfo.InvariantCulture);  // ❌ Creates new string each time
             result += ", ";
         }
         return result;
@@ -109,7 +110,7 @@ public class StringConcatBenchmarks
 
         for (int i = 0; i < Iterations; i++)
         {
-            if (i.TryFormat(buffer, out int written))
+            if (i.TryFormat(buffer, out int written, provider: CultureInfo.InvariantCulture))
             {
                 sb.Append(buffer[..written]);
             }
@@ -312,7 +313,7 @@ public class SortingBenchmarks
         BubbleSortImpl(copy);
     }
 
-    private void BubbleSortImpl(int[] arr)
+    private static void BubbleSortImpl(int[] arr)
     {
         int n = arr.Length;
         for (int i = 0; i < n - 1; i++)

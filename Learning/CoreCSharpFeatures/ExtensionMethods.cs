@@ -35,7 +35,7 @@ public static class StringExtensions
         => string.IsNullOrWhiteSpace(value);
 
     public static string ToTitleCase(this string value)
-        => System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
+        => System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower(System.Globalization.CultureInfo.CurrentCulture));
 
     public static string Reverse(this string value)
     {

@@ -1,53 +1,39 @@
-# 📊 Observability & Monitoring Patterns
+# Observability Guide
 
-**Sections 19-20 Partial - Monitoring, Logging, Tracing, and Metrics**
+## Learning goals
 
-This folder contains patterns for observing, monitoring, and troubleshooting distributed systems in production.
+- Understand the main concepts covered in Observability.
+- Compare baseline and recommended implementation approaches.
+- Apply the patterns in runnable project examples.
 
-## 📂 Contents
+## Prerequisites
 
-- **StructuredLoggingAdvanced.cs** - JSON logs, correlation IDs, searchable logging
-- **PrometheusAndGrafana.cs** - Metrics collection, time-series storage, dashboards, alerting
-- **OpenTelemetrySetup.cs** - Vendor-agnostic instrumentation, traces, metrics, logs
-- **DistributedTracingJaegerZipkin.cs** - Request tracing across services, latency insights
-- **ApplicationInsightsIntegration.cs** - Azure Application Insights, auto-tracking, dashboards
-- **HealthChecksAndHeartbeats.cs** - Liveness and readiness probes, dependency checks
+- Logging and metrics fundamentals
+- Distributed-system troubleshooting context
 
-## 🎯 Key Concepts
+## Runnable examples
 
-### What You'll Learn
-- Structured logging best practices
-- Metrics collection and aggregation
-- Distributed tracing across services
-- Observability as code
-- Production troubleshooting
-- Real-time alerting
+- ApplicationInsightsIntegration.cs - Topic implementation and demonstration code
+- DistributedTracingJaegerZipkin.cs - Topic implementation and demonstration code
+- HealthChecksAndHeartbeats.cs - Topic implementation and demonstration code
+- OpenTelemetrySetup.cs - Topic implementation and demonstration code
+- PrometheusAndGrafana.cs - Topic implementation and demonstration code
+- StructuredLoggingAdvanced.cs - Topic implementation and demonstration code
 
-### Real-World Scenarios
-- Production incident triage using logs
-- Kubernetes liveness probe configuration
-- Monitoring multi-region deployment
-- Real-time performance dashboards
+Run examples from the project root:
 
-## 💡 Usage
-
-Each file demonstrates:
-- Setup and configuration
-- Integration with popular tools
-- Real-world telemetry examples
-- Cost optimization strategies
-- Common troubleshooting patterns
-
-Run demonstrations:
 ```bash
 dotnet run
-# Select Observability patterns from menu
 ```
 
-## 🔗 Related Sections
-- [Microservices](../Microservices/README.md) - Observing distributed systems
-- [DevOps](../DevOps/README.md) - Infrastructure monitoring
-- [Security](../Security/README.md) - Audit logging
+## Bad vs good examples summary
 
----
-_Updated: February 15, 2026_
+- Bad: brittle or overly coupled approach that reduces maintainability.
+- Good: clear, testable, and production-oriented implementation pattern.
+- Why it matters: consistent patterns improve readability, reliability, and onboarding speed.
+
+## Related docs
+
+- [Primary](../docs/Logging-Observability.md)
+- [Related](../docs/HealthChecks.md)
+

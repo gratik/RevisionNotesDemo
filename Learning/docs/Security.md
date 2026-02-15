@@ -1,6 +1,28 @@
 # Authentication, Authorization, and Encryption
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: Authentication and authorization basics
+- Related examples: Learning/Security/AuthenticationExamples.cs, Learning/Security/SecureAPIDesignPatterns.cs
+
+
 > Part of: [C# & OOP Revision Notes - Comprehensive Demonstration Project](../../README.md)
+
+## Module Metadata
+
+- **Prerequisites**: Web API and MVC
+- **When to Study**: Before exposing production APIs or handling auth flows.
+- **Related Files**: `../Security/*.cs`
+- **Estimated Time**: 150-180 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Configuration.md)
+- **Next Step**: [Testing.md](Testing.md)
+<!-- STUDY-NAV-END -->
+
 
 ## Overview
 
@@ -457,7 +479,7 @@ public void DeleteUser(int userId)
 - [Security/AuthenticationExamples.cs](../Security/AuthenticationExamples.cs) - JWT, Cookie, OAuth patterns
 - [Security/EncryptionExamples.cs](../Security/EncryptionExamples.cs) - AES, RSA, password hashing, Data Protection API
 - [Security/SecureCodingPractices.cs](../Security/SecureCodingPractices.cs) - Input validation, SQL injection prevention
-- [Security/HashingAndSigningExamples.cs](../Security/HashingAndSigningExamples.cs) - HMAC, digital signatures
+- [Security/EncryptionExamples.cs](../Security/EncryptionExamples.cs) - Hashing, HMAC, and digital-signature fundamentals
 
 ---
 
@@ -471,3 +493,35 @@ public void DeleteUser(int userId)
 ---
 
 Generated: 2026-02-14
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [Testing.md](Testing.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: Security is layered: identity, authorization, secret handling, data protection, and continuous monitoring.
+- 2-minute deep dive: I enforce authN/authZ at boundaries, scope tokens minimally, rotate secrets, protect data in transit/at rest, and keep logs audit-safe without exposing sensitive fields.
+- Common follow-up: Most common API security miss?
+- Strong response: Missing authorization checks on background handlers and non-happy-path endpoints.
+- Tradeoff callout: Strong controls without observability reduce incident response effectiveness.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know Security and I would just follow best practices."
+- Strong answer: "For Security, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply Security in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

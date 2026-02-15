@@ -1,65 +1,81 @@
-// ==============================================================================
-// OAuth2 and OpenID Connect identity provider
-// ==============================================================================
+// ============================================================================
+// IDENTITY PROVIDER AND OPENID CONNECT
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// Central identity provider patterns for OAuth2 and OpenID Connect: issuing
+// tokens, managing scopes, and federating user authentication.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Centralizes authentication and policy enforcement
+// ✅ Enables SSO across apps and APIs
+// ✅ Supports delegated authorization with standard protocols
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ Organizations with multiple apps/services needing shared identity
+// ✅ APIs requiring scoped access tokens and consent model
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ Single app prototypes where external IdP integration is unnecessary
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// Web and mobile clients authenticate via OIDC, receive tokens from IdP, and
+// call downstream APIs with audience-specific scopes.
+// ============================================================================
 
 namespace RevisionNotesDemo.Security;
 
-public class IdentityServerAndOpenIDConnect
+public static class IdentityServerAndOpenIDConnect
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  OAuth2 and OpenID Connect identity provider");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  Identity Provider and OpenID Connect                ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowProtocolRoles();
+        ShowTokenDesign();
+        ShowFlowSelection();
+        ShowImplementationRisks();
     }
 
-    private static void DisplayOverview()
+    private static void ShowProtocolRoles()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers oauth2 and openid connect identity provider\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) PROTOCOL ROLES");
+        Console.WriteLine("- Authorization server issues tokens");
+        Console.WriteLine("- Resource server validates scopes/audience");
+        Console.WriteLine("- Client app requests tokens on user/service behalf\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowTokenDesign()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) TOKEN DESIGN");
+
+        var claims = new[] { "sub", "tenant_id", "scope", "role" };
+
+        Console.WriteLine($"- Core claims: {string.Join(", ", claims)}");
+        Console.WriteLine("- Keep tokens small; put large data behind APIs");
+        Console.WriteLine("- Validate iss, aud, exp, nbf on every request\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowFlowSelection()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) FLOW SELECTION");
+        Console.WriteLine("- Authorization Code + PKCE for browser/mobile apps");
+        Console.WriteLine("- Client Credentials for service-to-service auth");
+        Console.WriteLine("- Device Code for limited-input devices\n");
+    }
+
+    private static void ShowImplementationRisks()
+    {
+        Console.WriteLine("4) IMPLEMENTATION RISKS");
+        Console.WriteLine("- Broad wildcard redirect URIs");
+        Console.WriteLine("- Over-privileged default scopes");
+        Console.WriteLine("- Long token lifetime without revocation support");
+        Console.WriteLine("- Missing key rotation for signing certificates\n");
     }
 }

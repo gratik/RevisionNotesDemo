@@ -2,6 +2,21 @@
 // COMMON MODELS
 // Reference: Revision Notes - Various Pages
 // ============================================================================
+// WHAT IS THIS?
+// -------------
+// A shared model catalog for entities, DTOs, value objects, and response
+// patterns reused across architecture, API, data, and testing examples.
+//
+// WHY IT MATTERS
+// --------------
+// Consistent model semantics reduce accidental drift between examples and make
+// cross-topic demonstrations easier to understand and extend.
+//
+// WHEN TO USE
+// -----------
+// Use these models when a demo needs representative business data structures
+// without redefining domain contracts in every topic folder.
+//
 // PURPOSE: Shared models and DTOs used across multiple demonstrations
 // ============================================================================
 

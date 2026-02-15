@@ -1,6 +1,28 @@
 # Web API, Minimal API, and MVC Patterns
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: HTTP and ASP.NET Core basics
+- Related examples: Learning/WebAPI/MinimalAPI/MinimalAPIBestPractices.cs, Learning/WebAPI/ControllerAPI/WebAPIBestPractices.cs
+
+
 > Part of: [C# & OOP Revision Notes - Comprehensive Demonstration Project](../../README.md)
+
+## Module Metadata
+
+- **Prerequisites**: DotNet Concepts, Async Multithreading
+- **When to Study**: Start of Backend/API implementation work.
+- **Related Files**: `../WebAPI/**/*.cs`
+- **Estimated Time**: 150-180 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Configuration.md)
+- **Next Step**: [API-Documentation.md](API-Documentation.md)
+<!-- STUDY-NAV-END -->
+
 
 ## Overview
 
@@ -445,3 +467,35 @@ public ActionResult<User> Create(User user)
 ---
 
 Generated: 2026-02-14
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [API-Documentation.md](API-Documentation.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: A production API is more than CRUD; it needs explicit contracts, validation, auth boundaries, error semantics, and version strategy.
+- 2-minute deep dive: I define request/response DTOs per endpoint, validate early, return consistent problem details, and use idempotency for retry-sensitive operations.
+- Common follow-up: Minimal API vs controllers?
+- Strong response: Minimal APIs for focused services and fast iteration; controllers for larger APIs needing richer conventions and cross-cutting filters.
+- Tradeoff callout: Over-versioning too early increases maintenance overhead.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know Web API MVC and I would just follow best practices."
+- Strong answer: "For Web API MVC, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply Web API MVC in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

@@ -62,7 +62,7 @@ public class IQueryableVsIEnumerableDemo
         Console.WriteLine("\n--- IEnumerable (Client-side filtering) ---");
         IEnumerable<Customer> enumerable = projected.AsEnumerable()
             .Select(c => customers.First(x => x.Id == c.Id))
-            .Where(c => c.Name.StartsWith("A"));
+            .Where(c => c.Name.StartsWith('A'));
         Console.WriteLine("[ENUM] IEnumerable: Filtering happens in memory");
         Console.WriteLine($"[ENUM] Results: {string.Join(", ", enumerable.Select(c => c.Name))}");
 

@@ -195,8 +195,8 @@ public static class LogLevelExamples
             return order;
         }
 
-        private Task<Order?> FetchOrder(int orderId) => Task.FromResult<Order?>(new Order { Id = orderId, Items = new(), Total = 100m });
-        private Task ChargePayment(Order order) => Task.CompletedTask;
+        private static Task<Order?> FetchOrder(int orderId) => Task.FromResult<Order?>(new Order { Id = orderId, Items = new(), Total = 100m });
+        private static Task ChargePayment(Order order) => Task.CompletedTask;
     }
 
     // GUIDELINE - When to use each level:
@@ -273,7 +273,8 @@ public static class MessageTemplateExamples
         public void UpdatePrice(int productId, decimal oldPrice, decimal newPrice)
         {
             // ❌ BAD: String interpolation - not structured
-            _logger.LogInformation($"Product {productId} price changed from {oldPrice} to {newPrice}");
+            var badMessage = $"Product {productId} price changed from {oldPrice} to {newPrice}";
+            _logger.LogInformation("{Message}", badMessage);
             // In Serilog: { "Message": "Product 42 price changed from 10.5 to 12.99" }
             // Can't query by productId as a number
 
@@ -434,8 +435,8 @@ public static class LogScopeExamples
             }
         }
 
-        private Task ValidateItems(int orderId) => Task.CompletedTask;
-        private Task ProcessPayment(int orderId) => Task.CompletedTask;
+        private static Task ValidateItems(int orderId) => Task.CompletedTask;
+        private static Task ProcessPayment(int orderId) => Task.CompletedTask;
     }
 
     // ✅ BEST PRACTICE: Middleware for request-scoped logging
@@ -695,7 +696,10 @@ public class XunitLoggerProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName) => new XunitLogger<object>(_output, categoryName);
 
-    public void Dispose() { }
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
 }
 
 public class XunitLogger<T> : ILogger<T>
@@ -720,4 +724,5 @@ public class XunitLogger<T> : ILogger<T>
 }
 
 // Fact attribute for testing examples
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class FactAttribute : Attribute { }

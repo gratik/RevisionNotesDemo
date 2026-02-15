@@ -27,6 +27,8 @@
 // ============================================================================
 
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.Net;
 using System.Text.Json;
 
@@ -41,7 +43,7 @@ public class UnhandledExceptionService
     public string ProcessData(string? input)
     {
         // No validation - will throw NullReferenceException
-        return input!.ToUpper();
+        return input!.ToUpper(CultureInfo.InvariantCulture);
     }
 
     public int Divide(int a, int b)
@@ -100,19 +102,22 @@ public class NotFoundException : BusinessException
 
 public class RobustService
 {
+    private static readonly string[] InputCannotBeNullOrEmpty = ["Input cannot be null or empty"];
+    private static readonly string[] DivisorCannotBeZero = ["Divisor cannot be zero"];
+
     public string ProcessData(string? input)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
             throw new ValidationException(new Dictionary<string, string[]>
             {
-                { "input", new[] { "Input cannot be null or empty" } }
+                { "input", InputCannotBeNullOrEmpty }
             });
         }
 
         try
         {
-            return input.ToUpper();
+            return input.ToUpper(CultureInfo.InvariantCulture);
         }
         catch (Exception)
         {
@@ -126,7 +131,7 @@ public class RobustService
         {
             throw new ValidationException(new Dictionary<string, string[]>
             {
-                { "divisor", new[] { "Divisor cannot be zero" } }
+                { "divisor", DivisorCannotBeZero }
             });
         }
 
@@ -169,6 +174,17 @@ public class ErrorResponse
 
 public class GlobalExceptionHandlerMiddleware
 {
+    private static readonly Action<ILogger, string, Exception?> UnhandledExceptionOccurred =
+        LoggerMessage.Define<string>(
+            LogLevel.Error,
+            new EventId(741, nameof(UnhandledExceptionOccurred)),
+            "An unhandled exception occurred: {Message}");
+
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
     private readonly RequestDelegate _next;
     private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger;
     private readonly bool _isDevelopment;
@@ -191,7 +207,7 @@ public class GlobalExceptionHandlerMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unhandled exception occurred: {Message}", ex.Message);
+            UnhandledExceptionOccurred(_logger, ex.Message, ex);
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -240,10 +256,7 @@ public class GlobalExceptionHandlerMiddleware
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = statusCode;
 
-        var jsonResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
+        var jsonResponse = JsonSerializer.Serialize(response, JsonSerializerOptions);
 
         return context.Response.WriteAsync(jsonResponse);
     }

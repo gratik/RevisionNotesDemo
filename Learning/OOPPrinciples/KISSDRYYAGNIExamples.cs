@@ -104,7 +104,7 @@ public class UserServiceWithRepetition
             throw new ArgumentException("Name is required");
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentException("Email is required");
-        if (!email.Contains("@"))
+        if (!email.Contains('@'))
             throw new ArgumentException("Email must be valid");
 
         Console.WriteLine($"Creating user: {name}, {email}");
@@ -117,7 +117,7 @@ public class UserServiceWithRepetition
             throw new ArgumentException("Name is required");
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentException("Email is required");
-        if (!email.Contains("@"))
+        if (!email.Contains('@'))
             throw new ArgumentException("Email must be valid");
 
         Console.WriteLine($"Updating user {id}: {name}, {email}");
@@ -128,13 +128,13 @@ public class UserServiceWithRepetition
 public class UserServiceDRY
 {
     // Single validation method - reused everywhere
-    private void ValidateUserData(string name, string email)
+    private static void ValidateUserData(string name, string email)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name is required");
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentException("Email is required");
-        if (!email.Contains("@"))
+        if (!email.Contains('@'))
             throw new ArgumentException("Email must be valid");
     }
 
@@ -215,7 +215,7 @@ public class OrderProcessor
     // DRY: Reusable validation
     // YAGNI: Only essential features
 
-    private void ValidateOrder(decimal amount)
+    private static void ValidateOrder(decimal amount)
     {
         // DRY: Single validation method
         if (amount <= 0)
@@ -233,7 +233,7 @@ public class OrderProcessor
         Console.WriteLine($"[KISS+DRY+YAGNI] Order: ${amount:F2}, Tax: ${tax:F2}, Total: ${total:F2}");
     }
 
-    private decimal CalculateTax(decimal amount)
+    private static decimal CalculateTax(decimal amount)
     {
         // KISS: Simple calculation
         // YAGNI: No complex tax rules until actually needed

@@ -32,6 +32,63 @@ using System.Net;
 
 namespace RevisionNotesDemo.Resilience;
 
+internal static class CircuitBreakerLogs
+{
+    internal static readonly Action<ILogger, double, string, Exception?> CircuitOpenedForDurationDueTo =
+        LoggerMessage.Define<double, string>(
+            LogLevel.Warning,
+            new EventId(201, nameof(CircuitOpenedForDurationDueTo)),
+            "Circuit breaker OPENED for {Duration}s due to: {Message}");
+
+    internal static readonly Action<ILogger, Exception?> CircuitClosedServiceRecovered =
+        LoggerMessage.Define(
+            LogLevel.Information,
+            new EventId(202, nameof(CircuitClosedServiceRecovered)),
+            "Circuit breaker CLOSED - service recovered");
+
+    internal static readonly Action<ILogger, Exception?> CircuitHalfOpenTestingRecovery =
+        LoggerMessage.Define(
+            LogLevel.Information,
+            new EventId(203, nameof(CircuitHalfOpenTestingRecovery)),
+            "Circuit breaker HALF-OPEN - testing if service recovered");
+
+    internal static readonly Action<ILogger, int, Exception?> CircuitOpenedFailureRate =
+        LoggerMessage.Define<int>(
+            LogLevel.Warning,
+            new EventId(204, nameof(CircuitOpenedFailureRate)),
+            "Circuit breaker OPENED: {FailureRate}% failure rate in last 10s");
+
+    internal static readonly Action<ILogger, Exception?> CircuitClosed =
+        LoggerMessage.Define(
+            LogLevel.Information,
+            new EventId(205, nameof(CircuitClosed)),
+            "Circuit breaker CLOSED");
+
+    internal static readonly Action<ILogger, Exception?> CircuitHalfOpenTesting =
+        LoggerMessage.Define(
+            LogLevel.Information,
+            new EventId(206, nameof(CircuitHalfOpenTesting)),
+            "Circuit breaker HALF-OPEN - testing recovery");
+
+    internal static readonly Action<ILogger, string, Exception?> CircuitOpenedForService =
+        LoggerMessage.Define<string>(
+            LogLevel.Warning,
+            new EventId(207, nameof(CircuitOpenedForService)),
+            "Circuit OPENED for {Service}");
+
+    internal static readonly Action<ILogger, string, Exception?> CircuitClosedForService =
+        LoggerMessage.Define<string>(
+            LogLevel.Information,
+            new EventId(208, nameof(CircuitClosedForService)),
+            "Circuit CLOSED for {Service}");
+
+    internal static readonly Action<ILogger, Exception?> CircuitOpened =
+        LoggerMessage.Define(
+            LogLevel.Warning,
+            new EventId(209, nameof(CircuitOpened)),
+            "Circuit OPENED");
+}
+
 /// <summary>
 /// EXAMPLE 1: CIRCUIT BREAKER BASICS - How It Works
 /// 
@@ -110,19 +167,18 @@ public static class CircuitBreakerBasics
                 onBreak: (exception, duration) =>
                 {
                     // ✅ Log when circuit opens
-                    logger.LogWarning(exception,
-                        "Circuit breaker OPENED for {Duration}s due to: {Message}",
-                        duration.TotalSeconds, exception.Message);
+                    CircuitBreakerLogs.CircuitOpenedForDurationDueTo(
+                        logger, duration.TotalSeconds, exception.Message, exception);
                 },
                 onReset: () =>
                 {
                     // ✅ Log when circuit closes
-                    logger.LogInformation("Circuit breaker CLOSED - service recovered");
+                    CircuitBreakerLogs.CircuitClosedServiceRecovered(logger, null);
                 },
                 onHalfOpen: () =>
                 {
                     // ✅ Log when testing recovery
-                    logger.LogInformation("Circuit breaker HALF-OPEN - testing if service recovered");
+                    CircuitBreakerLogs.CircuitHalfOpenTestingRecovery(logger, null);
                 });
 
         return await circuitBreakerPolicy.ExecuteAsync(async () =>
@@ -170,16 +226,15 @@ public static class AdvancedCircuitBreakerExamples
                 durationOfBreak: TimeSpan.FromSeconds(30),   // ✅ Stay open for 30s
                 onBreak: (result, duration) =>
                 {
-                    logger.LogWarning("Circuit breaker OPENED: {FailureRate}% failure rate in last 10s",
-                        50);  // Could calculate actual rate from result
+                    CircuitBreakerLogs.CircuitOpenedFailureRate(logger, 50, null);  // Could calculate actual rate from result
                 },
                 onReset: () =>
                 {
-                    logger.LogInformation("Circuit breaker CLOSED");
+                    CircuitBreakerLogs.CircuitClosed(logger, null);
                 },
                 onHalfOpen: () =>
                 {
-                    logger.LogInformation("Circuit breaker HALF-OPEN - testing recovery");
+                    CircuitBreakerLogs.CircuitHalfOpenTesting(logger, null);
                 });
 
         var response = await circuitBreakerPolicy.ExecuteAsync(() =>
@@ -217,11 +272,11 @@ public static class AdvancedCircuitBreakerExamples
                 durationOfBreak: config.DurationOfBreak,
                 onBreak: (result, duration) =>
                 {
-                    logger.LogWarning("Circuit OPENED for {Service}", config.ServiceName);
+                    CircuitBreakerLogs.CircuitOpenedForService(logger, config.ServiceName, null);
                 },
                 onReset: () =>
                 {
-                    logger.LogInformation("Circuit CLOSED for {Service}", config.ServiceName);
+                    CircuitBreakerLogs.CircuitClosedForService(logger, config.ServiceName, null);
                 });
 
         var response = await circuitBreakerPolicy.ExecuteAsync(() =>
@@ -392,12 +447,12 @@ public static class CircuitBreakerMonitoring
                     durationOfBreak: TimeSpan.FromSeconds(30),
                     onBreak: (exception, duration) =>
                     {
-                        _logger.LogWarning("Circuit OPENED");
+                        CircuitBreakerLogs.CircuitOpened(_logger, null);
                         // ✅ Could send alert here (email, Slack, PagerDuty)
                     },
                     onReset: () =>
                     {
-                        _logger.LogInformation("Circuit CLOSED");
+                        CircuitBreakerLogs.CircuitClosed(_logger, null);
                         // ✅ Send recovery notification
                     });
         }

@@ -1,6 +1,28 @@
 # Data Access Patterns (ADO.NET, Dapper, EF Core)
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: SQL basics, repository patterns
+- Related examples: Learning/DataAccess/AdoNetPatterns.cs, Learning/DataAccess/DapperExamples.cs
+
+
 > Part of: [C# & OOP Revision Notes - Comprehensive Demonstration Project](../../README.md)
+
+## Module Metadata
+
+- **Prerequisites**: LINQ Queries, Async Multithreading
+- **When to Study**: After API basics; before deeper persistence specialization.
+- **Related Files**: `../DataAccess/*.cs`
+- **Estimated Time**: 120-150 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Configuration.md)
+- **Next Step**: [Entity-Framework.md](Entity-Framework.md)
+<!-- STUDY-NAV-END -->
+
 
 ## Overview
 
@@ -8,6 +30,15 @@ This guide covers three primary data access approaches in .NET: ADO.NET (raw SQL
 Dapper (micro-ORM), and Entity Framework Core (full ORM). Each has distinct performance
 characteristics, complexity tradeoffs, and ideal use cases. This document focuses on
 ADO.NET and Dapper patterns; see [Entity-Framework.md](Entity-Framework.md) for EF Core.
+
+## Folder Boundary (Important)
+
+To avoid overlap in this repository:
+
+- `Learning/DataAccess` is the **canonical implementation track** for data access code.
+- `Learning/Database` is the **concept/comparison catalog** for quick-reference study.
+
+If you are adding or updating runnable implementation content, use `Learning/DataAccess` first.
 
 ---
 
@@ -462,3 +493,35 @@ var connString = "Server=.;Database=MyDb";  // Pooling=true by default
 ---
 
 Generated: 2026-02-15
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [Entity-Framework.md](Entity-Framework.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: Good data access minimizes unnecessary I/O, keeps transaction boundaries explicit, and makes query behavior observable.
+- 2-minute deep dive: I choose EF, Dapper, or ADO.NET based on workload and control requirements, prevent N+1/query bloat, and enforce atomic write + outbox patterns for reliability.
+- Common follow-up: How do you decide between EF and Dapper?
+- Strong response: EF for productivity/domain modeling, Dapper for hot-path read/write control, with measured benchmarks guiding the final choice.
+- Tradeoff callout: Premature micro-optimization can reduce maintainability without measurable benefit.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know Data Access and I would just follow best practices."
+- Strong answer: "For Data Access, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply Data Access in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

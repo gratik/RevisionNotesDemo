@@ -80,7 +80,7 @@ public interface IBackgroundTaskQueue
     Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken);
 }
 
-public class BackgroundTaskQueue : IBackgroundTaskQueue
+public class BackgroundTaskQueue : IBackgroundTaskQueue, IDisposable
 {
     private readonly System.Collections.Concurrent.ConcurrentQueue<Func<CancellationToken, Task>> _workItems = new();
     private readonly SemaphoreSlim _signal = new(0);
@@ -97,6 +97,12 @@ public class BackgroundTaskQueue : IBackgroundTaskQueue
         await _signal.WaitAsync(cancellationToken);
         _workItems.TryDequeue(out var workItem);
         return workItem!;
+    }
+
+    public void Dispose()
+    {
+        _signal.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
 

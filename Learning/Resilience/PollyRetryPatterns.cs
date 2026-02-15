@@ -28,6 +28,7 @@
 using Polly;
 using Polly.Retry;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http;
 
@@ -57,6 +58,12 @@ namespace RevisionNotesDemo.Resilience;
 /// </summary>
 public static class SimpleRetryExamples
 {
+    private static readonly Action<Microsoft.Extensions.Logging.ILogger, int, string, Exception?> RetryDueToException =
+        LoggerMessage.Define<int, string>(
+            LogLevel.Warning,
+            new EventId(1, nameof(RetryDueToException)),
+            "Retry {RetryCount} due to: {Message}");
+
     // ❌ BAD: No retry - fails on first transient error
     public static async Task<string> NoRetry(HttpClient client)
     {
@@ -90,9 +97,7 @@ public static class SimpleRetryExamples
             .RetryAsync(3, onRetry: (exception, retryCount) =>
             {
                 // ✅ Log each retry attempt
-                logger.LogWarning(exception,
-                    "Retry {RetryCount} due to: {Message}",
-                    retryCount, exception.Message);
+                RetryDueToException(logger, retryCount, exception.Message, exception);
             });
 
         return await retryPolicy.ExecuteAsync(async () =>
@@ -136,6 +141,12 @@ public static class SimpleRetryExamples
 /// </summary>
 public static class WaitAndRetryExamples
 {
+    private static readonly Action<Microsoft.Extensions.Logging.ILogger, int, double, string, Exception?> RetryAfterDelayWithOperation =
+        LoggerMessage.Define<int, double, string>(
+            LogLevel.Warning,
+            new EventId(2, nameof(RetryAfterDelayWithOperation)),
+            "Retry {RetryCount} after {Delay}ms. Operation: {Operation}");
+
     // ✅ GOOD: Fixed delay wait-and-retry
     public static async Task<string> FixedDelayRetry(HttpClient client)
     {
@@ -190,9 +201,8 @@ public static class WaitAndRetryExamples
                 sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),  // 2s, 4s, 8s
                 onRetry: (exception, timeSpan, retryCount, context) =>
                 {
-                    logger.LogWarning(exception,
-                        "Retry {RetryCount} after {Delay}ms. Operation: {Operation}",
-                        retryCount, timeSpan.TotalMilliseconds, context["Operation"]);
+                    var operation = context["Operation"]?.ToString() ?? "Unknown";
+                    RetryAfterDelayWithOperation(logger, retryCount, timeSpan.TotalMilliseconds, operation, exception);
                 });
 
         return await retryPolicy.ExecuteAsync(

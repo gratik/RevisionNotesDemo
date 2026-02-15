@@ -1,65 +1,89 @@
-// ==============================================================================
-// Azure DevOps build and release pipelines
-// ==============================================================================
+// ============================================================================
+// AZURE DEVOPS PIPELINES
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// CI/CD workflows for build, test, security scanning, artifact publishing, and
+// staged deployments using Azure DevOps YAML pipelines.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Standardizes delivery quality gates across teams
+// ✅ Reduces release risk through repeatable automation
+// ✅ Improves traceability from commit to production deployment
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ Teams using Azure Repos/Boards or Azure-hosted infrastructure
+// ✅ Services that need controlled promotion across environments
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ Very small repos where local scripts are sufficient
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// Build on pull request, run unit tests and SAST, publish artifact on main,
+// then deploy to dev -> staging -> production with approvals.
+// ============================================================================
 
 namespace RevisionNotesDemo.DevOps;
 
-public class AzureDevOpsPipelines
+public static class AzureDevOpsPipelines
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  Azure DevOps build and release pipelines");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  Azure DevOps Build and Release Pipelines            ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowPipelineStages();
+        ShowQualityGates();
+        ShowReleasePromotion();
+        ShowPitfalls();
     }
 
-    private static void DisplayOverview()
+    private static void ShowPipelineStages()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers azure devops build and release pipelines\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) PIPELINE STAGES");
+        Console.WriteLine("- Validate: restore, compile, lint, unit tests");
+        Console.WriteLine("- Security: dependency and secret scanning");
+        Console.WriteLine("- Package: immutable versioned artifact");
+        Console.WriteLine("- Deploy: environment-specific rollout strategy\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowQualityGates()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) QUALITY GATES");
+
+        var gates = new[]
+        {
+            "Unit tests pass",
+            "Coverage >= 80%",
+            "No high/critical vulnerabilities",
+            "IaC validation successful"
+        };
+
+        Console.WriteLine($"- Gate count: {gates.Length}");
+        Console.WriteLine($"- First gate: {gates[0]}");
+        Console.WriteLine("- Keep gates deterministic and fast to maintain developer trust\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowReleasePromotion()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) RELEASE PROMOTION");
+        Console.WriteLine("- Promote the same artifact across environments (no rebuild)");
+        Console.WriteLine("- Require manual approval before production");
+        Console.WriteLine("- Use canary or ring-based rollout for high-risk changes");
+        Console.WriteLine("- Auto-rollback on health check failures\n");
+    }
+
+    private static void ShowPitfalls()
+    {
+        Console.WriteLine("4) COMMON PITFALLS");
+        Console.WriteLine("- Pipeline logic duplicated across many YAML files");
+        Console.WriteLine("- Long-running test suites in every PR path");
+        Console.WriteLine("- Environment drift because of manual hotfixes");
+        Console.WriteLine("- Secrets stored in variables instead of a vault\n");
     }
 }

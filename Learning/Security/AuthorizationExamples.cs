@@ -26,6 +26,7 @@
 // ==============================================================================
 
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 using System.Security.Claims;
 
 namespace RevisionNotesDemo.Security;
@@ -370,7 +371,7 @@ public class DocumentService
         return Results.Ok("Document updated");
     }
 
-    private Document GetDocument(int id) =>
+    private static Document GetDocument(int id) =>
         new Document(id, "Sample", "user123", "Sales");
 }
 
@@ -401,7 +402,7 @@ public static class CombinedRequirementsExamples
                 policy.RequireRole("Admin");
                 policy.RequireClaim("Level", "Senior", "Principal");
                 policy.RequireAssertion(context =>
-                    int.Parse(context.User.FindFirst("YearsOfService")?.Value ?? "0") >= 5);
+                    int.Parse(context.User.FindFirst("YearsOfService")?.Value ?? "0", CultureInfo.InvariantCulture) >= 5);
             });
 
             // ✅ GOOD: Any of multiple roles (OR logic)

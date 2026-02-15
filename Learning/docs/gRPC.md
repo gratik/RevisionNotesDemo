@@ -1,5 +1,27 @@
 # gRPC for ASP.NET Core
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: Protocol Buffers and service contract basics
+- Related examples: Learning/WebAPI/gRPC/GrpcBestPractices.cs
+
+
+## Module Metadata
+
+- **Prerequisites**: Web API and MVC, API Documentation
+- **When to Study**: After REST fundamentals; for service-to-service optimization.
+- **Related Files**: `../WebAPI/gRPC/*.cs`
+- **Estimated Time**: 60-90 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Configuration.md)
+- **Next Step**: [HealthChecks.md](HealthChecks.md)
+<!-- STUDY-NAV-END -->
+
+
 ## Overview
 
 gRPC is a modern, high-performance RPC (Remote Procedure Call) framework that uses HTTP/2 and Protocol Buffers for efficient service-to-service communication.
@@ -155,3 +177,35 @@ app.Run();
 - [Official gRPC Documentation](https://grpc.io/)
 - [gRPC for ASP.NET Core](https://learn.microsoft.com/aspnet/core/grpc/)
 - [Protocol Buffers Guide](https://protobuf.dev/)
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [HealthChecks.md](HealthChecks.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: This topic covers gRPC and focuses on clear decisions, practical tradeoffs, and production-safe defaults.
+- 2-minute deep dive: Start with the core problem, explain the implementation boundary, show one failure mode, and describe the mitigation or optimization strategy.
+- Common follow-up: How would you apply this in a real system with constraints?
+- Strong response: State assumptions, compare at least two approaches, and justify the chosen option with reliability, maintainability, and performance impact.
+- Tradeoff callout: Over-engineering this area too early can increase complexity without measurable delivery or runtime benefit.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know gRPC and I would just follow best practices."
+- Strong answer: "For gRPC, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply gRPC in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

@@ -27,6 +27,7 @@
 
 using System.Buffers;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -105,7 +106,7 @@ public class ArrayPoolExamples
             int position = 0;
             for (int i = 0; i < count; i++)
             {
-                if (i.TryFormat(buffer.AsSpan(position), out int written))
+                if (i.TryFormat(buffer.AsSpan(position), out int written, provider: CultureInfo.InvariantCulture))
                     position += written;
             }
 
@@ -172,7 +173,8 @@ public class ObjectPoolingExamples
         public string Process(string input)
         {
             // Do work
-            return input.ToUpper();
+            _ = _buffer.Length;
+            return input.ToUpper(CultureInfo.InvariantCulture);
         }
     }
 
@@ -373,11 +375,11 @@ public class AsyncOptimizationExamples
         }
     }
 
-    private Task<string> FetchDataAsync() => Task.FromResult("data");
-    private string ProcessData(string data) => data.ToUpper();
-    private Task SaveDataAsync(string data) => Task.CompletedTask;
-    private void Process(string item) { }
-    private void ProcessParam(string item) { }
+    private static Task<string> FetchDataAsync() => Task.FromResult("data");
+    private static string ProcessData(string data) => data.ToUpper(CultureInfo.InvariantCulture);
+    private static Task SaveDataAsync(string data) => Task.CompletedTask;
+    private static void Process(string item) { }
+    private static void ProcessParam(string item) { }
 }
 
 /// <summary>
@@ -496,7 +498,7 @@ public class StringOptimizationExamples
     // ✅ Avoid string.Format in hot paths
     public string Format_Slow(int id, string name)
     {
-        return string.Format("User {0}: {1}", id, name);  // ❌ Slow
+        return string.Format(CultureInfo.InvariantCulture, "User {0}: {1}", id, name);  // ❌ Slow
     }
 
     public string Format_Fast(int id, string name)
@@ -508,7 +510,7 @@ public class StringOptimizationExamples
     public int ParseInt_Span(string text)
     {
         ReadOnlySpan<char> span = text.AsSpan().Trim();  // ✅ No allocation
-        return int.Parse(span);
+        return int.Parse(span, CultureInfo.InvariantCulture);
     }
 }
 

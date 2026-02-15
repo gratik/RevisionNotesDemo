@@ -174,8 +174,8 @@ public class IOptionsSnapshotExamples
             return GetProductsV1(maxItems);
         }
 
-        private List<Product> GetProductsV1(int count) => new();
-        private List<Product> GetProductsV2(int count) => new();
+        private static List<Product> GetProductsV1(int count) => new();
+        private static List<Product> GetProductsV2(int count) => new();
     }
 
     public class Product { public int Id { get; set; } }
@@ -243,7 +243,7 @@ public class IOptionsMonitorExamples
             // Cache with current expiration...
         }
 
-        private void ReconfigureCache()
+        private static void ReconfigureCache()
         {
             // Adjust cache based on new settings
         }

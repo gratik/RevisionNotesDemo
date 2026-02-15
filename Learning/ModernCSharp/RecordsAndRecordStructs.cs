@@ -348,8 +348,8 @@ public static class PositionalVsNominalRecords
     // ✅ GOOD: Nominal record (traditional property syntax)
     public record PersonNominal
     {
-        public string FirstName { get; init; }
-        public string LastName { get; init; }
+        public string FirstName { get; init; } = string.Empty;
+        public string LastName { get; init; } = string.Empty;
         public int Age { get; init; }
     }
 

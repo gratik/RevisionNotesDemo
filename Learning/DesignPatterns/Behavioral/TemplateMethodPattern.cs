@@ -259,12 +259,12 @@ public abstract class DataParser
     }
 
     // Common steps (implemented in base class)
-    private void OpenFile(string filePath)
+    private static void OpenFile(string filePath)
     {
         Console.WriteLine($"  📂 Opening file: {filePath}");
     }
 
-    private void CloseFile()
+    private static void CloseFile()
     {
         Console.WriteLine("  📂 Closing file");
     }
@@ -355,12 +355,12 @@ public abstract class Beverage
     }
 
     // Common methods
-    private void BoilWater()
+    private static void BoilWater()
     {
         Console.WriteLine("  💧 Boiling water...");
     }
 
-    private void PourInCup()
+    private static void PourInCup()
     {
         Console.WriteLine("  ☕ Pouring into cup");
     }

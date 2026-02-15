@@ -263,18 +263,16 @@ public class CharacterFormatFactory
     {
         var key = $"{fontFamily}-{fontSize}-{color}-{bold}-{italic}";
 
-        if (!_formats.ContainsKey(key))
+        if (_formats.TryGetValue(key, out var existing))
         {
-            var format = new CharacterFormat(fontFamily, fontSize, color, bold, italic);
-            _formats[key] = format;
-            Console.WriteLine($"[FLYWEIGHT] 🆕 Created new format: {format}");
-        }
-        else
-        {
-            Console.WriteLine($"[FLYWEIGHT] ♻️  Reusing existing format: {_formats[key]}");
+            Console.WriteLine($"[FLYWEIGHT] ♻️  Reusing existing format: {existing}");
+            return existing;
         }
 
-        return _formats[key];
+        var format = new CharacterFormat(fontFamily, fontSize, color, bold, italic);
+        _formats[key] = format;
+        Console.WriteLine($"[FLYWEIGHT] 🆕 Created new format: {format}");
+        return format;
     }
 
     public int GetFormatCount() => _formats.Count;
@@ -343,12 +341,14 @@ public class TreeFactory
     {
         var key = $"{name}-{color}";
 
-        if (!_treeTypes.ContainsKey(key))
+        if (_treeTypes.TryGetValue(key, out var existing))
         {
-            _treeTypes[key] = new TreeType(name, color, texture);
+            return existing;
         }
 
-        return _treeTypes[key];
+        var treeType = new TreeType(name, color, texture);
+        _treeTypes[key] = treeType;
+        return treeType;
     }
 
     public int GetTreeTypeCount() => _treeTypes.Count;

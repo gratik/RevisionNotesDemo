@@ -34,6 +34,7 @@
 // ==============================================================================
 
 using System.Data;
+using System.Globalization;
 using Microsoft.Data.SqlClient;
 
 namespace RevisionNotesDemo.DataAccess;
@@ -200,7 +201,7 @@ public class SqlCommandPatternsExamples
 
         // ✅ Returns first column of first row
         var result = await command.ExecuteScalarAsync();
-        return result != null ? Convert.ToInt32(result) : 0;
+        return result != null ? Convert.ToInt32(result, CultureInfo.InvariantCulture) : 0;
     }
 
     // ✅ ExecuteScalar: Get new ID after INSERT
@@ -218,7 +219,7 @@ public class SqlCommandPatternsExamples
         command.Parameters.AddWithValue("@Email", email);
 
         var result = await command.ExecuteScalarAsync();
-        return result != null ? Convert.ToInt32(result) : 0;
+        return result != null ? Convert.ToInt32(result, CultureInfo.InvariantCulture) : 0;
     }
 
     public class User

@@ -26,6 +26,7 @@
 // ==============================================================================
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Globalization;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -95,7 +96,7 @@ public class JwtAuthenticationService
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique token ID
-            new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64), // Issued at
+            new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64), // Issued at
         };
 
         // Add role claims
@@ -147,7 +148,7 @@ public class JwtAuthenticationService
 
             // ✅ GOOD: Verify algorithm to prevent "none" algorithm attack
             if (validatedToken is JwtSecurityToken jwtToken &&
-                jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.Ordinal))
             {
                 return principal;
             }
@@ -494,7 +495,7 @@ public class TotpService
                      (hash[offset + 3] & 0xFF);
 
         var code = binary % 1000000;
-        return code.ToString("D6"); // 6-digit code with leading zeros
+        return code.ToString("D6", CultureInfo.InvariantCulture); // 6-digit code with leading zeros
     }
 
     /// <summary>
@@ -515,7 +516,7 @@ public class TotpService
                userCode == nextCode;
     }
 
-    private string GenerateCodeForCounter(string secret, long counter)
+    private static string GenerateCodeForCounter(string secret, long counter)
     {
         var secretBytes = Convert.FromBase64String(secret);
         var counterBytes = BitConverter.GetBytes(counter);
@@ -534,7 +535,7 @@ public class TotpService
                      (hash[offset + 3] & 0xFF);
 
         var code = binary % 1000000;
-        return code.ToString("D6");
+        return code.ToString("D6", CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -548,7 +549,7 @@ public class TotpService
         return $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={secretBase32}&issuer={Uri.EscapeDataString(issuer)}";
     }
 
-    private string ConvertToBase32(byte[] input)
+    private static string ConvertToBase32(byte[] input)
     {
         const string base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         var result = new StringBuilder();

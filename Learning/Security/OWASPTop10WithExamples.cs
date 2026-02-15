@@ -1,65 +1,87 @@
-// ==============================================================================
-// OWASP Top 10 vulnerabilities with C# examples
-// ==============================================================================
+// ============================================================================
+// OWASP TOP 10 WITH EXAMPLES
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// Practical mapping of common web security categories to prevention patterns
+// used in modern .NET applications.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Provides a threat-modeling baseline for teams
+// ✅ Helps prioritize controls by exploit prevalence and impact
+// ✅ Connects abstract categories to concrete coding practices
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ Secure design reviews and release readiness checks
+// ✅ Engineering onboarding for secure coding standards
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ As a substitute for threat modeling or penetration testing
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// API threat review checks auth failures, injection defenses, vulnerable
+// dependencies, and logging coverage before production rollout.
+// ============================================================================
 
 namespace RevisionNotesDemo.Security;
 
-public class OWASPTop10WithExamples
+public static class OWASPTop10WithExamples
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  OWASP Top 10 vulnerabilities with C# examples");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  OWASP Top 10 with .NET Examples                     ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowTopCategories();
+        ShowMitigationExamples();
+        ShowOperationalControls();
+        ShowReviewChecklist();
     }
 
-    private static void DisplayOverview()
+    private static void ShowTopCategories()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers owasp top 10 vulnerabilities with c# examples\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) HIGH-IMPACT CATEGORIES");
+        Console.WriteLine("- Broken access control");
+        Console.WriteLine("- Cryptographic failures");
+        Console.WriteLine("- Injection and insecure design");
+        Console.WriteLine("- Security misconfiguration and vulnerable components\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowMitigationExamples()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) MITIGATION EXAMPLES");
+
+        var mitigations = new Dictionary<string, string>
+        {
+            ["Injection"] = "Parameterized queries and strict input validation",
+            ["Broken Auth"] = "MFA, lockout, and robust session controls",
+            ["Access Control"] = "Server-side policy checks on every endpoint"
+        };
+
+        Console.WriteLine($"- Mitigation mappings: {mitigations.Count}");
+        Console.WriteLine($"- Injection control: {mitigations["Injection"]}");
+        Console.WriteLine("- Validate controls in tests, not just implementation docs\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowOperationalControls()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) OPERATIONAL CONTROLS");
+        Console.WriteLine("- SCA in CI for vulnerable dependencies");
+        Console.WriteLine("- Secure headers and hardening baseline");
+        Console.WriteLine("- Tamper-evident audit logs for security actions\n");
+    }
+
+    private static void ShowReviewChecklist()
+    {
+        Console.WriteLine("4) REVIEW CHECKLIST");
+        Console.WriteLine("- Are authorization checks centralized and tested?");
+        Console.WriteLine("- Are secrets externalized and rotated?");
+        Console.WriteLine("- Are error responses non-sensitive?");
+        Console.WriteLine("- Are threat model assumptions documented and current?\n");
     }
 }

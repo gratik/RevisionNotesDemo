@@ -1,65 +1,86 @@
-// ==============================================================================
-// Multi-factor and biometric authentication
-// ==============================================================================
+// ============================================================================
+// BIOMETRIC AND MFA PATTERNS
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// Authentication strategies combining knowledge/possession/inherence factors,
+// with phishing-resistant methods where possible.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Reduces account takeover risk from stolen passwords
+// ✅ Increases assurance for sensitive operations
+// ✅ Enables risk-based step-up authentication
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ User-facing applications handling sensitive data
+// ✅ Admin portals and finance/security critical actions
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ Low-risk internal prototypes without internet exposure
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// Passwordless login using passkeys plus fallback TOTP, with mandatory step-up
+// MFA for wire transfer approvals.
+// ============================================================================
 
 namespace RevisionNotesDemo.Security;
 
-public class BiometricAndMFAPatterns
+public static class BiometricAndMFAPatterns
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  Multi-factor and biometric authentication");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  Biometric and MFA Patterns                          ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowFactorTypes();
+        ShowRiskBasedPrompting();
+        ShowRecoveryControls();
+        ShowCommonWeaknesses();
     }
 
-    private static void DisplayOverview()
+    private static void ShowFactorTypes()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers multi-factor and biometric authentication\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) FACTOR TYPES");
+        Console.WriteLine("- Knowledge: password or PIN");
+        Console.WriteLine("- Possession: authenticator app, FIDO key");
+        Console.WriteLine("- Inherence: biometric from trusted device");
+        Console.WriteLine("- Prefer phishing-resistant options (passkeys/FIDO2)\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowRiskBasedPrompting()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) RISK-BASED PROMPTING");
+
+        var events = new[]
+        {
+            "new_device",
+            "impossible_travel",
+            "privileged_action"
+        };
+
+        Console.WriteLine($"- Step-up triggers: {string.Join(", ", events)}");
+        Console.WriteLine("- Challenge only on higher-risk context to reduce friction\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowRecoveryControls()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) RECOVERY CONTROLS");
+        Console.WriteLine("- Issue single-use recovery codes at enrollment");
+        Console.WriteLine("- Require identity proofing for factor reset");
+        Console.WriteLine("- Add delay + alert on recovery method changes\n");
+    }
+
+    private static void ShowCommonWeaknesses()
+    {
+        Console.WriteLine("4) COMMON WEAKNESSES");
+        Console.WriteLine("- SMS-only MFA for high-value accounts");
+        Console.WriteLine("- Unlimited OTP retries without lockout");
+        Console.WriteLine("- No audit trail for factor enrollment changes");
+        Console.WriteLine("- Weak backup/recovery path bypassing MFA assurance\n");
     }
 }

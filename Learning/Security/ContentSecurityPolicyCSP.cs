@@ -1,65 +1,80 @@
-// ==============================================================================
-// Browser-enforced content policy headers
-// ==============================================================================
+// ============================================================================
+// CONTENT SECURITY POLICY (CSP)
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// Browser security header that limits where scripts, styles, frames, and other
+// resources can be loaded from.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Reduces impact of XSS and script injection
+// ✅ Controls third-party resource execution
+// ✅ Adds visibility through violation reports
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ Any web application rendering HTML in browsers
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ APIs returning only JSON (header still harmless but less relevant)
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// App starts with report-only mode, then moves to enforced policy with
+// nonce-based scripts and restricted frame/src directives.
+// ============================================================================
 
 namespace RevisionNotesDemo.Security;
 
-public class ContentSecurityPolicyCSP
+public static class ContentSecurityPolicyCSP
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  Browser-enforced content policy headers");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  Content Security Policy (CSP)                       ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowPolicyShape();
+        ShowNonceStrategy();
+        ShowRolloutMode();
+        ShowFrequentErrors();
     }
 
-    private static void DisplayOverview()
+    private static void ShowPolicyShape()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers browser-enforced content policy headers\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) POLICY SHAPE");
+        Console.WriteLine("- default-src 'self'");
+        Console.WriteLine("- script-src 'self' 'nonce-<dynamic>'");
+        Console.WriteLine("- object-src 'none'");
+        Console.WriteLine("- frame-ancestors 'none' (or approved domains)\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowNonceStrategy()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) NONCE STRATEGY");
+
+        var nonceLength = 24;
+        Console.WriteLine($"- Generate per-request nonce (min length: {nonceLength})");
+        Console.WriteLine("- Attach nonce only to server-rendered trusted scripts");
+        Console.WriteLine("- Do not reuse nonce across responses\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowRolloutMode()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) ROLLOUT MODE");
+        Console.WriteLine("- Start with Content-Security-Policy-Report-Only");
+        Console.WriteLine("- Analyze violations and remove unsafe inline usage");
+        Console.WriteLine("- Enforce policy after noise is reduced\n");
+    }
+
+    private static void ShowFrequentErrors()
+    {
+        Console.WriteLine("4) FREQUENT ERRORS");
+        Console.WriteLine("- Using 'unsafe-inline' permanently");
+        Console.WriteLine("- Wildcard domains for script-src in production");
+        Console.WriteLine("- No reporting endpoint for policy violations");
+        Console.WriteLine("- Forgetting CSP updates when adding legitimate dependencies\n");
     }
 }

@@ -1,9 +1,50 @@
 # Interview Preparation Guide
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: Core C# and system design basics
+- Related examples: Learning/Appendices/CommonInterviewQuestions.cs
+
+
 **Last Updated**: 2026-02-15
 
 Comprehensive interview preparation covering common questions, coding challenges, system design,
 behavioral questions, and strategic advice for .NET developer positions.
+
+## Interview Acceleration Pack
+
+- [Interview Answer Blocks](interview/Interview-Answer-Blocks.md) - 30-second and 2-minute answer scaffolds with follow-up and tradeoff prompts.
+- [Interview Bad vs Strong Answers](interview/Interview-Bad-vs-Strong-Answers.md) - quality calibration examples by topic.
+- [Interview Timed Practice Sets](interview/Interview-Timed-Practice-Sets.md) - 15/30/45-minute scored rehearsal rounds.
+- [Interview Role Tracks](interview/Interview-Role-Tracks.md) - role-targeted study sequences and expected interview outcomes.
+- [Interview Common Traps](interview/Interview-Common-Traps.md) - common answer mistakes and stronger alternatives.
+- [Interview Whiteboard Prompts](interview/Interview-Whiteboard-Prompts.md) - system-design prompts with scoring rubric.
+- [Interview Last-Day Revision Sheet](interview/Interview-Last-Day-Revision-Sheet.md) - final high-signal checklist before interview day.
+- [Interview Behavioral-Technical Bridges](interview/Interview-Behavioral-Technical-Bridges.md) - STAR-style incident narratives with technical metrics and lessons.
+- [Interview Cheat Card](interview/Interview-Cheat-Card.md) - ultra-fast pre-interview concept and metric refresh.
+- [Interview Role Mock Scripts](interview/Interview-Role-Mock-Scripts.md) - role-specific mock interview flows with scoring signals.
+- [Interview Scoring Sheets](interview/Interview-Scoring-Sheets.md) - fillable role-specific scoring templates for mock rounds.
+- [Interview Mock Runbook](interview/Interview-Mock-Runbook.md) - full mock-session setup, cadence, and retrospective workflow.
+- [Interview Readiness Dashboard](interview/Interview-Readiness-Dashboard.md) - score and trend tracker for role-specific readiness.
+- [Interview Weekly Sprint Planner](interview/Interview-Weekly-Sprint-Planner.md) - 7-day structured prep cycle with measurable outputs.
+- [Interview Progress Log](interview/Interview-Progress-Log.md) - session-by-session evidence log for strengths, gaps, and next actions.
+- [Interview Question-to-Module Map](interview/Interview-Question-Module-Map.md) - direct mapping from common prompts to best-fit docs and runnable examples.
+
+## Module Metadata
+
+- **Prerequisites**: Foundations and at least one full track from `Learning-Path.md`
+- **When to Study**: After completing major modules; use it for synthesis and revision.
+- **Related Files**: `../Appendices/*.cs`
+- **Estimated Time**: 90-120 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Design-Patterns.md)
+- **Next Step**: [Learning Path](Learning-Path.md)
+<!-- STUDY-NAV-END -->
+
 
 ---
 
@@ -1010,3 +1051,35 @@ Key qualities interviewers look for:
 ---
 
 Generated: 2026-02-14
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Track complete. Return to [Learning Path](Learning-Path.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: This topic covers Interview preparation strategy and focuses on clear decisions, practical tradeoffs, and production-safe defaults.
+- 2-minute deep dive: Start with the core problem, explain the implementation boundary, show one failure mode, and describe the mitigation or optimization strategy.
+- Common follow-up: How would you apply this in a real system with constraints?
+- Strong response: State assumptions, compare at least two approaches, and justify the chosen option with reliability, maintainability, and performance impact.
+- Tradeoff callout: Over-engineering this area too early can increase complexity without measurable delivery or runtime benefit.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know interview preparation strategy and I would just follow best practices."
+- Strong answer: "For interview preparation strategy, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply interview preparation strategy in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

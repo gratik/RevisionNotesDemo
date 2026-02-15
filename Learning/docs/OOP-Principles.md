@@ -1,6 +1,28 @@
 # Object-Oriented Programming Principles (SOLID)
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: Classes and interfaces
+- Related examples: Learning/OOPPrinciples/SingleResponsibilityPrinciple.cs, Learning/OOPPrinciples/DependencyInversionPrinciple.cs
+
+
 > Part of: [C# & OOP Revision Notes - Comprehensive Demonstration Project](../../README.md)
+
+## Module Metadata
+
+- **Prerequisites**: None
+- **When to Study**: Start here for object-oriented fundamentals.
+- **Related Files**: `../OOPPrinciples/*.cs`
+- **Estimated Time**: 90-120 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](OOP-Principles.md)
+- **Next Step**: [Core-CSharp.md](Core-CSharp.md)
+<!-- STUDY-NAV-END -->
+
 
 ## Overview
 
@@ -574,3 +596,35 @@ public class SecureFileReader : FileReader
 ---
 
 Generated: 2026-02-14
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [Core-CSharp.md](Core-CSharp.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: OOP principles keep code maintainable by controlling responsibility, extensibility, substitutability, and dependency direction.
+- 2-minute deep dive: I use SRP/ISP to keep units focused, OCP/DIP to extend behavior safely through abstractions, and LSP to verify subtype behavior via tests rather than assumptions.
+- Common follow-up: Which principle is most frequently violated in production code?
+- Strong response: SRP, typically in service classes that combine business logic, orchestration, and infrastructure concerns.
+- Tradeoff callout: Over-abstracting too early can increase complexity and slow delivery.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know OOP Principles and I would just follow best practices."
+- Strong answer: "For OOP Principles, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply OOP Principles in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

@@ -33,6 +33,7 @@
 // ==============================================================================
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -64,6 +65,12 @@ namespace RevisionNotesDemo.WebAPI.MVC;
 /// </summary>
 public class HomeController : Controller
 {
+    private static readonly Action<ILogger, Exception?> HomePageRequested =
+        LoggerMessage.Define(
+            LogLevel.Information,
+            new EventId(711, nameof(HomePageRequested)),
+            "Home page requested");
+
     private readonly ILogger<HomeController> _logger;
     private readonly IProductService _productService;
 
@@ -78,7 +85,7 @@ public class HomeController : Controller
     // ✅ GOOD: Index action returns a view
     public IActionResult Index()
     {
-        _logger.LogInformation("Home page requested");
+        HomePageRequested(_logger, null);
         var model = new HomeViewModel
         {
             Title = "Welcome",
@@ -315,9 +322,9 @@ public class ShopController : Controller
         return View();
     }
 
-    private List<ProductViewModel> GetProducts() => new();
-    private List<CategoryViewModel> GetCategories() => new();
-    private List<ProductViewModel> SearchProductsByQuery(string query) => new();
+    private static List<ProductViewModel> GetProducts() => new();
+    private static List<CategoryViewModel> GetCategories() => new();
+    private static List<ProductViewModel> SearchProductsByQuery(string query) => new();
 }
 
 // Example View Component
@@ -410,8 +417,8 @@ public class AdminController : Controller
         return Json(data);
     }
 
-    private async Task ProcessFileAsync(IFormFile file) => await Task.CompletedTask;
-    private byte[] GenerateReport() => Array.Empty<byte>();
+    private static async Task ProcessFileAsync(IFormFile file) => await Task.CompletedTask;
+    private static byte[] GenerateReport() => Array.Empty<byte>();
 }
 
 // Supporting classes and view models
@@ -544,6 +551,7 @@ public class LogActionFilter : IActionFilter
 }
 
 public class LogPerformanceAttribute : ActionFilterAttribute { }
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute
 {
     public string? Roles { get; set; }

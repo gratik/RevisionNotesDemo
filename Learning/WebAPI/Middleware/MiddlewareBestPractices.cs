@@ -32,6 +32,8 @@
 // ==============================================================================
 
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.Threading.RateLimiting;
 
 namespace RevisionNotesDemo.WebAPI.Middleware;
@@ -221,6 +223,24 @@ public static class InlineMiddlewareExamples
 /// </summary>
 public class RequestTimingMiddleware
 {
+    private static readonly Action<ILogger, string, string, Exception?> RequestStarted =
+        LoggerMessage.Define<string, string>(
+            LogLevel.Information,
+            new EventId(301, nameof(RequestStarted)),
+            "Request started: {Method} {Path}");
+
+    private static readonly Action<ILogger, string, string, int, long, Exception?> RequestCompleted =
+        LoggerMessage.Define<string, string, int, long>(
+            LogLevel.Information,
+            new EventId(302, nameof(RequestCompleted)),
+            "Request completed: {Method} {Path} - Status: {StatusCode} - Duration: {ElapsedMs}ms");
+
+    private static readonly Action<ILogger, string, string, long, Exception?> RequestFailed =
+        LoggerMessage.Define<string, string, long>(
+            LogLevel.Error,
+            new EventId(303, nameof(RequestFailed)),
+            "Request failed: {Method} {Path} - Duration: {ElapsedMs}ms");
+
     private readonly RequestDelegate _next;
     private readonly ILogger<RequestTimingMiddleware> _logger;
 
@@ -241,30 +261,29 @@ public class RequestTimingMiddleware
         try
         {
             // Before: Execute before next middleware
-            _logger.LogInformation(
-                "Request started: {Method} {Path}",
-                context.Request.Method,
-                context.Request.Path);
+            RequestStarted(_logger, context.Request.Method, context.Request.Path.ToString(), null);
 
             await _next(context); // Call next middleware
 
             // After: Execute on response
             stopwatch.Stop();
-            _logger.LogInformation(
-                "Request completed: {Method} {Path} - Status: {StatusCode} - Duration: {ElapsedMs}ms",
+            RequestCompleted(
+                _logger,
                 context.Request.Method,
-                context.Request.Path,
+                context.Request.Path.ToString(),
                 context.Response.StatusCode,
-                stopwatch.ElapsedMilliseconds);
+                stopwatch.ElapsedMilliseconds,
+                null);
         }
         catch (Exception ex)
         {
             stopwatch.Stop();
-            _logger.LogError(ex,
-                "Request failed: {Method} {Path} - Duration: {ElapsedMs}ms",
+            RequestFailed(
+                _logger,
                 context.Request.Method,
-                context.Request.Path,
-                stopwatch.ElapsedMilliseconds);
+                context.Request.Path.ToString(),
+                stopwatch.ElapsedMilliseconds,
+                ex);
             throw; // Re-throw to let exception handler deal with it
         }
     }
@@ -303,6 +322,12 @@ public static class RequestTimingMiddlewareExtensions
 /// </summary>
 public class GlobalExceptionHandlerMiddleware
 {
+    private static readonly Action<ILogger, string, Exception?> UnhandledExceptionWithCorrelation =
+        LoggerMessage.Define<string>(
+            LogLevel.Error,
+            new EventId(304, nameof(UnhandledExceptionWithCorrelation)),
+            "Unhandled exception occurred. CorrelationId: {CorrelationId}");
+
     private readonly RequestDelegate _next;
     private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger;
     private readonly IHostEnvironment _environment;
@@ -334,9 +359,7 @@ public class GlobalExceptionHandlerMiddleware
         // Generate correlation ID for tracking
         var correlationId = context.TraceIdentifier;
 
-        _logger.LogError(exception,
-            "Unhandled exception occurred. CorrelationId: {CorrelationId}",
-            correlationId);
+        UnhandledExceptionWithCorrelation(_logger, correlationId, exception);
 
         // Determine status code based on exception type
         var (statusCode, title) = exception switch
@@ -402,6 +425,18 @@ public static class GlobalExceptionHandlerExtensions
 /// </summary>
 public class RequestResponseLoggingMiddleware
 {
+    private static readonly Action<ILogger, string, string, string, string, string, Exception?> HttpRequestLogged =
+        LoggerMessage.Define<string, string, string, string, string>(
+            LogLevel.Information,
+            new EventId(305, nameof(HttpRequestLogged)),
+            "HTTP Request: {Method} {Path} {QueryString}\nHeaders: {Headers}\nBody: {Body}");
+
+    private static readonly Action<ILogger, int, string, Exception?> HttpResponseLogged =
+        LoggerMessage.Define<int, string>(
+            LogLevel.Information,
+            new EventId(306, nameof(HttpResponseLogged)),
+            "HTTP Response: Status {StatusCode}\nBody: {Body}");
+
     private readonly RequestDelegate _next;
     private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
 
@@ -454,13 +489,14 @@ public class RequestResponseLoggingMiddleware
         var body = await reader.ReadToEndAsync();
         request.Body.Position = 0; // Reset for next middleware
 
-        _logger.LogInformation(
-            "HTTP Request: {Method} {Path} {QueryString}\nHeaders: {Headers}\nBody: {Body}",
+        HttpRequestLogged(
+            _logger,
             request.Method,
-            request.Path,
-            request.QueryString,
+            request.Path.ToString(),
+            request.QueryString.ToString(),
             string.Join(", ", request.Headers.Select(h => $"{h.Key}:{h.Value}")),
-            body);
+            body,
+            null);
     }
 
     private async Task LogResponse(HttpResponse response)
@@ -470,10 +506,7 @@ public class RequestResponseLoggingMiddleware
         var body = await reader.ReadToEndAsync();
         response.Body.Position = 0;
 
-        _logger.LogInformation(
-            "HTTP Response: Status {StatusCode}\nBody: {Body}",
-            response.StatusCode,
-            body);
+        HttpResponseLogged(_logger, response.StatusCode, body, null);
     }
 }
 
@@ -661,7 +694,7 @@ public static class RateLimitingConfiguration
                     : 60;
 
                 context.HttpContext.Response.Headers["Retry-After"] =
-                    retryAfter.ToString();
+                    retryAfter.ToString(CultureInfo.InvariantCulture);
 
                 await context.HttpContext.Response.WriteAsJsonAsync(new
                 {

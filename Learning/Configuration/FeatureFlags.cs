@@ -28,6 +28,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
 using Microsoft.FeatureManagement.Mvc;
@@ -89,10 +90,10 @@ public class BasicFeatureFlagsExamples
             return await ProcessCheckoutV1(order);  // ✅ Old implementation (fallback)
         }
 
-        private Task<CheckoutResult> ProcessCheckoutV1(Order order) =>
+        private static Task<CheckoutResult> ProcessCheckoutV1(Order order) =>
             Task.FromResult(new CheckoutResult { Success = true });
 
-        private Task<CheckoutResult> ProcessCheckoutV2(Order order) =>
+        private static Task<CheckoutResult> ProcessCheckoutV2(Order order) =>
             Task.FromResult(new CheckoutResult { Success = true, Enhanced = true });
     }
 
@@ -170,8 +171,8 @@ public class PercentageRolloutExamples
             return GetDashboardV1();  // ✅ 75% see old version
         }
 
-        private Dashboard GetDashboardV1() => new() { Version = 1 };
-        private Dashboard GetDashboardV2() => new() { Version = 2 };
+        private static Dashboard GetDashboardV1() => new() { Version = 1 };
+        private static Dashboard GetDashboardV2() => new() { Version = 2 };
     }
 
     public class Dashboard { public int Version { get; set; } }
@@ -251,7 +252,7 @@ public class UserTargetingExamples
             return await _featureManager.IsEnabledAsync("BetaFeatures", context);
         }
 
-        private string GetUserGroup(Microsoft.AspNetCore.Http.HttpContext context)
+        private static string GetUserGroup(Microsoft.AspNetCore.Http.HttpContext context)
         {
             // Check if user is in beta group (from claims, database, etc.)
             if (context.User.HasClaim("Group", "BetaTesters"))
@@ -436,8 +437,8 @@ public class CustomFeatureFilterExamples
             return GetBasicReport();
         }
 
-        private AnalyticsReport GetBasicReport() => new() { Type = "Basic" };
-        private AnalyticsReport GetAdvancedReport() => new() { Type = "Advanced" };
+        private static AnalyticsReport GetBasicReport() => new() { Type = "Basic" };
+        private static AnalyticsReport GetAdvancedReport() => new() { Type = "Advanced" };
     }
 
     public class AnalyticsReport { public string Type { get; set; } = ""; }
@@ -488,6 +489,12 @@ public class KillswitchExamples
     // ✅ GOOD: Fallback when feature disabled
     public class PaymentService
     {
+        private static readonly Action<ILogger, Exception?> NewPaymentFlowFailedFallback =
+            LoggerMessage.Define(
+                LogLevel.Error,
+                new EventId(701, nameof(NewPaymentFlowFailedFallback)),
+                "New payment flow failed, falling back to v1");
+
         private readonly IFeatureManager _featureManager;
         private readonly ILogger<PaymentService> _logger;
 
@@ -509,7 +516,7 @@ public class KillswitchExamples
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "New payment flow failed, falling back to v1");
+                    NewPaymentFlowFailedFallback(_logger, ex);
                     // Fall through to V1
                 }
             }
@@ -517,10 +524,10 @@ public class KillswitchExamples
             return await ProcessPaymentV1(amount);  // ✅ Old system (safe fallback)
         }
 
-        private Task<PaymentResult> ProcessPaymentV1(decimal amount) =>
+        private static Task<PaymentResult> ProcessPaymentV1(decimal amount) =>
             Task.FromResult(new PaymentResult { Success = true, Version = 1 });
 
-        private Task<PaymentResult> ProcessPaymentV2(decimal amount) =>
+        private static Task<PaymentResult> ProcessPaymentV2(decimal amount) =>
             Task.FromResult(new PaymentResult { Success = true, Version = 2 });
     }
 

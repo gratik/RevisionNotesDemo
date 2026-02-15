@@ -186,7 +186,8 @@ public static class StructuredPropertyExamples
         // ❌ BAD: String interpolation - not structured
         public void BadLogging(int userId, string orderId, decimal amount)
         {
-            _logger.LogInformation($"User {userId} placed order {orderId} for ${amount}");
+            var badMessage = $"User {userId} placed order {orderId} for ${amount}";
+            _logger.LogInformation("{Message}", badMessage);
             // Output: "User 123 placed order ORD-456 for $99.99"
             // Can only search text, not structured fields
         }
@@ -606,7 +607,8 @@ public static class BestPractices
     public static void BadTemplating(Microsoft.Extensions.Logging.ILogger logger, int userId)
     {
         // ❌ BAD
-        logger.LogInformation($"User {userId} logged in");  // Not structured!
+        var badMessage = $"User {userId} logged in";
+        logger.LogInformation("{Message}", badMessage);  // Not structured!
 
         // ✅ GOOD
         logger.LogInformation("User {UserId} logged in", userId);

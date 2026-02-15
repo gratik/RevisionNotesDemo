@@ -1,6 +1,28 @@
 # Resilience Patterns (Polly, Circuit Breaker)
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: HTTP failure handling basics
+- Related examples: Learning/Resilience/PollyRetryPatterns.cs, Learning/Resilience/CircuitBreakerPattern.cs
+
+
 > Part of: [C# & OOP Revision Notes - Comprehensive Demonstration Project](../../README.md)
+
+## Module Metadata
+
+- **Prerequisites**: Web API and MVC, Async Multithreading
+- **When to Study**: Before production release for external dependency handling.
+- **Related Files**: `../Resilience/*.cs`
+- **Estimated Time**: 90-120 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Design-Patterns.md)
+- **Next Step**: [Performance.md](Performance.md)
+<!-- STUDY-NAV-END -->
+
 
 ## Overview
 
@@ -281,3 +303,35 @@ var policy = Policy
 ---
 
 Generated: 2026-02-14
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [Performance.md](Performance.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: Resilience means controlled failure behavior under dependency issues, not just retries.
+- 2-minute deep dive: I combine timeout budgets, jittered retries, circuit breakers, and fallback behavior tied to SLOs and error budgets.
+- Common follow-up: How do you prevent retry storms?
+- Strong response: Cap attempts, add jitter, short-circuit via breaker state, and enforce per-call timeout budgets.
+- Tradeoff callout: Aggressive retries can amplify outages if limits are not enforced.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know Resilience and I would just follow best practices."
+- Strong answer: "For Resilience, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply Resilience in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.

@@ -65,7 +65,7 @@ public class UnoptimizedApiService
 // ✅ GOOD EXAMPLE - Async I/O, caching, pagination
 // ============================================================================
 
-public class OptimizedApiService
+public class OptimizedApiService : IDisposable
 {
     private static readonly HttpClient _httpClient = new HttpClient(); // Reused instance
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(10); // Limit concurrent operations
@@ -130,6 +130,12 @@ public class OptimizedApiService
                 yield return $"Record {j + 1}";
             }
         }
+    }
+
+    public void Dispose()
+    {
+        _semaphore.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
 

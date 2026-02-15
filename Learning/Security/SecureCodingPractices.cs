@@ -326,7 +326,7 @@ public class InputValidationExamples
     public static bool BadIsValidUsername(string username)
     {
         // NEVER do this - impossibleto list all bad characters!
-        return !username.Contains("<") && !username.Contains(">") && !username.Contains("'");
+        return !username.Contains('<') && !username.Contains('>') && !username.Contains('\'');
         // What about other special chars? SQL keywords? Unicode tricks?
     }
 
@@ -358,7 +358,7 @@ public class InputValidationExamples
         var uploadsPath = Path.GetFullPath("uploads");
 
         // Ensure file is within uploads directory
-        if (!fullPath.StartsWith(uploadsPath))
+        if (!fullPath.StartsWith(uploadsPath, StringComparison.Ordinal))
         {
             throw new SecurityException("Invalid file path");
         }

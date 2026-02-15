@@ -1,65 +1,80 @@
-// ==============================================================================
-// Multi-container development environments
-// ==============================================================================
+// ============================================================================
+// DOCKER COMPOSE FOR DEVELOPMENT
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// Declarative local multi-container setup for app dependencies such as
+// databases, caches, queues, and supporting tools.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Makes onboarding reproducible across machines
+// ✅ Mirrors production-like topology for integration testing
+// ✅ Reduces "works on my machine" issues
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ Services with 2+ runtime dependencies
+// ✅ Teams that need consistent local integration environments
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ Single-process apps with no external dependencies
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// API + PostgreSQL + Redis + message broker spun up with one command for local
+// development and smoke tests.
+// ============================================================================
 
 namespace RevisionNotesDemo.DevOps;
 
-public class DockerComposeDevelopment
+public static class DockerComposeDevelopment
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  Multi-container development environments");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  Docker Compose Development Environments             ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowServiceDesign();
+        ShowProfileStrategy();
+        ShowDataAndVolumes();
+        ShowCommonMistakes();
     }
 
-    private static void DisplayOverview()
+    private static void ShowServiceDesign()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers multi-container development environments\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) SERVICE DESIGN");
+        Console.WriteLine("- Keep services minimal: app + required dependencies");
+        Console.WriteLine("- Use explicit health checks and startup dependencies");
+        Console.WriteLine("- Pin image tags to avoid random local breakages\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowProfileStrategy()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) PROFILE STRATEGY");
+
+        var profiles = new[] { "default", "observability", "perf-test" };
+        Console.WriteLine($"- Available profiles: {string.Join(", ", profiles)}");
+        Console.WriteLine("- Keep default profile lightweight for fast startup");
+        Console.WriteLine("- Enable heavier stacks only when needed\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowDataAndVolumes()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) DATA AND VOLUMES");
+        Console.WriteLine("- Use named volumes for database persistence in local dev");
+        Console.WriteLine("- Mount source code for rapid feedback loops");
+        Console.WriteLine("- Reset state with a controlled cleanup command\n");
+    }
+
+    private static void ShowCommonMistakes()
+    {
+        Console.WriteLine("4) COMMON MISTAKES");
+        Console.WriteLine("- Hardcoding secrets in compose files");
+        Console.WriteLine("- Running all services as root inside containers");
+        Console.WriteLine("- Ignoring resource limits and causing laptop instability");
+        Console.WriteLine("- Diverging local compose from production assumptions\n");
     }
 }

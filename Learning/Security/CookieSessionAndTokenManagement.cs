@@ -1,65 +1,82 @@
-// ==============================================================================
-// Managing authentication state
-// ==============================================================================
+// ============================================================================
+// COOKIE, SESSION, AND TOKEN MANAGEMENT
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// Secure management of authentication state using cookies, server sessions,
+// and token-based approaches.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Prevents session hijacking and token theft abuse
+// ✅ Supports predictable sign-in/out behavior
+// ✅ Balances user experience and security controls
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ Web apps with browser sessions and APIs
+// ✅ Systems requiring explicit auth lifecycle controls
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ Stateless public APIs with no user authentication context
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// Browser app uses secure http-only cookies for refresh/session context and
+// short-lived access tokens for API calls.
+// ============================================================================
 
 namespace RevisionNotesDemo.Security;
 
-public class CookieSessionAndTokenManagement
+public static class CookieSessionAndTokenManagement
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  Managing authentication state");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  Cookie, Session, and Token Management               ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowCookieHardening();
+        ShowTokenLifetimes();
+        ShowRevocationModel();
+        ShowDangerPatterns();
     }
 
-    private static void DisplayOverview()
+    private static void ShowCookieHardening()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers managing authentication state\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) COOKIE HARDENING");
+        Console.WriteLine("- Use Secure + HttpOnly + SameSite settings");
+        Console.WriteLine("- Rotate session id after privilege changes/login");
+        Console.WriteLine("- Keep cookie payload minimal and opaque\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowTokenLifetimes()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) TOKEN LIFETIMES");
+
+        var accessMinutes = 15;
+        var refreshDays = 14;
+
+        Console.WriteLine($"- Access token lifetime: {accessMinutes} minutes");
+        Console.WriteLine($"- Refresh token lifetime: {refreshDays} days");
+        Console.WriteLine("- Use rotation and replay detection for refresh tokens\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowRevocationModel()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) REVOCATION MODEL");
+        Console.WriteLine("- Support sign-out from one device and all devices");
+        Console.WriteLine("- Revoke on password reset and suspicious activity");
+        Console.WriteLine("- Track token family identifiers for rolling refresh flows\n");
+    }
+
+    private static void ShowDangerPatterns()
+    {
+        Console.WriteLine("4) DANGER PATTERNS");
+        Console.WriteLine("- Long-lived access tokens without revocation controls");
+        Console.WriteLine("- Storing tokens in localStorage for high-risk apps");
+        Console.WriteLine("- Missing CSRF protection for cookie-authenticated endpoints");
+        Console.WriteLine("- No idle timeout for high-privilege sessions\n");
     }
 }

@@ -1,65 +1,81 @@
-// ==============================================================================
-// Isolating authentication across tenants
-// ==============================================================================
+// ============================================================================
+// MULTI-TENANT AUTHENTICATION
+// ============================================================================
 // WHAT IS THIS?
-// {WHAT}
+// -------------
+// Authentication and authorization design where tenant context is explicit,
+// isolated, and enforced across identity and data access layers.
 //
 // WHY IT MATTERS
-// {WHY}
+// --------------
+// ✅ Prevents cross-tenant data leakage
+// ✅ Enables tenant-specific policies and identity providers
+// ✅ Supports secure enterprise onboarding patterns
 //
 // WHEN TO USE
-// {WHEN}
+// -----------
+// ✅ SaaS systems serving multiple organizations
+// ✅ Platforms with tenant-scoped RBAC and compliance requirements
 //
 // WHEN NOT TO USE
-// {WHEN_NOT}
+// ---------------
+// ❌ Single-tenant internal apps without tenant boundaries
 //
 // REAL-WORLD EXAMPLE
-// {EXAMPLE}
-// ==============================================================================
-
-using System;
-using System.Collections.Generic;
+// ------------------
+// User signs in with tenant alias, receives token containing tenant id, and all
+// API access checks both user permissions and tenant ownership.
+// ============================================================================
 
 namespace RevisionNotesDemo.Security;
 
-public class MultiTenantAuthentication
+public static class MultiTenantAuthentication
 {
     public static void RunAll()
     {
-        Console.WriteLine("\n╔══════════════════════════════════════════════════════╗");
-        Console.WriteLine("║  Isolating authentication across tenants");
-        Console.WriteLine("╚══════════════════════════════════════════════════════╝\n");
-        
-        DisplayOverview();
-        ShowKeyPatterns();
-        ExplainBestPractices();
+        Console.WriteLine("\n╔═══════════════════════════════════════════════════════╗");
+        Console.WriteLine("║  Multi-Tenant Authentication                         ║");
+        Console.WriteLine("╚═══════════════════════════════════════════════════════╝\n");
+
+        ShowTenantResolution();
+        ShowClaimValidation();
+        ShowAuthorizationModel();
+        ShowCrossTenantRisks();
     }
 
-    private static void DisplayOverview()
+    private static void ShowTenantResolution()
     {
-        Console.WriteLine("📖 OVERVIEW:\n");
-        Console.WriteLine("This section covers isolating authentication across tenants\n");
-        Console.WriteLine("Key areas:\n");
-        Console.WriteLine("  • Core concepts and fundamentals");
-        Console.WriteLine("  • Design patterns and best practices");
-        Console.WriteLine("  • Real-world implementation examples");
-        Console.WriteLine("  • Common pitfalls and how to avoid them\n");
+        Console.WriteLine("1) TENANT RESOLUTION");
+        Console.WriteLine("- Resolve tenant via subdomain, path, or header");
+        Console.WriteLine("- Validate tenant exists and is active before login");
+        Console.WriteLine("- Never trust client-supplied tenant id without verification\n");
     }
 
-    private static void ShowKeyPatterns()
+    private static void ShowClaimValidation()
     {
-        Console.WriteLine("🎯 KEY PATTERNS:\n");
-        Console.WriteLine("  • Pattern 1: {PATTERN_1}");
-        Console.WriteLine("  • Pattern 2: {PATTERN_2}");
-        Console.WriteLine("  • Pattern 3: {PATTERN_3}\n");
+        Console.WriteLine("2) CLAIM VALIDATION");
+
+        var requiredClaims = new[] { "sub", "tenant_id", "scope" };
+
+        Console.WriteLine($"- Required claims: {string.Join(", ", requiredClaims)}");
+        Console.WriteLine("- Enforce tenant_id match with requested resource");
+        Console.WriteLine("- Reject tokens missing tenant-scoped claims\n");
     }
 
-    private static void ExplainBestPractices()
+    private static void ShowAuthorizationModel()
     {
-        Console.WriteLine("✅ BEST PRACTICES:\n");
-        Console.WriteLine("  ✓ Always consider scalability requirements");
-        Console.WriteLine("  ✓ Document architectural decisions");
-        Console.WriteLine("  ✓ Test thoroughly before production");
-        Console.WriteLine("  ✓ Monitor outcomes and iterate\n");
+        Console.WriteLine("3) AUTHORIZATION MODEL");
+        Console.WriteLine("- Policy = tenant membership + role + action scope");
+        Console.WriteLine("- Use tenant-aware RBAC/ABAC for privileged operations");
+        Console.WriteLine("- Include tenant id in audit logs for every decision\n");
+    }
+
+    private static void ShowCrossTenantRisks()
+    {
+        Console.WriteLine("4) CROSS-TENANT RISKS");
+        Console.WriteLine("- Caching data without tenant partition key");
+        Console.WriteLine("- Background jobs running without tenant context");
+        Console.WriteLine("- Shared admin endpoints bypassing tenant checks");
+        Console.WriteLine("- SQL/ORM filters not enforced at repository boundary\n");
     }
 }
