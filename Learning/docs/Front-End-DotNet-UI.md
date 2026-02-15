@@ -1,6 +1,28 @@
 # Front-End .NET UI Technologies
 
+## Metadata
+- Owner: Maintainers
+- Last updated: February 15, 2026
+- Prerequisites: ASP.NET and UI rendering basics
+- Related examples: Learning/FrontEnd/BlazorUiExamples.cs, Learning/FrontEnd/MvcUiExamples.cs, Learning/FrontEnd/ReactApiIntegrationExamples.cs
+
+
 > Part of: [C# & OOP Revision Notes - Comprehensive Demonstration Project](../../README.md)
+
+## Module Metadata
+
+- **Prerequisites**: Core C#, OOP Principles
+- **When to Study**: When selecting UI stack or planning migration paths.
+- **Related Files**: `../FrontEnd/*.cs`
+- **Estimated Time**: 60-90 minutes
+
+<!-- STUDY-NAV-START -->
+## Navigation
+
+- **Start Here**: [Learning Path](Learning-Path.md) | [Track Start](Design-Patterns.md)
+- **Next Step**: [Interview-Preparation.md](Interview-Preparation.md)
+<!-- STUDY-NAV-END -->
+
 
 ## Overview
 
@@ -16,6 +38,11 @@ Covered technologies:
 - WPF
 - Windows Forms
 - ASP.NET Web Forms
+
+Related SPA integration guides:
+
+- [.NET API to React Front End](DotNet-API-React.md)
+- [.NET API to Vue Front End](DotNet-API-Vue.md)
 
 ---
 
@@ -429,6 +456,32 @@ See `BadValidation` and `GoodValidation` in [Learning/FrontEnd/WebFormsUiExample
 
 ---
 
+## SPA with .NET API: React and Vue
+
+This is a common real-world pattern: a JavaScript SPA consumes a .NET API over HTTP.
+
+### React + .NET API (summary)
+
+- Use a shared API client (`fetch` wrapper or axios instance).
+- Normalize API errors (`ProblemDetails`) into stable UI states.
+- Use `AbortController` for request cancellation in unmounted components.
+- Keep CORS origins explicit and environment-specific.
+
+Detailed guide: [DotNet API to React Front End](DotNet-API-React.md)  
+Code examples: [Learning/FrontEnd/ReactApiIntegrationExamples.cs](../FrontEnd/ReactApiIntegrationExamples.cs)
+
+### Vue + .NET API (summary)
+
+- Use one axios client with request/response interceptors.
+- Keep API calls in composables/services, not inside page components.
+- Use Vite proxy for local development consistency.
+- Validate paging/filter input on API endpoints and return clear validation details.
+
+Detailed guide: [DotNet API to Vue Front End](DotNet-API-Vue.md)  
+Code examples: [Learning/FrontEnd/VueApiIntegrationExamples.cs](../FrontEnd/VueApiIntegrationExamples.cs)
+
+---
+
 ## Related Files
 
 - [Learning/FrontEnd/MvcUiExamples.cs](../FrontEnd/MvcUiExamples.cs)
@@ -438,6 +491,8 @@ See `BadValidation` and `GoodValidation` in [Learning/FrontEnd/WebFormsUiExample
 - [Learning/FrontEnd/WpfUiExamples.cs](../FrontEnd/WpfUiExamples.cs)
 - [Learning/FrontEnd/WinFormsUiExamples.cs](../FrontEnd/WinFormsUiExamples.cs)
 - [Learning/FrontEnd/WebFormsUiExamples.cs](../FrontEnd/WebFormsUiExamples.cs)
+- [Learning/FrontEnd/ReactApiIntegrationExamples.cs](../FrontEnd/ReactApiIntegrationExamples.cs)
+- [Learning/FrontEnd/VueApiIntegrationExamples.cs](../FrontEnd/VueApiIntegrationExamples.cs)
 - [Learning/WebAPI/MVC/MVCBestPractices.cs](../WebAPI/MVC/MVCBestPractices.cs)
 
 ---
@@ -445,6 +500,8 @@ See `BadValidation` and `GoodValidation` in [Learning/FrontEnd/WebFormsUiExample
 ## See Also
 
 - [Web API & MVC](Web-API-MVC.md)
+- [DotNet API to React Front End](DotNet-API-React.md)
+- [DotNet API to Vue Front End](DotNet-API-Vue.md)
 - [Security](Security.md)
 - [Performance](Performance.md)
 - [Testing](Testing.md)
@@ -453,3 +510,35 @@ See `BadValidation` and `GoodValidation` in [Learning/FrontEnd/WebFormsUiExample
 ---
 
 Generated: 2026-02-14
+
+<!-- STUDY-NEXT-START -->
+## Next Step
+
+- Continue with [Interview-Preparation.md](Interview-Preparation.md).
+<!-- STUDY-NEXT-END -->
+
+---
+
+## Interview Answer Block
+
+- 30-second answer: This topic covers Front End DotNet UI and focuses on clear decisions, practical tradeoffs, and production-safe defaults.
+- 2-minute deep dive: Start with the core problem, explain the implementation boundary, show one failure mode, and describe the mitigation or optimization strategy.
+- Common follow-up: How would you apply this in a real system with constraints?
+- Strong response: State assumptions, compare at least two approaches, and justify the chosen option with reliability, maintainability, and performance impact.
+- Tradeoff callout: Over-engineering this area too early can increase complexity without measurable delivery or runtime benefit.
+
+## Interview Bad vs Strong Answer
+
+- Bad answer: "I know Front End DotNet UI and I would just follow best practices."
+- Strong answer: "For Front End DotNet UI, I first define the constraints, compare two viable approaches, justify the choice with concrete tradeoffs, and describe how I would validate outcomes in production."
+- Why strong wins: It demonstrates structured reasoning, context awareness, and measurable execution rather than generic statements.
+
+## Interview Timed Drill
+
+- Time box: 10 minutes.
+- Prompt: Explain how you would apply Front End DotNet UI in a real project with one concrete constraint (scale, security, latency, or team size).
+- Required outputs:
+  - One design or implementation decision
+  - One risk and mitigation
+  - One measurable validation signal
+- Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.
