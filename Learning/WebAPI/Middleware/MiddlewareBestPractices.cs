@@ -1,39 +1,34 @@
 // ==============================================================================
 // MIDDLEWARE BEST PRACTICES - ASP.NET Core Request Pipeline
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate middleware best practices for building robust request pipelines.
-//   Middleware are software components that handle HTTP requests and responses,
-//   forming a pipeline that processes every request in order.
 //
-// WHY MIDDLEWARE:
-//   - Cross-cutting concerns (logging, error handling, auth, etc.)
-//   - Request/response manipulation
-//   - Short-circuit the pipeline when needed
-//   - Composable and reusable components
-//   - Ordered execution for predictable behavior
+// WHAT IS MIDDLEWARE?
+// -------------------
+// Middleware are pipeline components that handle requests and responses in order.
+// They can short-circuit, modify responses, or delegate to the next component.
 //
-// WHAT YOU'LL LEARN:
-//   1. Middleware pipeline order (critical!)
-//   2. Built-in middleware configuration
-//   3. Custom inline middleware (Use/Run/Map)
-//   4. Custom middleware classes
-//   5. Exception handling middleware
-//   6. Request/response logging
-//   7. CORS middleware
-//   8. Rate limiting and throttling
-//   9. Short-circuiting and branching
-//   10. Conditional middleware
+// WHY IT MATTERS
+// --------------
+// - Centralized cross-cutting concerns (logging, auth, error handling)
+// - Predictable request flow when ordered correctly
+// - Reusable and composable components
 //
-// CRITICAL CONCEPT: Middleware Order Matters!
-//   The order you add middleware defines the request/response flow.
-//   Request: Top → Bottom
-//   Response: Bottom → Top (reverse)
+// WHEN TO USE
+// -----------
+// - YES: Logging, authentication, authorization, CORS, rate limiting
+// - YES: Global error handling and response shaping
+// - YES: Performance and security policies
 //
-// MIDDLEWARE PIPELINE FLOW:
-//   Request → Middleware1 → Middleware2 → Middleware3 → Endpoint
-//   Response ← Middleware1 ← Middleware2 ← Middleware3 ← Endpoint
+// WHEN NOT TO USE
+// ---------------
+// - NO: Business logic belongs in services/controllers
+// - NO: Avoid heavy work in middleware that slows every request
 //
+// REAL-WORLD EXAMPLE
+// ------------------
+// API pipeline:
+// - Error handler -> HTTPS -> Routing -> CORS -> Auth -> Logging -> Endpoints
+// - Correct order prevents security gaps and improves reliability
 // ==============================================================================
 
 using Microsoft.AspNetCore.RateLimiting;

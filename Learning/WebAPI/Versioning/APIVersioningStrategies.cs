@@ -1,33 +1,34 @@
 // ==============================================================================
 // API VERSIONING STRATEGIES - ASP.NET Core Web API
 // ==============================================================================
-// PURPOSE:
-//   Master API versioning strategies for backwards-compatible evolution.
-//   Learn URL, header, query string, and media type versioning.
 //
-// WHY API VERSIONING:
-//   - Backwards compatibility for existing clients
-//   - Evolve API without breaking changes
-//   - Support multiple client versions simultaneously
-//   - Graceful deprecation path
+// WHAT ARE THEY?
+// --------------
+// Strategies to expose API versions via URL path, query string, headers, or
+// media types so you can evolve APIs without breaking clients.
 //
-// WHAT YOU'LL LEARN:
-//   1. URL path versioning (api/v1/users)
-//   2. Query string versioning (api/users?api-version=1.0)
-//   3. Header versioning (X-API-Version: 1.0)
-//   4. Media type versioning (Accept: application/vnd.myapi.v1+json)
-//   5. Version-specific controllers
-//   6. Shared code between versions
+// WHY IT MATTERS
+// --------------
+// - Allows breaking changes while keeping old clients working
+// - Enables gradual migration and deprecation
+// - Improves API longevity and trust
 //
-// INSTALL: 
-//   Install-Package Microsoft.AspNetCore.Mvc.Versioning
-//   Install-Package Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer
+// WHEN TO USE
+// -----------
+// - YES: Public APIs and partner integrations
+// - YES: APIs with multiple client versions in the wild
 //
-// VERSIONING PHILOSOPHY:
-//   - Semantic versioning: Major.Minor.Patch
-//   - Major version = breaking changes
-//   - Minor version = new features (backwards compatible)
-//   - Patch version = bug fixes
+// WHEN NOT TO USE
+// ---------------
+// - NO: Short-lived internal services with coordinated releases
+// - NO: Simple prototypes where versioning adds overhead
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// User API:
+// - V1 returns Name as a single field
+// - V2 returns FirstName and LastName
+// - Both versions run in parallel during migration
 // ==============================================================================
 
 using Microsoft.AspNetCore.Mvc;
@@ -71,26 +72,26 @@ public static class UrlPathVersioningExamples
         {
             // ✅ Read version from URL path
             options.ApiVersionReader = new UrlSegmentApiVersionReader();
-            
+
             // ✅ Report supported versions in response headers
             options.ReportApiVersions = true;
-            
+
             // ✅ Default version if client doesn't specify
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.AssumeDefaultVersionWhenUnspecified = true;
         });
-        
+
         // ✅ Add API Explorer for Swagger integration
         services.AddVersionedApiExplorer(options =>
         {
             // Format version as 'v'major[.minor]
             options.GroupNameFormat = "'v'VVV";
-            
+
             // Substitute version in route
             options.SubstituteApiVersionInUrl = true;
         });
     }
-    
+
     // ✅ GOOD: V1 controller
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]  // ✅ {version:apiVersion} placeholder
@@ -106,10 +107,10 @@ public static class UrlPathVersioningExamples
                 new { Id = 1, Name = "John Doe" },  // V1: Simple response
                 new { Id = 2, Name = "Jane Smith" }
             };
-            
+
             return Ok(users);
         }
-        
+
         // GET api/v1/users/1
         [HttpGet("{id}")]
         public IActionResult GetUser(int id)
@@ -117,7 +118,7 @@ public static class UrlPathVersioningExamples
             return Ok(new { Id = id, Name = "John Doe" });
         }
     }
-    
+
     // ✅ GOOD: V2 controller with breaking changes
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -147,10 +148,10 @@ public static class UrlPathVersioningExamples
                     CreatedAt = DateTime.UtcNow
                 }
             };
-            
+
             return Ok(users);
         }
-        
+
         // GET api/v2/users/1
         [HttpGet("{id}")]
         public IActionResult GetUser(int id)
@@ -201,13 +202,13 @@ public static class QueryStringVersioningExamples
         {
             // ✅ Read version from query string
             options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
-            
+
             options.ReportApiVersions = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.AssumeDefaultVersionWhenUnspecified = true;
         });
     }
-    
+
     // ✅ GOOD: Single controller  with multiple versions
     [ApiController]
     [Route("api/[controller]")]  // ✅ No version in route
@@ -222,7 +223,7 @@ public static class QueryStringVersioningExamples
         {
             return Ok(new[] { new { Id = 1, Name = "Product 1", Price = 9.99 } });
         }
-        
+
         // GET api/products?api-version=2.0
         [HttpGet]
         [MapToApiVersion("2.0")]  // ✅ This method handles v2.0
@@ -240,7 +241,7 @@ public static class QueryStringVersioningExamples
                 }
             });
         }
-        
+
         // GET api/products/1 (version-neutral)
         [HttpGet("{id}")]
         public IActionResult GetProduct(int id)
@@ -285,13 +286,13 @@ public static class HeaderVersioningExamples
         {
             // ✅ Read version from header
             options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
-            
+
             options.ReportApiVersions = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.AssumeDefaultVersionWhenUnspecified = true;
         });
     }
-    
+
     // ✅ GOOD: Clean URLs, version in header
     [ApiController]
     [Route("api/[controller]")]  // ✅ No version in URL
@@ -307,7 +308,7 @@ public static class HeaderVersioningExamples
         {
             return Ok(new[] { new { Id = 1, Total = 100.00 } });
         }
-        
+
         // GET api/orders
         // Header: X-API-Version: 2.0
         [HttpGet]
@@ -327,7 +328,7 @@ public static class HeaderVersioningExamples
             });
         }
     }
-    
+
     // Example HTTP request:
     // GET /api/orders HTTP/1.1
     // Host: api.example.com
@@ -369,19 +370,19 @@ public static class MediaTypeVersioningExamples
         {
             // ✅ Read version from Accept header media type
             options.ApiVersionReader = new MediaTypeApiVersionReader();
-            
+
             options.ReportApiVersions = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.AssumeDefaultVersionWhenUnspecified = true;
         });
     }
-    
+
     // Configuration for media types
     // Example media types:
     // - application/vnd.myapi.v1+json
     // - application/vnd.myapi.v2+json
     // - application/vnd.myapi.v1+xml
-    
+
     // Example HTTP request:
     // GET /api/customers HTTP/1.1
     // Host: api.example.com
@@ -415,13 +416,13 @@ public static class MultipleVersioningStrategiesExamples
                 new QueryStringApiVersionReader("api-version"),
                 new HeaderApiVersionReader("X-API-Version")
             );
-            
+
             options.ReportApiVersions = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.AssumeDefaultVersionWhenUnspecified = true;
         });
     }
-    
+
     // Now these all work:
     // - GET /api/v2/users (URL versioning)
     // - GET /api/users?api-version=2.0 (Query string)
@@ -448,14 +449,14 @@ public static class VersionSpecificModelsExample
         public string Email { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
     }
-    
+
     // ✅ V1 DTO (simpler)
     public class UserV1Dto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;  // Combined name
     }
-    
+
     // ✅ V2 DTO (richer)
     public class UserV2Dto
     {
@@ -465,7 +466,7 @@ public static class VersionSpecificModelsExample
         public string Email { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
     }
-    
+
     // ✅ Shared service (domain logic)
     public class UserService
     {
@@ -478,7 +479,7 @@ public static class VersionSpecificModelsExample
             };
         }
     }
-    
+
     // ✅ V1 Controller
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -486,28 +487,28 @@ public static class VersionSpecificModelsExample
     public class UsersControllerV1 : ControllerBase
     {
         private readonly UserService _userService;
-        
+
         public UsersControllerV1(UserService userService)
         {
             _userService = userService;
         }
-        
+
         [HttpGet]
         public IActionResult GetUsers()
         {
             var users = _userService.GetUsers();
-            
+
             // ✅ Map to V1 DTO
             var v1Dtos = users.Select(u => new UserV1Dto
             {
                 Id = u.Id,
                 Name = $"{u.FirstName} {u.LastName}"  // Combine names for V1
             });
-            
+
             return Ok(v1Dtos);
         }
     }
-    
+
     // ✅ V2 Controller
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -515,17 +516,17 @@ public static class VersionSpecificModelsExample
     public class UsersControllerV2 : ControllerBase
     {
         private readonly UserService _userService;
-        
+
         public UsersControllerV2(UserService userService)
         {
             _userService = userService;
         }
-        
+
         [HttpGet]
         public IActionResult GetUsers()
         {
             var users = _userService.GetUsers();
-            
+
             // ✅ Map to V2 DTO
             var v2Dtos = users.Select(u => new UserV2Dto
             {
@@ -535,7 +536,7 @@ public static class VersionSpecificModelsExample
                 Email = u.Email,
                 CreatedAt = u.CreatedAt
             });
-            
+
             return Ok(v2Dtos);
         }
     }
@@ -562,7 +563,7 @@ public static class DeprecationExamples
             options.AssumeDefaultVersionWhenUnspecified = true;
         });
     }
-    
+
     // ✅ GOOD: Mark version as deprecated
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -578,10 +579,10 @@ public static class DeprecationExamples
             Response.Headers["X-API-Deprecated"] = "true";
             Response.Headers["X-API-Sunset-Date"] = "2024-12-31";
             Response.Headers["Link"] = "<https://api.example.com/api/v2/products>; rel=\"successor-version\"";
-            
+
             return Ok(new { Message = "This version is deprecated. Please migrate to V2." });
         }
-        
+
         [HttpGet]
         [MapToApiVersion("2.0")]
         public IActionResult GetProductsV2()
@@ -589,7 +590,7 @@ public static class DeprecationExamples
             return Ok(new[] { new { Id = 1, Name = "Product 1" } });
         }
     }
-    
+
     // Response headers for deprecated version:
     // HTTP/1.1 200 OK
     // X-API-Deprecated: true

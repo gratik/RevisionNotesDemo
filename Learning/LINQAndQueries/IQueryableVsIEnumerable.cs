@@ -2,93 +2,28 @@
 // IQUERYABLE VS IENUMERABLE
 // Reference: Revision Notes - Page 12
 // ============================================================================
-// DEFINITION:
-//   IEnumerable<T> and IQueryable<T> both represent collections that can be
-//   enumerated, but they execute queries very differently.
+// WHAT IS THIS?
+// -------------
+// IQueryable builds expression trees for remote execution; IEnumerable runs in memory.
 //
-// KEY DIFFERENCES:
-//   
-//   IENUMERABLE<T>:
-//     • Location: LINQ-to-Objects (in-memory)
-//     • Execution: Client-side (in your application)
-//     • Uses: Func<T, bool> (compiled code)
-//     • Best for: In-memory collections (List, Array)
-//     • Namespace: System.Collections.Generic
-//   
-//   IQUERYABLE<T>:
-//     • Location: LINQ-to-SQL, LINQ-to-Entities (database)
-//     • Execution: Server-side (database)
-//     • Uses: Expression<Func<T, bool>> (expression trees)
-//     • Best for: Database queries
-//     • Namespace: System.Linq
-//     • Inherits from: IEnumerable<T>
+// WHY IT MATTERS
+// --------------
+// ✅ Prevents accidental client-side filtering
+// ✅ Avoids loading entire tables into memory
 //
-// CRITICAL DIFFERENCE - EXPRESSION TREES:
-//   IQueryable uses Expression Trees that can be translated to SQL. This means
-//   filtering happens on the database server, not in your application.
+// WHEN TO USE
+// -----------
+// ✅ IQueryable for database queries
+// ✅ IEnumerable for in-memory data
 //
-// EXAMPLE - WHY IT MATTERS:
-//   
-//   ❌ BAD (IEnumerable - loads all data):
-//     IEnumerable<Customer> customers = dbContext.Customers;  // All loaded
-//     var active = customers.Where(c => c.IsActive);           // Filter in C#
-//     var first10 = active.Take(10);                           // Take in C#
-//     // SQL: SELECT * FROM Customers (loads everything!)
-//   
-//   ✅ GOOD (IQueryable - translates to SQL):
-//     IQueryable<Customer> customers = dbContext.Customers;   // Not executed
-//     var active = customers.Where(c => c.IsActive);          // Still not executed
-//     var first10 = active.Take(10);                          // Still not executed
-//     var result = first10.ToList();                          // NOW executed
-//     // SQL: SELECT TOP 10 * FROM Customers WHERE IsActive = 1
+// WHEN NOT TO USE
+// ---------------
+// ❌ IQueryable for LINQ-to-Objects only
+// ❌ Early `ToList()` that forces client-side filtering
 //
-// DEFERRED EXECUTION:
-//   Both support deferred execution - query not executed until enumerated.
-//   But IQueryable builds up an expression tree that's translated to SQL.
-//
-// WHEN TO USE:
-//   
-//   USE IQUERYABLE:
-//     • Always when querying databases
-//     • When you need server-side filtering
-//     • Large datasets
-//     • Entity Framework, LINQ-to-SQL
-//   
-//   USE IENUMERABLE:
-//     • After data is in memory (after ToList())
-//     • In-memory collections
-//     • Complex operations not translatable to SQL
-//
-// COMMON MISTAKE:
-//   ❌ Accidentally converting to IEnumerable<T> too early:
-//     var customers = dbContext.Customers
-//         .ToList()                      // Executes query, loads all - now IEnumerable
-//         .Where(c => c.IsActive)        // Filters in memory
-//         .Take(10);
-//   
-//   ✅ Keep as IQueryable<T> until the end:
-//     var customers = dbContext.Customers
-//         .Where(c => c.IsActive)        // Still IQueryable
-//         .Take(10)
-//         .ToList();                     // Only now execute
-//
-// PERFORMANCE IMPLICATIONS:
-//   Misusing these can cause:
-//     • Loading entire tables into memory
-//     • Inefficient queries
-//     • Network traffic
-//     • Memory issues
-//
-// CONVERSIONS:
-//   • .AsEnumerable() - Convert IQueryable to IEnumerable
-//   • .AsQueryable() - Convert IEnumerable to IQueryable
-//
-// BEST PRACTICES:
-//   • Always use IQueryable<T> for database queries
-//   • Keep queries as IQueryable as long as possible
-//   • Only call ToList()/ToArray() when you need the data
-//   • Be aware when providers fall back to client-side evaluation
-//   • Use logging to see generated SQL
+// REAL-WORLD EXAMPLE
+// ------------------
+// Keep EF queries as IQueryable until `ToList()`.
 // ============================================================================
 
 namespace RevisionNotesDemo.LINQAndQueries;

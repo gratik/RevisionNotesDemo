@@ -1,10 +1,113 @@
 // ============================================================================
-// SINGLETON PATTERN
+// SINGLETON PATTERN - Single Instance Control
 // Reference: Revision Notes - Design Patterns (Creational) - Page 3
 // ============================================================================
-// PURPOSE: "Ensures only one instance of a class exists and provides a global access point."
-// EXAMPLE: Logging service, configuration manager.
-// NOTE: From Revision Notes - "Singleton - replaced by DI lifetimes (AddSingleton)" in modern .NET
+//
+// WHAT IS THE SINGLETON PATTERN?
+// -------------------------------
+// Ensures that a class has only ONE instance throughout the application lifetime
+// and provides a global point of access to that instance. The class itself is
+// responsible for keeping track of its sole instance and preventing additional
+// instances from being created.
+//
+// Think of it as: "Only one CEO in a company - everyone accesses the same person"
+//
+// Core Concepts:
+//   • Private Constructor: Prevents external instantiation
+//   • Static Instance: Holds the single instance
+//   • Global Access Point: Public static property to get the instance
+//   • Lazy Initialization: Instance created only when first needed
+//   • Thread Safety: Only one instance even in multithreaded scenarios
+//
+// WHY IT MATTERS
+// --------------
+// ✅ SINGLE SOURCE OF TRUTH: One shared state across entire application
+// ✅ CONTROLLED ACCESS: Manage access to shared resources (DB connections, file handles)
+// ✅ LAZY INITIALIZATION: Resource created only when needed, not at startup
+// ✅ MEMORY EFFICIENCY: Prevents creating multiple heavy objects
+// ✅ CONFIGURATION: Single configuration manager accessible everywhere
+// ✅ LOGGING: Centralized logging without passing logger references
+// ⚠️ CAUTION: Often becomes an anti-pattern when overused (tight coupling, hard to test)
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Need exactly one instance of a class (Configuration Manager, Logger)
+// ✅ Must control access to shared resource (Database Connection Pool)
+// ✅ Want centralized state management without global variables
+// ✅ Expensive object that should be created once and reused
+// ✅ Legacy code where DI isn't available
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Modern .NET with Dependency Injection (use AddSingleton instead)
+// ❌ Need to test code in isolation (Singletons are hard to mock)
+// ❌ Multithreaded scenarios where state changes (race conditions)
+// ❌ When it creates hidden dependencies (violates Dependency Inversion)
+// ❌ Just to avoid passing parameters (lazy design choice)
+// ❌ When you need multiple instances in different contexts (testing, multi-tenancy)
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Imagine a hospital's central patient record system:
+//   • ONE central database connection manager
+//   • Every department (ER, Surgery, Pharmacy) needs access
+//   • Can't have multiple connection managers competing for resources
+//   • All departments must see the SAME patient records (single source of truth)
+//
+// Without Singleton:
+//   → Each department creates its own connection manager
+//   → Wasteful resource usage (100+ database connections)
+//   → Potential inconsistencies (different cached data)
+//   → No way to enforce connection limits
+//
+// With Singleton:
+//   → One ConnectionManager.Instance shared by all departments
+//   → Resource pooling (manageable number of connections)
+//   → Consistent view of data across all departments
+//   → Centralized connection limit enforcement
+//
+// MODERN .NET ALTERNATIVE (Preferred)
+// -----------------------------------
+// From Revision Notes - Page 4: "Singleton - replaced by DI lifetimes (AddSingleton)"
+//
+// Traditional Singleton:
+//   var logger = Logger.Instance;  // ❌ Hard to test, tight coupling
+//
+// Modern DI Approach:
+//   public class MyService
+//   {
+//       private readonly ILogger _logger;
+//       public MyService(ILogger logger) => _logger = logger;  // ✅ Testable, loose coupling
+//   }
+//
+//   // In Program.cs:
+//   builder.Services.AddSingleton<ILogger, Logger>();  // ✅ DI container manages lifecycle
+//
+// Benefits of DI over Traditional Singleton:
+//   ✅ Testable (inject mocks)
+//   ✅ Loose coupling (depend on interface)
+//   ✅ No static dependencies
+//   ✅ Controlled lifetime management
+//   ✅ Proper disposal
+//
+// COMMON ANTI-PATTERNS
+// --------------------
+// ❌ ANTIPATTERN #1: Non-Thread-Safe Singleton
+//   Problem: Multiple threads create multiple instances (race condition)
+//   Solution: Use Lazy<T> for thread-safe lazy initialization
+//
+// ❌ ANTIPATTERN #2: Singleton With Mutable State
+//   Problem: Global mutable state leads to unpredictable behavior
+//   Solution: Make state immutable or use proper synchronization
+//
+// ❌ ANTIPATTERN #3: Overusing Singleton (Service Locator)
+//   Problem: Everything becomes a singleton, violating SRP and DIP
+//   Solution: Use Dependency Injection instead
+//
+// ❌ ANTIPATTERN #4: Singleton Without Considering Disposal
+//   Problem: Resource leaks (DB connections, file handles)
+//   Solution: Implement IDisposable or use DI lifetime management
+//
 // ============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Creational;

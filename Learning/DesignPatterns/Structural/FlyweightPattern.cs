@@ -1,10 +1,189 @@
 // ==============================================================================
-// FLYWEIGHT PATTERN
+// FLYWEIGHT PATTERN - Share Common State to Reduce Memory
 // Reference: Revision Notes - Design Patterns
 // ==============================================================================
-// PURPOSE: Share common state among many objects to reduce memory usage
-// BENEFIT: Reduced memory footprint, improved performance with large object counts
-// USE WHEN: Many similar objects, most state can be extrinsic (shared)
+//
+// WHAT IS THE FLYWEIGHT PATTERN?
+// -------------------------------
+// Minimizes memory usage by sharing as much data as possible with similar objects.
+// Separates intrinsic state (shared, immutable) from extrinsic state (unique, context-specific).
+// Stores shared state once and references it from many objects.
+//
+// Think of it as: "Chess game - pieces share color/type (intrinsic) but have unique
+// positions (extrinsic). Don't store 'black knight' data 2 times, share it!"
+//
+// Core Concepts:
+//   • Flyweight: Stores shared intrinsic state (immutable)
+//   • Intrinsic State: Shared among many objects (font, color, type)
+//   • Extrinsic State: Unique per object, passed as context (position, size)
+//   • Flyweight Factory: Creates and caches flyweight objects
+//   • Memory Savings: n objects share m flyweights where m << n
+//
+// WHY IT MATTERS
+// --------------
+// ✅ MEMORY EFFICIENCY: Reduce memory from GB to MB in data-heavy scenarios
+// ✅ PERFORMANCE: Faster object creation (reuse vs create)
+// ✅ SCALABILITY: Support far more objects than would fit in memory
+// ✅ CACHE FRIENDLY: Shared objects improve CPU cache hit rates
+// ✅ IMMUTABILITY: Shared state is immutable (thread-safe by design)
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Application uses large number of similar objects
+// ✅ Storage cost of objects is high
+// ✅ Most object state can be made extrinsic (shared)
+// ✅ Many objects can be replaced by few shared objects
+// ✅ Application doesn't depend on object identity (reference equality)
+// ✅ Examples: text editors, game sprites, rendering engines
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Few objects or low memory usage (premature optimization)
+// ❌ Most state is extrinsic (can't share much)
+// ❌ Need object identity (reference comparison)
+// ❌ Complexity not justified by memory savings
+// ❌ Objects are mutated frequently
+//
+// REAL-WORLD EXAMPLE - Text Editor
+// ---------------------------------
+// Microsoft Word document with 100,000 characters:
+//   • Without Flyweight: Each character object stores font, size, color, bold, italic
+//   • 100,000 characters × 50 bytes = 5 MB just for formatting!
+//   • Most characters share same formatting (e.g., Arial 12pt Black)
+//
+// WITHOUT FLYWEIGHT:
+//   → class Character {
+//         char Value;           // 2 bytes
+//         int Row, Column;      // 8 bytes (extrinsic - unique position)
+//         string FontFamily;    // 20 bytes (intrinsic - often shared)
+//         int FontSize;         // 4 bytes (intrinsic)
+//         string Color;         // 10 bytes (intrinsic)
+//         bool Bold, Italic;    // 2 bytes (intrinsic)
+//       }  // Total: ~50 bytes per character
+//   → 100,000 characters × 50 bytes = 5 MB
+//   → Most have identical formatting (wasted memory)
+//
+// WITH FLYWEIGHT:
+//   → class CharacterFormat {  // Flyweight (immutable, shared)
+//         string FontFamily;    // Shared
+//         int FontSize;         // Shared
+//         string Color;         // Shared
+//         bool Bold, Italic;    // Shared
+//       }  // 36 bytes
+//   → class Character {
+//         char Value;              // 2 bytes
+//         int Row, Column;         // 8 bytes (unique)
+//         CharacterFormat Format;  // 8 bytes (reference to shared)
+//       }  // Total: ~18 bytes per character
+//   → Typical document: 5-10 different formats shared by 100,000 characters
+//   → Memory: (100,000 × 18) + (10 × 36) = 1.8 MB + 360 bytes ≈ 1.8 MB
+//   → SAVINGS: 5 MB → 1.8 MB (64% reduction!)
+//
+// ANOTHER EXAMPLE - Game Sprites
+// ------------------------------
+// Forest scene with 10,000 tree objects:
+//   • 3 tree types: Oak, Pine, Birch
+//   • Each type: 3D model (5MB), textures (2MB), animations (1MB) = 8MB
+//   • Each tree instance: position (12 bytes), rotation (4 bytes), scale (4 bytes)
+//
+// Without Flyweight:
+//   → 10,000 trees × 8 MB = 80 GB (impossible!)
+//
+// With Flyweight:
+//   → 3 tree types × 8 MB = 24 MB (shared)
+//   → 10,000 instances × 20 bytes = 200 KB (unique positions)
+//   → Total: 24 MB + 200 KB ≈ 24 MB
+//   → SAVINGS: 80 GB → 24 MB (99.97% reduction!)
+//
+// Code:
+//   class TreeType {  // Flyweight
+//       Mesh model;
+//       Texture texture;
+//       Animation anim;
+//   }
+//   
+//   class Tree {  // Context
+//       TreeType type;  // Reference to shared flyweight
+//       Vector3 position;  // Unique
+//       float rotation;    // Unique
+//   }
+//   
+//   TreeType oakType = TreeFactory.GetTreeType("Oak");  // Shared by all oaks
+//   for (int i = 0; i < 5000; i++)
+//       new Tree(oakType, RandomPosition());  // 5000 oaks share 1 TreeType
+//
+// ANOTHER EXAMPLE - String Interning
+// -----------------------------------
+// .NET's string.Intern() is Flyweight pattern:
+//   string a = "hello";
+//   string b = "hello";
+//   string c = string.Intern("hello");
+//   
+//   // Without interning: 3 separate "hello" objects in memory
+//   // With interning: All reference same "hello" object
+//   
+//   Console.WriteLine(ReferenceEquals(a, c));  // True - same object!
+//
+// INTRINSIC VS EXTRINSIC STATE
+// ----------------------------
+// INTRINSIC (Shared):
+//   • Independent of context
+//   • Can be shared (font, color, type, mesh)
+//   • Immutable
+//   • Stored in flyweight
+//
+// EXTRINSIC (Unique):
+//   • Depends on context
+//   • Cannot be shared (position, state, id)
+//   • Can be mutable
+//   • Passed to flyweight methods
+//
+// Example:
+//   flyweight.Render(position, rotation);  // Extrinsic passed as parameters
+//
+// FLYWEIGHT FACTORY
+// -----------------
+// Manages flyweight pool:
+//   public class FlyweightFactory<T>
+//   {
+//       private Dictionary<string, T> _cache = new();
+//       
+//       public T GetFlyweight(string key, Func<T> create)
+//       {
+//           if (!_cache.ContainsKey(key))
+//               _cache[key] = create();
+//           return _cache[key];
+//       }
+//   }
+//
+// .NET FRAMEWORK EXAMPLES
+// -----------------------
+// Flyweight pattern in .NET:
+//   • String interning: string.Intern()
+//   • Integer caching: Integer.valueOf() in Java (same concept)
+//   • Font caching in UI frameworks
+//   • ObjectPool<T> pattern (similar concept)
+//
+// PERFORMANCE CONSIDERATIONS
+// --------------------------
+// Benefits:
+//   • Reduced memory (often 50-90%)
+//   • Fewer allocations (faster)
+//   • Better cache locality
+//
+// Trade-offs:
+//   • Complexity of separating intrinsic/extrinsic
+//   • Dictionary lookup overhead (usually negligible)
+//   • Must manage flyweight lifecycle
+//
+// BEST PRACTICES
+// --------------
+// ✅ Make flyweights immutable (thread-safe)
+// ✅ Use factory to manage flyweight pool
+// ✅ Profile memory before optimizing (avoid premature optimization)
+// ✅ Clear separation between intrinsic and extrinsic state
+// ✅ Consider weak references for large rarely-used flyweights
+//
 // ==============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Structural;

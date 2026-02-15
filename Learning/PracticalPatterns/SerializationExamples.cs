@@ -2,8 +2,28 @@
 // SERIALIZATION EXAMPLES
 // Reference: Revision Notes - Practical Scenarios - Page 13
 // ============================================================================
-// System.Text.Json: Modern, fast, built-in JSON serializer
-// Custom converters, attributes, handling special cases
+// WHAT IS THIS?
+// -------------
+// JSON serialization with System.Text.Json, attributes, and converters.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Controls payload shape and naming
+// ✅ Protects sensitive data and improves performance
+//
+// WHEN TO USE
+// -----------
+// ✅ API payloads and caching snapshots
+// ✅ Persisting objects as JSON
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ When legacy features require a different serializer
+// ❌ For binary protocols where JSON is inefficient
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Hide internal fields and rename API properties.
 // ============================================================================
 
 using System.Text.Json;

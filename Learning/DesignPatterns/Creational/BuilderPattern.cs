@@ -1,9 +1,101 @@
 // ============================================================================
-// BUILDER PATTERN
+// BUILDER PATTERN - Construct Complex Objects Step-by-Step
 // Reference: Revision Notes - Design Patterns (Creational) - Page 3
 // ============================================================================
-// PURPOSE: "Separates the construction of a complex object from its representation."
-// EXAMPLE: Building complex reports or meal orders.
+//
+// WHAT IS THE BUILDER PATTERN?
+// -----------------------------
+// Separates the construction of a complex object from its representation so
+// that the same construction process can create different representations.
+// Allows you to construct complex objects step-by-step using a fluent interface.
+//
+// Think of it as: "Ordering a custom burger - choose bun, patty, toppings, sauce
+// one at a time, then get final burger"
+//
+// Core Concepts:
+//   • Builder: Interface defining steps to build product
+//   • Concrete Builder: Implements building steps
+//   • Product: Complex object being built
+//   • Director: Optional - orchestrates building steps in specific order
+//   • Fluent Interface: Method chaining (builder.AddX().AddY().Build())
+//
+// WHY IT MATTERS
+// --------------
+// ✅ READABLE CODE: .AddBun().AddCheese().AddLettuce() vs new Burger(bun, cheese, lettuce, ...)
+// ✅ IMMUTABLE PRODUCTS: Build object completely before returning
+// ✅ STEP-BY-STEP: Construct complex objects in manageable steps
+// ✅ DIFFERENT REPRESENTATIONS: Same building process, different results
+// ✅ ENCAPSULATION: Construction logic hidden from client
+// ✅ VALIDATION: Validate each step or final product before returning
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Object has many optional parameters (avoid telescoping constructors)
+// ✅ Need to create different representations of same object
+// ✅ Construction process must be independent of parts being created
+// ✅ Object creation involves multiple steps
+// ✅ Want immutable objects (all fields set before object returned)
+// ✅ Constructor has 4+ parameters (especially if many are optional)
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Simple objects with few parameters (use constructor or object initializer)
+// ❌ Object doesn't have optional parameters
+// ❌ Construction is straightforward (new MyClass() suffices)
+// ❌ Overhead of builder class not justified
+// ❌ C# record types with 'with' expressions handle it better
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Imagine a SQL query builder (like Entity Framework's LINQ or Dapper):
+//   • Complex SQL queries with SELECT, FROM, WHERE, JOIN, ORDER BY, etc.
+//   • Not all clauses needed for every query
+//   • Order matters but can be specified flexibly
+//   • Easy to make mistakes with raw SQL strings
+//
+// Without Builder:
+//   → string sql = "SELECT * FROM Users WHERE Age > 18";
+//   → Hard to read, easy to make SQL injection mistakes
+//   → Difficult to conditionally add WHERE/ORDER BY clauses
+//   → No compile-time safety
+//
+// With Builder:
+//   → var query = new QueryBuilder()
+//         .Select("FirstName", "LastName", "Email")
+//         .From("Users")
+//         .Where("Age > @age")
+//         .OrderBy("LastName")
+//         .Build();
+//   → Fluent, readable, type-safe
+//   → Can conditionally add clauses: if (needFilter) builder.Where(...);
+//   → Validates query structure before building
+//   → Prevents SQL injection with parameterization
+//
+// COMPARISON WITH SIMILAR PATTERNS
+// ---------------------------------
+// Builder vs Constructor with Parameters:
+//   • Builder: Fluent, step-by-step, optional parameters clear
+//   • Constructor: new MyClass(p1, p2, p3, p4, p5...) - parameter hell
+//
+// Builder vs Factory Method:
+//   • Builder: Constructs complex objects step-by-step (HOW to build)
+//   • Factory: Decides which class to instantiate (WHAT to build)
+//
+// MODERN C# ALTERNATIVES
+// ----------------------
+// C# 9.0+ Record Types with 'with' expressions:
+//   record Person(string First, string Last, int Age);
+//   var person = new Person("John", "Doe", 30);
+//   var updated = person with { Age = 31 };  // Create modified copy
+//
+// Object Initializers (simple cases):
+//   var person = new Person { First = "John", Last = "Doe", Age = 30 };
+//
+// But Builder still wins for:
+//   • Complex validation logic
+//   • Multi-step construction process
+//   • Immutable objects requiring complete state
+//
 // ============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Creational;

@@ -1,8 +1,8 @@
 # Interview Preparation Guide
 
-**Last Updated**: 2026-02-14
+**Last Updated**: 2026-02-15
 
-Comprehensive interview preparation covering common questions, coding challenges, system design, 
+Comprehensive interview preparation covering common questions, coding challenges, system design,
 behavioral questions, and strategic advice for .NET developer positions.
 
 ---
@@ -10,12 +10,14 @@ behavioral questions, and strategic advice for .NET developer positions.
 ## How to Use This Guide
 
 **Preparation Timeline**:
+
 - **1 week before**: Review all common questions
 - **3 days before**: Practice coding challenges
 - **1 day before**: Review behavioral answers and company research
 - **Day of**: Review quick reference tables
 
 **Study Strategy**:
+
 1. Read question
 2. Try to answer (write it down)
 3. Compare with provided answer
@@ -30,18 +32,19 @@ behavioral questions, and strategic advice for .NET developer positions.
 
 **Q1: What is the difference between IEnumerable and IQueryable?**
 
-**Answer**: 
+**Answer**:
+
 - **IEnumerable**: In-memory collection, LINQ to Objects
   - Executes queries locally in C# code
   - Fetches all data first, then filters
   - Use for: In-memory collections, List<T>, arrays
-  
 - **IQueryable**: Expression trees, deferred execution
   - Converts LINQ to SQL/other query languages
   - Filters data at the source (database)
   - Use for: Database queries with EF Core
-  
+
 **Example**:
+
 ```csharp
 // ❌ IEnumerable - bad for large datasets
 IEnumerable<User> users = dbContext.Users;  // Fetches ALL users
@@ -57,6 +60,7 @@ var adults = users.Where(u => u.Age >= 18).ToList(); // SQL: WHERE Age >= 18
 **Q2: When would you use async/await?**
 
 **Answer**: Use async/await for **I/O-bound operations** to avoid blocking threads:
+
 - Database queries
 - HTTP requests
 - File I/O
@@ -65,6 +69,7 @@ var adults = users.Where(u => u.Age >= 18).ToList(); // SQL: WHERE Age >= 18
 **Don't use** for CPU-bound work (use Task.Run instead).
 
 **Example**:
+
 ```csharp
 // ✅ Good: I/O-bound
 public async Task<User> GetUserAsync(int id)
@@ -84,6 +89,7 @@ public async Task<int> CalculateFactorial(int n)
 **Q3: Explain SOLID principles in one sentence each.**
 
 **Answer**:
+
 - **S** - Single Responsibility: One class, one reason to change
 - **O** - Open/Closed: Open for extension, closed for modification
 - **L** - Liskov Substitution: Subtypes must be substitutable for base types
@@ -94,16 +100,18 @@ public async Task<int> CalculateFactorial(int n)
 
 **Q4: What is dependency injection and why use it?**
 
-**Answer**: 
+**Answer**:
 DI inverts control by **providing dependencies** to a class rather than having it create them.
 
 **Benefits**:
+
 - ✅ Testability (inject mocks)
 - ✅ Loose coupling
 - ✅ Single source of configuration
 - ✅ Easier to swap implementations
 
 **Example**:
+
 ```csharp
 // ❌ Bad: Hard to test, tightly coupled
 public class OrderService
@@ -115,7 +123,7 @@ public class OrderService
 public class OrderService
 {
     private readonly IEmailService _emailService;
-    
+
     public OrderService(IEmailService emailService)  // ✅ Injected
     {
         _emailService = emailService;
@@ -128,14 +136,13 @@ public class OrderService
 **Q5: What are the DI service lifetimes?**
 
 **Answer**:
+
 - **Singleton**: One instance for entire application lifetime
   - Use for: Stateless services, configurations
   - Example: Logging, caching
-  
 - **Scoped**: One instance per request/scope
   - Use for: DbContext, request-specific services
   - Example: Database context, unit of work
-  
 - **Transient**: New instance every time
   - Use for: Lightweight, stateless services
   - Example: Validators, utilities
@@ -147,6 +154,7 @@ public class OrderService
 **Q6: How do you prevent memory leaks in .NET?**
 
 **Answer**:
+
 1. **Dispose unmanaged resources** (IDisposable, using statements)
 2. **Unsubscribe from events** (or use weak references)
 3. **Avoid long-lived references** to short-lived objects
@@ -154,6 +162,7 @@ public class OrderService
 5. **Don't hold references in static fields** unnecessarily
 
 **Example**:
+
 ```csharp
 // ❌ Memory leak: Event subscription
 public class Subscriber
@@ -162,7 +171,7 @@ public class Subscriber
     {
         publisher.SomeEvent += OnEvent;  // ❌ Publisher holds reference forever
     }
-    
+
     private void OnEvent(object sender, EventArgs e) { }
 }
 
@@ -170,18 +179,18 @@ public class Subscriber
 public class Subscriber : IDisposable
 {
     private readonly Publisher _publisher;
-    
+
     public Subscriber(Publisher publisher)
     {
         _publisher = publisher;
         _publisher.SomeEvent += OnEvent;
     }
-    
+
     public void Dispose()
     {
         _publisher.SomeEvent -= OnEvent;  // ✅ Clean up
     }
-    
+
     private void OnEvent(object sender, EventArgs e) { }
 }
 ```
@@ -190,13 +199,15 @@ public class Subscriber : IDisposable
 
 **Q7: What is a circuit breaker?**
 
-**Answer**: 
+**Answer**:
 Resilience pattern that **stops calling a failing service** to:
+
 - Prevent cascading failures
 - Allow service time to recover
 - Fail fast instead of waiting for timeout
 
 **States**:
+
 - **Closed**: Normal operation
 - **Open**: Stop calling service (fail immediately)
 - **Half-Open**: Test if service recovered
@@ -209,18 +220,21 @@ Resilience pattern that **stops calling a failing service** to:
 
 **Answer**:
 Use records for **immutable, value-based data**:
+
 - DTOs (Data Transfer Objects)
 - API requests/responses
 - Value objects in domain models
 - Messages in event-driven systems
 
 **Benefits**:
+
 - Immutability by default
 - Value-based equality
 - Concise syntax (no boilerplate)
 - Deconstruction support
 
 **Example**:
+
 ```csharp
 // ✅ Perfect for record
 public record UserDto(int Id, string Name, string Email);
@@ -241,6 +255,7 @@ public record UserEntity  // ❌ Entity with behavior and identity
 Use **centralized exception handling middleware** with **consistent ProblemDetails** responses.
 
 **Example**:
+
 ```csharp
 // Global exception handler
 app.UseExceptionHandler(appBuilder =>
@@ -249,20 +264,21 @@ app.UseExceptionHandler(appBuilder =>
     {
         context.Response.StatusCode = 500;
         context.Response.ContentType = "application/problem+json";
-        
+
         var problemDetails = new ProblemDetails
         {
             Title = "An error occurred",
             Status = 500,
             Detail = "Contact support if issue persists"
         };
-        
+
         await context.Response.WriteAsJsonAsync(problemDetails);
     });
 });
 ```
 
 **Don't**:
+
 - ❌ Expose stack traces in production
 - ❌ Return generic "error" strings
 - ❌ Use different error formats per endpoint
@@ -273,11 +289,13 @@ app.UseExceptionHandler(appBuilder =>
 
 **Answer**:
 Structured logging with **templates preserves field names** for:
+
 - Filtering by specific values
 - Aggregation and analytics
 - Better performance (pre-parsed template)
 
 **Example**:
+
 ```csharp
 // ❌ Bad: String interpolation loses structure
 _logger.LogInformation($"User {userId} logged in at {DateTime.Now}");
@@ -294,12 +312,14 @@ _logger.LogInformation("User {UserId} logged in at {LoginTime}", userId, DateTim
 **Q11: Explain async/await internals**
 
 **Answer**:
+
 - C# compiler transforms async method into **state machine**
 - **await** captures current context (SynchronizationContext)
 - Task represents **eventual completion** of async operation
 - **ConfigureAwait(false)** avoids capturing context (library code)
 
 **Key Points**:
+
 - Async != parallel (no new threads for I/O)
 - await is suspension point (thread returns to pool)
 - ValueTask for hot path optimization
@@ -310,16 +330,19 @@ _logger.LogInformation("User {UserId} logged in at {LoginTime}", userId, DateTim
 
 **Answer**:
 **.NET uses generational GC**:
+
 - **Gen 0**: Short-lived objects (collected frequently)
 - **Gen 1**: Mid-term objects (buffer between 0 and 2)
 - **Gen 2**: Long-lived objects (collected rarely)
 
 **Process**:
+
 1. Mark: Find live objects (reachable from roots)
 2. Sweep: Remove dead objects
 3. Compact: Move objects together (reduce fragmentation)
 
 **Types**:
+
 - Workstation GC (client apps)
 - Server GC (high-throughput, multi-core)
 
@@ -328,6 +351,7 @@ _logger.LogInformation("User {UserId} logged in at {LoginTime}", userId, DateTim
 **Q13: What are the differences between ref, out, and in?**
 
 **Answer**:
+
 - **ref**: Pass by reference, must be initialized before call
 - **out**: Pass by reference, must be assigned before method returns
 - **in**: Read-only reference (performance optimization for large structs)
@@ -346,12 +370,14 @@ void Method3(in LargeStruct value) { }  // Read-only, no copy
 Middleware = **components** that process HTTP requests and responses in a **pipeline**.
 
 **Key Concepts**:
+
 - **Order matters** (authentication before authorization)
 - **next()** calls next middleware
 - **Run()** terminates pipeline (no next)
 - **Use()** can call next or short-circuit
 
 **Example Order**:
+
 ```csharp
 app.UseExceptionHandler();    // 1. Catch errors
 app.UseHttpsRedirection();    // 2. Redirect to HTTPS
@@ -366,15 +392,16 @@ app.MapControllers();         // 6. Execute endpoint
 **Q15: What is the difference between Task and ValueTask?**
 
 **Answer**:
+
 - **Task**: Reference type, heap allocation
   - Use for: Most async methods
   - Overhead: Small allocation per task
-  
 - **ValueTask**: Value type, can avoid allocation
   - Use for: Hot path, frequently called methods that may complete synchronously
   - Caveat: Can only await once, more complex to use
 
 **Example**:
+
 ```csharp
 // ✅ Task - general use
 public async Task<User> GetUserAsync(int id)
@@ -389,7 +416,7 @@ public async ValueTask<User> GetUserAsync(int id)
 {
     if (_cache.TryGetValue(id, out var user))
         return user;  // ✅ Returns synchronously, no allocation
-    
+
     user = await _repository.GetAsync(id);
     _cache[id] = user;
     return user;
@@ -402,18 +429,18 @@ public async ValueTask<User> GetUserAsync(int id)
 
 ### Do's and Don'ts
 
-| Topic | ✅ Do | ❌ Avoid |
-|-------|------|----------|
-| **Async I/O** | Use async/await end-to-end | Blocking with .Result or .Wait() |
-| **CPU Work** | Use Task.Run for expensive work | Marking CPU methods as async |
-| **Logging** | Use structured templates | String interpolation in hot paths |
-| **EF Core** | Use AsNoTracking for reads | Tracking every query by default |
-| **Caching** | Set expirations and size limits | Unbounded cache growth |
-| **DI Lifetimes** | Scoped for request services | Singleton for per-request state |
-| **Exceptions** | Use specific exception types | Catching Exception (too broad) |
-| **Strings** | Use StringBuilder for concatenation | += in loops |
-| **Collections** | Use appropriate collection type | List<T> for everything |
-| **Nullability** | Enable nullable reference types | Ignoring null warnings |
+| Topic            | ✅ Do                               | ❌ Avoid                          |
+| ---------------- | ----------------------------------- | --------------------------------- |
+| **Async I/O**    | Use async/await end-to-end          | Blocking with .Result or .Wait()  |
+| **CPU Work**     | Use Task.Run for expensive work     | Marking CPU methods as async      |
+| **Logging**      | Use structured templates            | String interpolation in hot paths |
+| **EF Core**      | Use AsNoTracking for reads          | Tracking every query by default   |
+| **Caching**      | Set expirations and size limits     | Unbounded cache growth            |
+| **DI Lifetimes** | Scoped for request services         | Singleton for per-request state   |
+| **Exceptions**   | Use specific exception types        | Catching Exception (too broad)    |
+| **Strings**      | Use StringBuilder for concatenation | += in loops                       |
+| **Collections**  | Use appropriate collection type     | List<T> for everything            |
+| **Nullability**  | Enable nullable reference types     | Ignoring null warnings            |
 
 ---
 
@@ -485,7 +512,7 @@ public string ReverseString3(string input)
 {
     char[] chars = input.ToCharArray();
     int left = 0, right = chars.Length - 1;
-    
+
     while (left < right)
     {
         // Swap
@@ -493,7 +520,7 @@ public string ReverseString3(string input)
         left++;
         right--;
     }
-    
+
     return new string(chars);
 }
 
@@ -511,7 +538,7 @@ public List<int> FindDuplicates(int[] nums)
 {
     var seen = new HashSet<int>();
     var duplicates = new HashSet<int>();
-    
+
     foreach (var num in nums)
     {
         if (!seen.Add(num))  // ✅ Add returns false if already exists
@@ -519,7 +546,7 @@ public List<int> FindDuplicates(int[] nums)
             duplicates.Add(num);
         }
     }
-    
+
     return duplicates.ToList();
 }
 
@@ -543,7 +570,7 @@ public List<int> FindDuplicatesLinq(int[] nums)
 public List<string> FizzBuzz(int n)
 {
     var result = new List<string>();
-    
+
     for (int i = 1; i <= n; i++)
     {
         if (i % 15 == 0)           // ✅ Divisible by both 3 and 5
@@ -555,7 +582,7 @@ public List<string> FizzBuzz(int n)
         else
             result.Add(i.ToString());
     }
-    
+
     return result;
 }
 
@@ -566,25 +593,25 @@ public List<string> FizzBuzz(int n)
 
 ### Challenge 4: Two Sum
 
-``` csharp
+```csharp
 // Find indices of two numbers that add up to target
 
 public int[] TwoSum(int[] nums, int target)
 {
     var map = new Dictionary<int, int>();  // Value -> Index
-    
+
     for (int i = 0; i < nums.Length; i++)
     {
         int complement = target - nums[i];
-        
+
         if (map.ContainsKey(complement))
         {
             return new[] { map[complement], i };
         }
-        
+
         map[nums[i]] = i;
     }
-    
+
     return Array.Empty<int>();
 }
 
@@ -609,7 +636,7 @@ public bool IsValid(string s)
         { '}', '{' },
         { ']', '[' }
     };
-    
+
     foreach (char c in s)
     {
         if (pairs.ContainsValue(c))  // Opening bracket
@@ -622,7 +649,7 @@ public bool IsValid(string s)
                 return false;
         }
     }
-    
+
     return stack.Count == 0;
 }
 
@@ -642,12 +669,14 @@ public bool IsValid(string s)
 ### Design a URL Shortener
 
 **Requirements**:
+
 - Shorten long URLs to short codes
 - Redirect short → long URL
 - Analytics (click count)
 - Expiration
 
 **High-Level Design**:
+
 ```
 User → API Gateway → URL Service → Database (Redis + SQL)
                           ↓
@@ -655,11 +684,12 @@ User → API Gateway → URL Service → Database (Redis + SQL)
 ```
 
 **Key Components**:
+
 1. **URL Generation Service**
    - Base62 encoding (a-z, A-Z, 0-9)
    - 7 characters = 62^7 = 3.5 trillion URLs
-   
 2. **Database Schema**:
+
    ```sql
    CREATE TABLE Urls (
        Id BIGINT PRIMARY KEY,
@@ -669,7 +699,7 @@ User → API Gateway → URL Service → Database (Redis + SQL)
        ExpiresAt DATETIME,
        ClickCount INT
    );
-   
+
    INDEX on ShortCode for fast lookup
    ```
 
@@ -686,6 +716,7 @@ User → API Gateway → URL Service → Database (Redis + SQL)
    ```
 
 **Scaling**:
+
 - Read-heavy → Cache with Redis
 - Write-heavy → Database sharding by hash(shortCode)
 - CDN for static content
@@ -696,6 +727,7 @@ User → API Gateway → URL Service → Database (Redis + SQL)
 ### Design a Rate Limiter
 
 **Requirements**:
+
 - Limit API calls per user
 - Different limits per tier (free/premium)
 - Track requests across distributed servers
@@ -713,23 +745,24 @@ User → API Gateway → URL Service → Database (Redis + SQL)
    - Count requests in last N seconds
 
 **Implementation with Redis**:
+
 ```csharp
 public class RateLimiter
 {
     private readonly IDatabase _redis;
-    
+
     public async Task<bool> IsAllowedAsync(string userId, int maxRequests, TimeSpan window)
     {
         string key = $"rate_limit:{userId}";
         long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         long windowStart = now - (long)window.TotalSeconds;
-        
+
         // Remove old entries
         await _redis.SortedSetRemoveRangeByScoreAsync(key, 0, windowStart);
-        
+
         // Count requests in window
         long count = await _redis.SortedSetLengthAsync(key);
-        
+
         if (count < maxRequests)
         {
             // Add current request
@@ -737,7 +770,7 @@ public class RateLimiter
             await _redis.KeyExpireAsync(key, window);
             return true;
         }
-        
+
         return false;  // Rate limit exceeded
     }
 }
@@ -761,9 +794,10 @@ public class RateLimiter
 **Q: Tell me about a time you faced a difficult bug**
 
 **Example Answer**:
+
 - **Situation**: Production issue - API response time increased from 200ms to 5s
 - **Task**: Identify root cause and fix without downtime
-- **Action**: 
+- **Action**:
   1. Checked monitoring dashboards (APM)
   2. Found N+1 query problem in EF Core
   3. Added `.Include()` for eager loading
@@ -775,9 +809,10 @@ public class RateLimiter
 **Q: Describe a time you had to learn something quickly**
 
 **Example Answer**:
+
 - **Situation**: Project required SignalR for real-time features, had 1 week
 - **Task**: Learn SignalR and implement chat feature
-- **Action**: 
+- **Action**:
   1. Read official docs
   2. Built prototype
   3. Code review with senior dev
@@ -789,9 +824,10 @@ public class RateLimiter
 **Q: Tell me about a time you disagreed with a team member**
 
 **Example Answer**:
+
 - **Situation**: Teammate wanted to use Repository pattern for all entities
 - **Task**: Discuss trade-offs and reach consensus
-- **Action**: 
+- **Action**:
   1. Presented research on when Repository adds value
   2. Showed EF Core DbSet already provides repository functionality
   3. Proposed using it only for complex domain logic
@@ -895,26 +931,30 @@ public class RateLimiter
 ## Study Resources
 
 ### Official Documentation
+
 - Microsoft Learn: https://learn.microsoft.com/training/
 - .NET Documentation: https://learn.microsoft.com/dotnet/
 - C# Programming Guide: https://learn.microsoft.com/dotnet/csharp/
 
 ### Practice Platforms
+
 - LeetCode: Algorithm practice
 - HackerRank: Coding challenges
 - Codewars: Kata exercises
 - Exercism: Mentored learning
 
 ### Books
-- *C# in Depth* by Jon Skeet
-- *CLR via C#* by Jeffrey Richter
-- *Designing Data-Intensive Applications* by Martin Kleppmann
+
+- _C# in Depth_ by Jon Skeet
+- _CLR via C#_ by Jeffrey Richter
+- _Designing Data-Intensive Applications_ by Martin Kleppmann
 
 ---
 
 ## Final Checklist
 
 ### Week Before Interview
+
 - [ ] Review common questions in this guide
 - [ ] Practice 5-10 coding challenges
 - [ ] Review your projects and be ready to discuss
@@ -922,13 +962,15 @@ public class RateLimiter
 - [ ] Prepare questions to ask
 
 ### Day Before Interview
+
 - [ ] Review quick reference tables
 - [ ] Practice introducing yourself
 - [ ] Review STAR method examples
 - [ ] Prepare your workspace (if remote)
-- [ ]  Test camera/mic (if remote)
+- [ ] Test camera/mic (if remote)
 
 ### Interview Day
+
 - [ ] Arrive/login 10 minutes early
 - [ ] Have water nearby
 - [ ] Have pen and paper for notes
@@ -956,6 +998,7 @@ public class RateLimiter
 **You're not expected to know everything!**
 
 Key qualities interviewers look for:
+
 - Problem-solving approach
 - Communication skills
 - Willingness to learn

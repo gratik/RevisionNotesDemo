@@ -2,9 +2,28 @@
 // VALIDATION PATTERNS
 // Reference: Revision Notes - Practical Scenarios
 // ==============================================================================
-// PURPOSE: Various approaches to validate data and business rules
-// BENEFIT: Data integrity, clear validation logic, reusable validators
-// USE WHEN: Need input validation, business rule enforcement, data validation
+// WHAT IS THIS?
+// -------------
+// Approaches to validate input, business rules, and domain invariants.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Prevents bad data from entering the system
+// ✅ Keeps business rules explicit and testable
+//
+// WHEN TO USE
+// -----------
+// ✅ API input validation and form submission checks
+// ✅ Domain rule enforcement for key workflows
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Tiny scripts where validation overhead adds little value
+// ❌ Duplicate validation already enforced upstream
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Validate checkout totals and required shipping fields.
 // ==============================================================================
 
 namespace RevisionNotesDemo.PracticalPatterns;

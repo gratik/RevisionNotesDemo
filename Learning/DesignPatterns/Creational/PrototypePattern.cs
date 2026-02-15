@@ -1,9 +1,107 @@
 // ============================================================================
-// PROTOTYPE PATTERN
+// PROTOTYPE PATTERN - Clone Objects Instead of Creating from Scratch
 // Reference: Revision Notes - Design Patterns (Creational) - Page 3
 // ============================================================================
-// PURPOSE: "Creates new objects by copying an existing object (clone)."
-// EXAMPLE: Cloning game characters with predefined stats.
+//
+// WHAT IS THE PROTOTYPE PATTERN?
+// -------------------------------
+// Creates new objects by copying an existing object (prototype) rather than
+// creating from scratch. Useful when object creation is expensive or complex.
+// Defines a Clone() method that creates a copy of the object including all
+// its internal state.
+//
+// Think of it as: "Photocopying a filled form instead of filling out a new blank form"
+//
+// Core Concepts:
+//   • Prototype: Interface with Clone() method
+//   • Concrete Prototype: Class implementing Clone()
+//   • Shallow Copy: Copies object references (default with MemberwiseClone)
+//   • Deep Copy: Recursively copies referenced objects
+//   • Clone Registry: Optional - stores and retrieves commonly used prototypes
+//
+// WHY IT MATTERS
+// --------------
+// ✅ PERFORMANCE: Avoid expensive initialization when cloning is faster
+// ✅ REDUCED COMPLEXITY: Clone complex objects without knowing their internals
+// ✅ DYNAMIC CONFIG: Create objects at runtime without knowing concrete class
+// ✅ AVOID SUBCLASSING: Don't need factory subclass for each configuration
+// ✅ PRESERVE STATE: Keep current state while creating variations
+// ✅ PROTOTYPE REGISTRY: Reuse common configurations
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Object creation is expensive (database load, file parsing, network call)
+// ✅ Need to avoid subclasses of object creator (like Factory Method requires)
+// ✅ Objects have similar configurations (clone and modify vs create from scratch)
+// ✅ Want to hide complexity of object creation from client
+// ✅ System should be independent of how products are created
+// ✅ Game development: Clone enemy templates with preset stats
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Object creation is simple and cheap (new MyClass() is fine)
+// ❌ Classes rarely change (no need for runtime configuration)
+// ❌ Deep vs shallow copy concerns add complexity
+// ❌ Circular references make cloning complex
+// ❌ Objects don't have internal state to preserve
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Imagine a game like World of Warcraft spawning monsters:
+//   • Thousands of enemy instances needed per zone
+//   • Each enemy type (Dragon, Orc, Skeleton) has complex initialization:
+//     - Load 3D model from file (slow)
+//     - Initialize AI behavior trees
+//     - Set up animation controllers
+//     - Configure collision detection
+//   • Creating from scratch = 100ms per enemy = VERY SLOW
+//   • All enemies of same type share 90% of properties
+//
+// Without Prototype:
+//   → for (int i = 0; i < 1000; i++) {
+//         var dragon = new Dragon(); // Load model, init AI, setup animations (100ms × 1000 = 100 seconds!)
+//     }
+//   → 100 seconds to spawn 1000 dragons = game freezes
+//   → Duplicate expensive initialization logic
+//
+// With Prototype:
+//   → var dragonPrototype = new Dragon(); // Load once (100ms)
+//   → for (int i = 0; i < 1000; i++) {
+//         var dragon = dragonPrototype.Clone(); // Just copy (0.1ms × 1000 = 100ms)
+//         dragon.Position = GetRandomPosition();
+//     }
+//   → 100ms total to spawn 1000 dragons = 1000× faster!
+//   → Prototype registry stores common enemy templates
+//
+// SHALLOW VS DEEP COPY
+// --------------------
+// Shallow Copy (default MemberwiseClone()):
+//   • Copies value types (int, bool, struct)
+//   • Copies references (not the referenced objects)
+//   • Fast but can cause unintended sharing
+//
+// Deep Copy:
+//   • Recursively copies referenced objects
+//   • Slower but creates truly independent copy
+//   • Required when objects have complex state
+//
+// Example:
+//   // Shallow: Both clones share same Address object
+//   var person2 = person1.ShallowClone();
+//   person2.Address.City = "NYC"; // person1.Address also changed!
+//
+//   // Deep: Each clone has own Address
+//   var person2 = person1.DeepClone();
+//   person2.Address.City = "NYC"; // person1.Address unchanged ✓
+//
+// C# IMPLEMENTATION OPTIONS
+// -------------------------
+// 1. MemberwiseClone(): Built-in protected method (shallow copy)
+// 2. IClonable Interface: Legacy, not recommended (no generic support)
+// 3. Copy Constructor: public MyClass(MyClass original) { ... }
+// 4. Serialization: Deep copy via JSON serialization (slow but easy)
+// 5. Custom Clone() method: Most flexible, shown in examples below
+//
 // ============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Creational;

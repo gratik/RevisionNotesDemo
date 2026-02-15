@@ -1,26 +1,35 @@
 // ==============================================================================
 // TRANSACTION PATTERNS - ACID Guarantees and Consistency
 // ==============================================================================
-// PURPOSE:
-//   Master database transactions for data consistency.
-//   Atomicity, Consistency, Isolation, Durability (ACID).
 //
-// WHY TRANSACTIONS:
-//   - Multiple operations succeed/fail together
-//   - Prevent partial updates
-//   - Maintain data integrity
-//   - Handle concurrent access
+// WHAT ARE TRANSACTIONS?
+// ----------------------
+// A transaction groups operations into an all-or-nothing unit of work.
+// If one step fails, the whole transaction rolls back to preserve consistency.
 //
-// WHAT YOU'LL LEARN:
-//   1. Database transactions (DbTransaction)
-//   2. Isolation levels
-//   3. TransactionScope for distributed transactions
-//   4. Rollback patterns
-//   5. Deadlock handling
-//   6. Best practices
+// WHY IT MATTERS
+// --------------
+// - Prevents partial updates (data integrity)
+// - Handles concurrent access safely
+// - Supports rollback and recovery
+// - Required for financial and inventory systems
 //
-// KEY PRINCIPLE:
-//   Transaction = All-or-nothing. Either all operations succeed, or all fail.
+// WHEN TO USE
+// -----------
+// - YES: Multiple related updates must succeed together
+// - YES: Money transfers, inventory updates, order processing
+// - YES: Cross-table writes that must stay consistent
+//
+// WHEN NOT TO USE
+// ---------------
+// - NO: Single simple updates (SaveChanges is already atomic)
+// - NO: Long-running operations that would hold locks too long
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Bank transfer:
+// - Debit account A and credit account B in a single transaction
+// - If credit fails, debit is rolled back
 // ==============================================================================
 
 using System.Data;
@@ -49,13 +58,13 @@ namespace RevisionNotesDemo.DataAccess;
 public class BasicTransactionExamples
 {
     private readonly string _connectionString = "ConnectionString";
-    
+
     // ❌ BAD: No transaction - partial updates possible
     public async Task<bool> TransferMoney_NoTransaction(int fromId, int toId, decimal amount)
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         // Debit from account
         var debitSql = "UPDATE Accounts SET Balance = Balance - @Amount WHERE Id = @Id";
         using (var command = new SqlCommand(debitSql, connection))
@@ -64,10 +73,10 @@ public class BasicTransactionExamples
             command.Parameters.AddWithValue("@Id", fromId);
             await command.ExecuteNonQueryAsync();
         }
-        
+
         // ❌ If exception here, money is debited but not credited!
         // throw new Exception("Crash!");
-        
+
         // Credit to account
         var creditSql = "UPDATE Accounts SET Balance = Balance + @Amount WHERE Id = @Id";
         using (var command = new SqlCommand(creditSql, connection))
@@ -76,18 +85,18 @@ public class BasicTransactionExamples
             command.Parameters.AddWithValue("@Id", toId);
             await command.ExecuteNonQueryAsync();
         }
-        
+
         return true;  // ❌ Money could be lost or duplicated!
     }
-    
+
     // ✅ GOOD: Transaction ensures atomicity
     public async Task<bool> TransferMoney_WithTransaction(int fromId, int toId, decimal amount)
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         using var transaction = connection.BeginTransaction();  // ✅ Start transaction
-        
+
         try
         {
             // Debit from account
@@ -98,7 +107,7 @@ public class BasicTransactionExamples
                 command.Parameters.AddWithValue("@Id", fromId);
                 await command.ExecuteNonQueryAsync();
             }
-            
+
             // Credit to account
             var creditSql = "UPDATE Accounts SET Balance = Balance + @Amount WHERE Id = @Id";
             using (var command = new SqlCommand(creditSql, connection, transaction))  // ✅ Pass transaction
@@ -107,7 +116,7 @@ public class BasicTransactionExamples
                 command.Parameters.AddWithValue("@Id", toId);
                 await command.ExecuteNonQueryAsync();
             }
-            
+
             transaction.Commit();  // ✅ Both succeeded, commit
             return true;
         }
@@ -117,15 +126,15 @@ public class BasicTransactionExamples
             throw;
         }
     }
-    
+
     // ✅ BETTER: Async transaction (SQL Server 2012+)
     public async Task<bool> TransferMoney_AsyncTransaction(int fromId, int toId, decimal amount)
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         using var transaction = (SqlTransaction)await connection.BeginTransactionAsync();  // ✅ Async begin
-        
+
         try
         {
             var debitSql = "UPDATE Accounts SET Balance = Balance - @Amount WHERE Id = @Id";
@@ -135,7 +144,7 @@ public class BasicTransactionExamples
                 command.Parameters.AddWithValue("@Id", fromId);
                 await command.ExecuteNonQueryAsync();
             }
-            
+
             var creditSql = "UPDATE Accounts SET Balance = Balance + @Amount WHERE Id = @Id";
             using (var command = new SqlCommand(creditSql, connection, transaction))
             {
@@ -143,7 +152,7 @@ public class BasicTransactionExamples
                 command.Parameters.AddWithValue("@Id", toId);
                 await command.ExecuteNonQueryAsync();
             }
-            
+
             await transaction.CommitAsync();  // ✅ Async commit
             return true;
         }
@@ -170,19 +179,19 @@ public class EfCoreTransactionExamples
     public async Task<bool> CreateOrderWithInventory(AppDbContext context, Order order, List<OrderItem> items)
     {
         using var transaction = await context.Database.BeginTransactionAsync();
-        
+
         try
         {
             // 1. Create order
             context.Orders.Add(order);
             await context.SaveChangesAsync();  // ✅ First save
-            
+
             // 2. Add order items
             foreach (var item in items)
             {
                 item.OrderId = order.Id;
                 context.OrderItems.Add(item);
-                
+
                 // 3. Update inventory
                 var product = await context.Products.FindAsync(item.ProductId);
                 if (product != null)
@@ -192,9 +201,9 @@ public class EfCoreTransactionExamples
                         throw new InvalidOperationException("Insufficient stock");
                 }
             }
-            
+
             await context.SaveChangesAsync();  // ✅ Second save
-            
+
             await transaction.CommitAsync();  // ✅ All succeeded
             return true;
         }
@@ -204,25 +213,25 @@ public class EfCoreTransactionExamples
             throw;
         }
     }
-    
+
     // ✅ GOOD: Share transaction across contexts
     public async Task<bool> ShareTransaction(AppDbContext context1, AuditDbContext context2)
     {
         using var transaction = await context1.Database.BeginTransactionAsync();
-        
+
         try
         {
             // Use same transaction in both contexts
             await context2.Database.UseTransactionAsync(transaction.GetDbTransaction());  // ✅ Share
-            
+
             // Changes in context1
             context1.Orders.Add(new Order { Total = 100 });
             await context1.SaveChangesAsync();
-            
+
             // Changes in context2
             context2.AuditLogs.Add(new AuditLog { Message = "Order created" });
             await context2.SaveChangesAsync();
-            
+
             await transaction.CommitAsync();  // ✅ Both databases committed
             return true;
         }
@@ -232,17 +241,17 @@ public class EfCoreTransactionExamples
             throw;
         }
     }
-    
+
     // ✅ GOOD: Automatic transaction for single SaveChanges
     public async Task<Order> CreateOrder_AutomaticTransaction(AppDbContext context, Order order)
     {
         // ✅ SaveChanges automatically wraps in transaction
         context.Orders.Add(order);
         await context.SaveChangesAsync();  // ✅ Atomic by default
-        
+
         return order;
     }
-    
+
     // Supporting classes
     public class AppDbContext : DbContext
     {
@@ -250,12 +259,12 @@ public class EfCoreTransactionExamples
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
     }
-    
+
     public class AuditDbContext : DbContext
     {
         public DbSet<AuditLog> AuditLogs { get; set; } = null!;
     }
-    
+
     public class Order { public int Id { get; set; } public decimal Total { get; set; } }
     public class OrderItem { public int Id { get; set; } public int OrderId { get; set; } public int ProductId { get; set; } public int Quantity { get; set; } }
     public class Product { public int Id { get; set; } public int Stock { get; set; } }
@@ -279,61 +288,61 @@ public class EfCoreTransactionExamples
 public class IsolationLevelExamples
 {
     private readonly string _connectionString = "ConnectionString";
-    
+
     // ✅ Read Uncommitted: Fastest, allows dirty reads
     public async Task<List<Product>> GetProducts_ReadUncommitted()
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         // ✅ Lowest isolation: Can read uncommitted changes from other transactions
         using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
-        
+
         using var command = new SqlCommand("SELECT * FROM Products", connection, transaction);
         using var reader = await command.ExecuteReaderAsync();
-        
+
         var products = new List<Product>();
         while (await reader.ReadAsync())
         {
             products.Add(new Product { Id = reader.GetInt32(0) });
         }
-        
+
         // Use case: Dashboard stats where exact precision doesn't matter
         // GOTCHA: Can see "dirty reads" - changes not yet committed
-        
+
         return products;
     }
-    
+
     // ✅ Read Committed: Default, prevents dirty reads
     public async Task<Product?> GetProduct_ReadCommitted(int id)
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         // ✅ Default: Only read committed data
         using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
-        
+
         using var command = new SqlCommand("SELECT * FROM Products WHERE Id = @Id", connection, transaction);
         command.Parameters.AddWithValue("@Id", id);
         using var reader = await command.ExecuteReaderAsync();
-        
+
         if (await reader.ReadAsync())
             return new Product { Id = reader.GetInt32(0) };
-        
+
         // GOTCHA: Still allows "non-repeatable reads" - data can change between reads
-        
+
         return null;
     }
-    
+
     // ✅ Repeatable Read: Prevents non-repeatable reads
     public async Task<bool> UpdateProduct_RepeatableRead(int id, decimal newPrice)
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         // ✅ Locks rows to prevent changes during transaction
         using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.RepeatableRead);
-        
+
         try
         {
             // Read product
@@ -343,7 +352,7 @@ public class IsolationLevelExamples
                 readCmd.Parameters.AddWithValue("@Id", id);
                 currentPrice = (decimal)(await readCmd.ExecuteScalarAsync() ?? 0m);
             }
-            
+
             // Business logic
             if (currentPrice > newPrice * 0.5m)  // Max 50% discount
             {
@@ -354,11 +363,11 @@ public class IsolationLevelExamples
                 updateCmd.Parameters.AddWithValue("@Price", newPrice);
                 updateCmd.Parameters.AddWithValue("@Id", id);
                 await updateCmd.ExecuteNonQueryAsync();
-                
+
                 transaction.Commit();
                 return true;
             }
-            
+
             transaction.Rollback();
             return false;
         }
@@ -368,16 +377,16 @@ public class IsolationLevelExamples
             throw;
         }
     }
-    
+
     // ✅ Serializable: Highest isolation, full consistency
     public async Task<bool> ProcessOrder_Serializable(int productId, int quantity)
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         // ✅ Highest isolation: Acts as if transactions run serially
         using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.Serializable);
-        
+
         try
         {
             // Check stock
@@ -389,7 +398,7 @@ public class IsolationLevelExamples
                 checkCmd.Parameters.AddWithValue("@Id", productId);
                 stock = (int)(await checkCmd.ExecuteScalarAsync() ?? 0);
             }
-            
+
             if (stock >= quantity)
             {
                 // Deduct stock
@@ -399,11 +408,11 @@ public class IsolationLevelExamples
                 updateCmd.Parameters.AddWithValue("@Quantity", quantity);
                 updateCmd.Parameters.AddWithValue("@Id", productId);
                 await updateCmd.ExecuteNonQueryAsync();
-                
+
                 transaction.Commit();
                 return true;
             }
-            
+
             transaction.Rollback();
             return false;  // Insufficient stock
         }
@@ -413,7 +422,7 @@ public class IsolationLevelExamples
             throw;
         }
     }
-    
+
     public class Product { public int Id { get; set; } public decimal Price { get; set; } public int Stock { get; set; } }
 }
 
@@ -450,7 +459,7 @@ public class TransactionScopeExamples
 {
     private readonly string _connectionString1 = "Server=.;Database=Db1;Trusted_Connection=true";
     private readonly string _connectionString2 = "Server=.;Database=Db2;Trusted_Connection=true";
-    
+
     // ✅ GOOD: TransactionScope for ambient transaction
     public async Task<bool> CreateOrderAndAudit_TransactionScope(Order order)
     {
@@ -459,7 +468,7 @@ public class TransactionScopeExamples
             TransactionScopeOption.Required,
             new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted },
             TransactionScopeAsyncFlowOption.Enabled);  // ✅ REQUIRED for async
-        
+
         try
         {
             // Operation 1: Main database
@@ -470,7 +479,7 @@ public class TransactionScopeExamples
                 command.Parameters.AddWithValue("@Total", order.Total);
                 await command.ExecuteNonQueryAsync();
             }
-            
+
             // Operation 2: Audit database
             using (var connection2 = new SqlConnection(_connectionString2))
             {
@@ -479,7 +488,7 @@ public class TransactionScopeExamples
                 command.Parameters.AddWithValue("@Message", "Order created");
                 await command.ExecuteNonQueryAsync();
             }
-            
+
             scope.Complete();  // ✅ Commit both databases
             return true;
         }
@@ -489,10 +498,10 @@ public class TransactionScopeExamples
             throw;
         }
     }
-    
+
     // ⚠️ IMPORTANT: TransactionScopeAsyncFlowOption.Enabled
     // Without it, transaction doesn't flow across await boundaries!
-    
+
     public class Order { public decimal Total { get; set; } }
 }
 
@@ -510,7 +519,7 @@ public class TransactionScopeExamples
 public class DeadlockHandlingExamples
 {
     private readonly string _connectionString = "ConnectionString";
-    
+
     // ✅ GOOD: Retry logic for deadlock victim
     public async Task<bool> UpdateWithRetry(int productId, int quantity, int maxRetries = 3)
     {
@@ -524,35 +533,35 @@ public class DeadlockHandlingExamples
             {
                 if (attempt == maxRetries - 1)
                     throw;
-                
+
                 // ✅ Exponential backoff
                 await Task.Delay(TimeSpan.FromMilliseconds(100 * Math.Pow(2, attempt)));
             }
         }
-        
+
         return false;
     }
-    
+
     private async Task<bool> UpdateProduct(int productId, int quantity)
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         using var transaction = await connection.BeginTransactionAsync();
-        
+
         try
         {
             // ✅ BEST PRACTICE: Always access tables in same order across app
             // Good: Always Products → OrderItems → Orders
             // Bad: Sometimes Orders → Products, other times Products → Orders
-            
+
             using var command = new SqlCommand(
                 "UPDATE Products SET Stock = Stock - @Quantity WHERE Id = @Id",
                 connection, (SqlTransaction)transaction);
             command.Parameters.AddWithValue("@Quantity", quantity);
             command.Parameters.AddWithValue("@Id", productId);
             await command.ExecuteNonQueryAsync();
-            
+
             await transaction.CommitAsync();
             return true;
         }

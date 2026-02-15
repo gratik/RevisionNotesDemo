@@ -1,8 +1,28 @@
 // ==============================================================================
 // FRONT-END UI - WPF (WINDOWS DESKTOP)
 // ==============================================================================
-// PURPOSE: Show WPF patterns with good/bad illustrative examples.
-// NOTE: Examples are illustrative only and not meant to be run as-is.
+// WHAT IS THIS?
+// -------------
+// WPF UI patterns with data binding and MVVM.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Keeps UI logic out of code-behind
+// ✅ Enables testable view models
+//
+// WHEN TO USE
+// -----------
+// ✅ Windows desktop apps with rich UI
+// ✅ Apps needing advanced WPF capabilities
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Cross-platform or web-first apps
+// ❌ Lightweight tools where WinForms is sufficient
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Bind TextBox to view model property.
 // ==============================================================================
 
 namespace RevisionNotesDemo.FrontEnd;

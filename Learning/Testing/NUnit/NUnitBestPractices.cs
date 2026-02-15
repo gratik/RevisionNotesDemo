@@ -1,10 +1,36 @@
 // ==============================================================================
 // NUNIT BEST PRACTICES - Comprehensive Testing Patterns
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate NUnit testing framework best practices with real-world examples.
-//   NUnit is the mature, feature-rich testing framework with 17+ years of development.
-//   It's the enterprise standard with the most extensive assertion library.
+// WHAT IS THIS?
+// -------------
+// NUnit is a mature, feature-rich testing framework for .NET with a powerful
+// constraint-based assertion model and extensive attributes for setup, teardown,
+// and categorization.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ EXPRESSIVE ASSERTIONS: Assert.That constraints are readable and precise
+// ✅ MATURE ECOSYSTEM: Long-lived framework with strong tooling support
+// ✅ FLEXIBLE ORGANIZATION: Rich attributes for categories and fixtures
+// ✅ MIGRATION FRIENDLY: Familiar for teams moving from MSTest or older stacks
+//
+// WHEN TO USE
+// -----------
+// ✅ Legacy or enterprise codebases already using NUnit
+// ✅ Teams that prefer constraint-based assertions
+// ✅ Test suites with heavy use of categories and fixtures
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Greenfield projects needing minimal ceremony (xUnit may be better)
+// ❌ Teams standardizing on Microsoft-first tooling defaults
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Game studio with Unity:
+// - Existing NUnit-based tests for gameplay logic
+// - Extensive use of SetUp/OneTimeSetUp and constraint assertions
+// - Stays on NUnit for consistency and tooling support
 //
 // WHY NUNIT:
 //   - Battle-tested (first released 2002, continuously updated)

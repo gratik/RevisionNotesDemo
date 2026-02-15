@@ -1,31 +1,28 @@
 // ==============================================================================
 // CIRCUIT BREAKER PATTERN - Preventing Cascading Failures
 // ==============================================================================
-// PURPOSE:
-//   Implement circuit breaker pattern with Polly to protect systems from cascading failures.
-//   Automatically stop calling failing services, allow recovery, then resume.
+// WHAT IS THIS?
+// -------------
+// A breaker that stops calls to failing services and allows recovery.
 //
-// WHY CIRCUIT BREAKER:
-//   - Prevent resource exhaustion (threads, connections)
-//   - Fail fast instead of waiting for timeout
-//   - Give failing service time to recover
-//   - Prevent cascading failures across microservices
-//   - Based on Michael Nygard's "Release It!"
+// WHY IT MATTERS
+// --------------
+// ✅ Prevents resource exhaustion and cascading failures
+// ✅ Improves user experience with fast failures
 //
-// WHAT YOU'LL LEARN:
-//   1. Circuit breaker states (Closed, Open, Half-Open)
-//   2. Basic circuit breaker setup
-//   3. Advanced circuit breaker (thresholds, break duration)
-//   4. Circuit breaker with fallback
-//   5. Monitoring circuit breaker state
-//   6. Circuit breaker + retry combination
+// WHEN TO USE
+// -----------
+// ✅ Unstable external dependencies
+// ✅ High-latency services that can time out
 //
-// CIRCUIT BREAKER STATES:
-//   CLOSED: Normal operation, requests flow through
-//   OPEN: Failure threshold reached, requests fail immediately  
-//   HALF-OPEN: Testing if service recovered, limited requests allowed
+// WHEN NOT TO USE
+// ---------------
+// ❌ Purely internal operations with deterministic behavior
+// ❌ Short-lived calls that fail fast without retries
 //
-// ANALOGY: Like an electrical circuit breaker - trips when overloaded, resets after cooling
+// REAL-WORLD EXAMPLE
+// ------------------
+// Open circuit after repeated 5xx responses.
 // ==============================================================================
 
 using Polly;
@@ -76,7 +73,7 @@ public static class CircuitBreakerBasics
         // If service is down, EVERY call waits for timeout (e.g., 30s)
         // 100 concurrent users = 100 threads blocked for 30s each
     }
-    
+
     // ✅ GOOD: Simple circuit breaker
     public static async Task<string> WithCircuitBreaker(HttpClient client)
     {
@@ -85,14 +82,14 @@ public static class CircuitBreakerBasics
             .CircuitBreakerAsync(
                 exceptionsAllowedBeforeBreaking: 3,       // ✅ Break after 3 consecutive failures
                 durationOfBreak: TimeSpan.FromSeconds(30));  // ✅ Stay open for 30s
-        
+
         return await circuitBreakerPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         });
-        
+
         // Flow:
         // Attempt 1: Fails → Count = 1 (CLOSED)
         // Attempt 2: Fails → Count = 2 (CLOSED)
@@ -101,7 +98,7 @@ public static class CircuitBreakerBasics
         // After 30s: Circuit moves to HALF-OPEN
         // Next attempt: If succeeds → Circuit CLOSES, if fails → Circuit OPENS again
     }
-    
+
     // ✅ GOOD: Circuit breaker with logging
     public static async Task<string> WithLogging(HttpClient client, ILogger logger)
     {
@@ -127,7 +124,7 @@ public static class CircuitBreakerBasics
                     // ✅ Log when testing recovery
                     logger.LogInformation("Circuit breaker HALF-OPEN - testing if service recovered");
                 });
-        
+
         return await circuitBreakerPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
@@ -184,13 +181,13 @@ public static class AdvancedCircuitBreakerExamples
                 {
                     logger.LogInformation("Circuit breaker HALF-OPEN - testing recovery");
                 });
-        
+
         var response = await circuitBreakerPolicy.ExecuteAsync(() =>
             client.GetAsync("https://api.example.com/data"));
-        
+
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
-        
+
         // Example scenario:
         // 10s window: 30 total requests
         // - 20 succeed
@@ -202,7 +199,7 @@ public static class AdvancedCircuitBreakerExamples
         // - 25 fail (62.5% failure rate)
         // Circuit OPENS (> 50% threshold)
     }
-    
+
     // ✅ GOOD: Configurable advanced circuit breaker
     public static async Task<string> ConfigurableCircuitBreaker(
         HttpClient client,
@@ -226,14 +223,14 @@ public static class AdvancedCircuitBreakerExamples
                 {
                     logger.LogInformation("Circuit CLOSED for {Service}", config.ServiceName);
                 });
-        
+
         var response = await circuitBreakerPolicy.ExecuteAsync(() =>
             client.GetAsync(config.Endpoint));
-        
+
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
-    
+
     // Configuration class
     public class CircuitBreakerConfig
     {
@@ -244,7 +241,7 @@ public static class AdvancedCircuitBreakerExamples
         public int MinimumThroughput { get; init; } = 20;
         public TimeSpan DurationOfBreak { get; init; } = TimeSpan.FromSeconds(30);
     }
-    
+
     // Example configuration in appsettings.json:
     // {
     //   "CircuitBreaker": {
@@ -377,17 +374,17 @@ public static class CircuitBreakerMonitoring
         private readonly HttpClient _client;
         private readonly ILogger<MonitorableCircuitBreaker> _logger;
         private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
-        
+
         public CircuitState State => _circuitBreakerPolicy.CircuitState;
         public bool IsOpen => State == CircuitState.Open;
         public bool IsHalfOpen => State == CircuitState.HalfOpen;
         public bool IsClosed => State == CircuitState.Closed;
-        
+
         public MonitorableCircuitBreaker(HttpClient client, ILogger<MonitorableCircuitBreaker> logger)
         {
             _client = client;
             _logger = logger;
-            
+
             _circuitBreakerPolicy = Policy
                 .Handle<HttpRequestException>()
                 .CircuitBreakerAsync(
@@ -404,30 +401,30 @@ public static class CircuitBreakerMonitoring
                         // ✅ Send recovery notification
                     });
         }
-        
+
         public async Task<string> CallService()
         {
             var response = await _circuitBreakerPolicy.ExecuteAsync(() =>
                 _client.GetAsync("https://api.example.com/data"));
-            
+
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
-        
+
         // ✅ Health check integration
         public bool IsHealthy() => State != CircuitState.Open;
     }
-    
+
     // ✅ GOOD: ASP.NET Core health check
     public class CircuitBreakerHealthCheck : Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheck
     {
         private readonly MonitorableCircuitBreaker _circuitBreaker;
-        
+
         public CircuitBreakerHealthCheck(MonitorableCircuitBreaker circuitBreaker)
         {
             _circuitBreaker = circuitBreaker;
         }
-        
+
         public Task<Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult> CheckHealthAsync(
             Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckContext context,
             CancellationToken cancellationToken = default)
@@ -437,18 +434,18 @@ public static class CircuitBreakerMonitoring
                 return Task.FromResult(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Unhealthy(
                     "Circuit breaker is OPEN - service unavailable"));
             }
-            
+
             if (_circuitBreaker.IsHalfOpen)
             {
                 return Task.FromResult(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Degraded(
                     "Circuit breaker is HALF-OPEN - testing recovery"));
             }
-            
+
             return Task.FromResult(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy(
                 "Circuit breaker is CLOSED - service healthy"));
         }
     }
-    
+
     // Configure in Startup:
     // services.AddHealthChecks()
     //     .AddCheck<CircuitBreakerHealthCheck>("circuit-breaker");
@@ -582,7 +579,7 @@ public static class HttpClientFactoryIntegration
                 policy.CircuitBreakerAsync(
                     handledEventsAllowedBeforeBreaking: 5,
                     durationOfBreak: TimeSpan.FromMinutes(1)));
-        
+
         // Now any service requesting IHttpClientFactory.CreateClient("PaymentAPI")
         // gets retry + circuit breaker automatically
     }

@@ -1,31 +1,28 @@
 // ==============================================================================
 // AUTHENTICATION EXAMPLES - ASP.NET Core Security
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate authentication patterns in ASP.NET Core including JWT tokens,
-//   Cookie authentication, OAuth 2.0, and ASP.NET Core Identity basics.
+// WHAT IS THIS?
+// -------------
+// Identity verification patterns (JWT, cookies, OAuth, refresh tokens).
 //
-// WHY AUTHENTICATION:
-//   - Verify user identity
-//   - Protect sensitive resources
-//   - Enable personalization
-//   - Track user actions
-//   - Comply with regulations
+// WHY IT MATTERS
+// --------------
+// ✅ Protects resources and user data
+// ✅ Enables personalization and auditing
 //
-// WHAT YOU'LL LEARN:
-//   1. JWT (JSON Web Token) authentication
-//   2. Cookie-based authentication
-//   3. OAuth 2.0 / OpenID Connect flows
-//   4. Bearer token generation and validation
-//   5. Refresh token patterns
-//   6. Multi-factor authentication (MFA) basics
-//   7. Identity framework basics
-//   8. External authentication providers
+// WHEN TO USE
+// -----------
+// ✅ APIs and apps that require user identity
+// ✅ Multi-client apps (web, mobile, SPA)
 //
-// AUTHENTICATION VS AUTHORIZATION:
-//   - Authentication: WHO you are (identity verification)
-//   - Authorization: WHAT you can do (permission check)
+// WHEN NOT TO USE
+// ---------------
+// ❌ Public endpoints with no identity needs
+// ❌ Internal tools with separate network-based controls only
 //
+// REAL-WORLD EXAMPLE
+// ------------------
+// SPA uses JWT access and refresh tokens for API access.
 // ==============================================================================
 
 using System.IdentityModel.Tokens.Jwt;
@@ -74,18 +71,18 @@ public class JwtAuthenticationService
     private readonly string _secretKey;
     private readonly string _issuer;
     private readonly string _audience;
-    
+
     public JwtAuthenticationService(string secretKey, string issuer, string audience)
     {
         // ❌ BAD: Hardcoded secret in code
         // _secretKey = "my-super-secret-key";
-        
+
         // ✅ GOOD: Secret from configuration/environment variable
         _secretKey = secretKey; // From IConfiguration or Key Vault
         _issuer = issuer;
         _audience = audience;
     }
-    
+
     /// <summary>
     /// Generate JWT token for authenticated user
     /// </summary>
@@ -100,17 +97,17 @@ public class JwtAuthenticationService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique token ID
             new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64), // Issued at
         };
-        
+
         // Add role claims
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
-        
+
         // ✅ GOOD: Create signing credentials
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        
+
         // ✅ GOOD: Create token with appropriate expiration
         var token = new JwtSecurityToken(
             issuer: _issuer,
@@ -119,10 +116,10 @@ public class JwtAuthenticationService
             expires: DateTime.UtcNow.AddHours(1), // Token valid for 1 hour
             signingCredentials: credentials
         );
-        
+
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-    
+
     /// <summary>
     /// Validate JWT token and extract claims
     /// </summary>
@@ -130,7 +127,7 @@ public class JwtAuthenticationService
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_secretKey);
-        
+
         try
         {
             // ✅ GOOD: Validate token parameters
@@ -145,16 +142,16 @@ public class JwtAuthenticationService
                 ValidateLifetime = true, // Check expiration
                 ClockSkew = TimeSpan.FromMinutes(5) // Allow 5 min clock skew
             };
-            
+
             var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
-            
+
             // ✅ GOOD: Verify algorithm to prevent "none" algorithm attack
             if (validatedToken is JwtSecurityToken jwtToken &&
                 jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
                 return principal;
             }
-            
+
             return null;
         }
         catch (SecurityTokenException)
@@ -189,7 +186,7 @@ public class JwtAuthenticationService
 public class RefreshTokenService
 {
     private readonly Dictionary<string, RefreshToken> _refreshTokens = new(); // In production: Use database
-    
+
     public record RefreshToken(
         string Token,
         string UserId,
@@ -198,7 +195,7 @@ public class RefreshTokenService
         string? ReplacedByToken = null, // For token rotation
         bool IsRevoked = false
     );
-    
+
     /// <summary>
     /// Generate secure refresh token
     /// </summary>
@@ -206,7 +203,7 @@ public class RefreshTokenService
     {
         // ❌ BAD: Sequential or predictable tokens
         // var token = $"refresh_{userId}_{DateTime.Now.Ticks}";
-        
+
         // ✅ GOOD: Cryptographically secure random token
         var randomBytes = new byte[64];
         using (var rng = RandomNumberGenerator.Create())
@@ -214,22 +211,22 @@ public class RefreshTokenService
             rng.GetBytes(randomBytes);
         }
         var token = Convert.ToBase64String(randomBytes);
-        
+
         var refreshToken = new RefreshToken(
             Token: token,
             UserId: userId,
             ExpiresAt: DateTime.UtcNow.AddDays(30), // 30 days
             CreatedAt: DateTime.UtcNow
         );
-        
+
         // ✅ GOOD: Store hashed token (in production)
         // var hashedToken = HashToken(token);
         // _database.RefreshTokens.Add(new { Hash = hashedToken, UserId, ExpiresAt });
-        
+
         _refreshTokens[token] = refreshToken;
         return refreshToken;
     }
-    
+
     /// <summary>
     /// Validate refresh token and rotate it (security best practice)
     /// </summary>
@@ -239,7 +236,7 @@ public class RefreshTokenService
         {
             return (false, null);
         }
-        
+
         // ✅ GOOD: Check if token is valid
         if (refreshToken.IsRevoked ||
             refreshToken.ExpiresAt < DateTime.UtcNow ||
@@ -247,16 +244,16 @@ public class RefreshTokenService
         {
             return (false, null);
         }
-        
+
         // ✅ GOOD: Rotate token (generate new one, invalidate old)
         var newRefreshToken = GenerateRefreshToken(refreshToken.UserId);
-        
+
         // Mark old token as replaced
         _refreshTokens[token] = refreshToken with { ReplacedByToken = newRefreshToken.Token };
-        
+
         return (true, newRefreshToken);
     }
-    
+
     /// <summary>
     /// Revoke refresh token (logout, security breach, etc.)
     /// </summary>
@@ -304,19 +301,19 @@ public static class CookieAuthenticationSetup
                 options.Cookie.SameSite = SameSiteMode.Strict; // CSRF protection
                 options.ExpireTimeSpan = TimeSpan.FromHours(8); // Cookie lifetime
                 options.SlidingExpiration = true; // Renew cookie on activity
-                
+
                 // Redirect paths
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
                 options.AccessDeniedPath = "/Account/AccessDenied";
-                
+
                 // ❌ BAD: Storing sensitive data in cookie
                 // Don't store password, credit cards, SSN in cookie!
-                
+
                 // ✅ GOOD: Store minimal claims (userId, name, roles)
             });
     }
-    
+
     /// <summary>
     /// Login user with cookie authentication
     /// </summary>
@@ -328,7 +325,7 @@ public static class CookieAuthenticationSetup
         // Validate credentials (check database)
         // var user = await _userService.ValidateCredentials(username, password);
         // if (user == null) return Results.Unauthorized();
-        
+
         // ✅ GOOD: Create claims for authenticated user
         var claims = new List<Claim>
         {
@@ -338,20 +335,20 @@ public static class CookieAuthenticationSetup
             new Claim(ClaimTypes.Role, "User"),
             new Claim(ClaimTypes.Role, "Admin"),
         };
-        
+
         var claimsIdentity = new ClaimsIdentity(claims, "CookieAuth");
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-        
+
         // ✅ GOOD: Sign in user (creates encrypted cookie)
         await context.SignInAsync("CookieAuth", claimsPrincipal, new AuthenticationProperties
         {
             IsPersistent = true, // "Remember me"
             ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
         });
-        
+
         return Results.Ok(new { Message = "Logged in successfully" });
     }
-    
+
     /// <summary>
     /// Logout user
     /// </summary>
@@ -398,35 +395,35 @@ public static class OAuthSetup
     public static void ConfigureOAuthProviders(WebApplicationBuilder builder)
     {
         builder.Services.AddAuthentication();
-            /* Requires: dotnet add package Microsoft.AspNetCore.Authentication.Google
-             *           dotnet add package Microsoft.AspNetCore.Authentication.MicrosoftAccount
-            
-            // ✅ GOOD: Google OAuth configuration
-            .AddGoogle(options =>
-            {
-                options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
-                options.SaveTokens = true; // Save access token for API calls
-                
-                // Request additional scopes
-                options.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
-                options.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
-                
-                // Map claims
-                options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
-                options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
-                options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
-            })
-            
-            // ✅ GOOD: Microsoft OAuth configuration
-            .AddMicrosoftAccount(options =>
-            {
-                options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"]!;
-                options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"]!;
-                options.SaveTokens = true;
-            });
-            */
-        
+        /* Requires: dotnet add package Microsoft.AspNetCore.Authentication.Google
+         *           dotnet add package Microsoft.AspNetCore.Authentication.MicrosoftAccount
+
+        // ✅ GOOD: Google OAuth configuration
+        .AddGoogle(options =>
+        {
+            options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+            options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+            options.SaveTokens = true; // Save access token for API calls
+
+            // Request additional scopes
+            options.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
+            options.Scope.Add("https://www.googleapis.com/auth/userinfo.email");
+
+            // Map claims
+            options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
+            options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+            options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+        })
+
+        // ✅ GOOD: Microsoft OAuth configuration
+        .AddMicrosoftAccount(options =>
+        {
+            options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"]!;
+            options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"]!;
+            options.SaveTokens = true;
+        });
+        */
+
         // ❌ BAD: Hardcoding client secrets
         // .AddGoogle(options => { options.ClientId = "123"; options.ClientSecret = "secret"; })
     }
@@ -471,7 +468,7 @@ public class TotpService
         }
         return Convert.ToBase64String(secretBytes);
     }
-    
+
     /// <summary>
     /// Generate current TOTP code (6 digits, 30-second window)
     /// </summary>
@@ -480,26 +477,26 @@ public class TotpService
         var secretBytes = Convert.FromBase64String(secret);
         var unixTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var counter = unixTimestamp / 30; // 30-second window
-        
+
         var counterBytes = BitConverter.GetBytes(counter);
         if (BitConverter.IsLittleEndian)
         {
             Array.Reverse(counterBytes);
         }
-        
+
         using var hmac = new HMACSHA1(secretBytes);
         var hash = hmac.ComputeHash(counterBytes);
-        
+
         var offset = hash[^1] & 0x0F;
         var binary = ((hash[offset] & 0x7F) << 24) |
                      ((hash[offset + 1] & 0xFF) << 16) |
                      ((hash[offset + 2] & 0xFF) << 8) |
                      (hash[offset + 3] & 0xFF);
-        
+
         var code = binary % 1000000;
         return code.ToString("D6"); // 6-digit code with leading zeros
     }
-    
+
     /// <summary>
     /// Validate TOTP code (allow previous/next 30-sec window for clock skew)
     /// </summary>
@@ -507,17 +504,17 @@ public class TotpService
     {
         // ✅ GOOD: Check current window and adjacent windows for clock skew
         var currentCode = GenerateCode(secret);
-        
+
         // Generate codes for previous and next 30-second windows
         var unixTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var previousCode = GenerateCodeForCounter(secret, (unixTimestamp / 30) - 1);
         var nextCode = GenerateCodeForCounter(secret, (unixTimestamp / 30) + 1);
-        
+
         return userCode == currentCode ||
                userCode == previousCode ||
                userCode == nextCode;
     }
-    
+
     private string GenerateCodeForCounter(string secret, long counter)
     {
         var secretBytes = Convert.FromBase64String(secret);
@@ -526,20 +523,20 @@ public class TotpService
         {
             Array.Reverse(counterBytes);
         }
-        
+
         using var hmac = new HMACSHA1(secretBytes);
         var hash = hmac.ComputeHash(counterBytes);
-        
+
         var offset = hash[^1] & 0x0F;
         var binary = ((hash[offset] & 0x7F) << 24) |
                      ((hash[offset + 1] & 0xFF) << 16) |
                      ((hash[offset + 2] & 0xFF) << 8) |
                      (hash[offset + 3] & 0xFF);
-        
+
         var code = binary % 1000000;
         return code.ToString("D6");
     }
-    
+
     /// <summary>
     /// Generate QR code URL for authenticator apps
     /// </summary>
@@ -550,33 +547,33 @@ public class TotpService
         var secretBase32 = ConvertToBase32(Convert.FromBase64String(secret));
         return $"otpauth://totp/{Uri.EscapeDataString(label)}?secret={secretBase32}&issuer={Uri.EscapeDataString(issuer)}";
     }
-    
+
     private string ConvertToBase32(byte[] input)
     {
         const string base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         var result = new StringBuilder();
-        
+
         for (int offset = 0; offset < input.Length;)
         {
             int numCharsInThisGroup = Math.Min(5, input.Length - offset);
             byte[] group = new byte[5];
             Array.Copy(input, offset, group, 0, numCharsInThisGroup);
-            
+
             int buffer = 0;
             for (int i = 0; i < 5; i++)
             {
                 buffer = (buffer << 8) | group[i];
             }
-            
+
             for (int i = 0; i < 8; i++)
             {
                 int index = (buffer >> (35 - (i * 5))) & 0x1F;
                 result.Append(base32Chars[index]);
             }
-            
+
             offset += 5;
         }
-        
+
         return result.ToString();
     }
 }
@@ -600,7 +597,7 @@ public static class AuthenticationConfiguration
         {
             var secretKey = builder.Configuration["Jwt:SecretKey"]!;
             var key = Encoding.UTF8.GetBytes(secretKey);
-            
+
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -612,7 +609,7 @@ public static class AuthenticationConfiguration
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.FromMinutes(5)
             };
-            
+
             // ✅ GOOD: Handle authentication events
             options.Events = new JwtBearerEvents
             {
@@ -629,7 +626,7 @@ public static class AuthenticationConfiguration
             };
         });
     }
-    
+
     public static void UseAuthenticationPipeline(WebApplication app)
     {
         // ✅ CORRECT ORDER: Authentication BEFORE Authorization

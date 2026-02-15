@@ -2,47 +2,37 @@
 // OPEN-CLOSED PRINCIPLE (OCP)
 // Reference: Revision Notes - OOP (Object Oriented Principals) - Page 2
 // ============================================================================
-// DEFINITION:
-//   "Software entities should be open for extension but closed for modification."
-//   You should be able to add new functionality without changing existing code.
 //
-// EXPLANATION:
-//   Use abstractions (interfaces, abstract classes) and polymorphism to allow adding new
-//   behavior without modifying existing, tested code. This reduces the risk of breaking
-//   existing functionality when adding new features.
+// WHAT IS OCP?
+// ------------
+// Software entities should be open for extension but closed for modification.
+// You should add new behavior without changing existing, tested code.
 //
-// EXAMPLE:
-//   ❌ BAD: Modify existing switch/if-else statements every time you add a new type
-//   ✅ GOOD: Define an interface and add new implementations without touching existing code
+// WHY IT MATTERS
+// --------------
+// - Reduces risk of breaking existing functionality
+// - Encourages stable APIs and extensibility
+// - Enables plugin-style architectures
+// - Improves maintainability and test confidence
 //
-// REAL-WORLD ANALOGY:
-//   Electrical outlets - you can plug in new devices without rewiring your house.
-//   USB ports - new USB devices work without modifying the port.
+// WHEN TO USE
+// -----------
+// - YES: When new behaviors are expected (payments, shipping, pricing rules)
+// - YES: When existing code is stable and widely used
+// - YES: When large if/else or switch chains are forming
 //
-// BENEFITS:
-//   • Reduces risk of breaking existing functionality
-//   • Easier to add new features
-//   • Better maintainability
-//   • Follows Don't Repeat Yourself (DRY)
-//   • Supports plugin architectures
+// WHEN NOT TO USE
+// ---------------
+// - NO: If the domain is stable and extensions are unlikely
+// - NO: If the abstraction is premature and unclear
+// - NO: If changes always require modifying existing logic anyway
 //
-// WHEN TO USE:
-//   • When you anticipate future extensions
-//   • When building frameworks or libraries
-//   • Instead of long switch/if-else chains
-//   • When multiple implementations of same behavior exist
-//
-// COMMON VIOLATIONS:
-//   • Switch statements on type codes
-//   • Long if-else chains checking object types
-//   • Modifying existing classes to add new features
-//   • Hardcoded dependencies
-//
-// BEST PRACTICES:
-//   • Program to interfaces, not implementations
-//   • Use Strategy pattern for interchangeable algorithms
-//   • Use Factory pattern for object creation
-//   • Favor composition over inheritance
+// REAL-WORLD EXAMPLE
+// ------------------
+// Payment processing:
+// - Add Apple Pay by creating ApplePayPaymentStrategy
+// - No changes needed to CheckoutService
+// - Existing payment methods remain untouched
 // ============================================================================
 
 namespace RevisionNotesDemo.OOPPrinciples;

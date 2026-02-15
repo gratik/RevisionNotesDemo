@@ -2,8 +2,37 @@
 // TESTING FRAMEWORKS COMPARISON - xUnit vs NUnit vs MSTest
 // Reference: Revision Notes - Unit Testing Best Practices
 // ==============================================================================
-// PURPOSE: Compare testing frameworks with examples
-// KEY CONCEPTS: xUnit (modern), NUnit (traditional), MSTest (VS integrated)
+// WHAT IS THIS?
+// -------------
+// A side-by-side comparison of the three major .NET unit testing frameworks:
+// xUnit (modern, minimal), NUnit (mature, feature-rich), and MSTest (Microsoft/VS).
+//
+// WHY IT MATTERS
+// --------------
+// ✅ FRAMEWORK FIT: Different teams value different tradeoffs (minimal vs rich tooling)
+// ✅ TOOLING ALIGNMENT: VS/Azure DevOps workflows can favor MSTest
+// ✅ PRODUCTIVITY: Attribute sets and assertion styles impact test readability
+// ✅ PERFORMANCE: Parallelization defaults differ between frameworks
+//
+// WHEN TO USE
+// -----------
+// ✅ xUnit for new .NET projects with modern conventions and parallelization
+// ✅ NUnit for legacy systems or teams needing rich constraints/attributes
+// ✅ MSTest for VS-centric organizations and Azure DevOps reporting
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Don't mix frameworks in the same test project without a strong reason
+// ❌ Avoid picking a framework just because it's default in a template
+// ❌ Skip MSTest if you rely heavily on constraint-based assertions (NUnit shines)
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Large enterprise suite:
+// - Core services use xUnit for speed and minimal ceremony
+// - Legacy desktop apps keep NUnit due to existing constraint-based tests
+// - Internal tools stay on MSTest for Azure DevOps integration
+// A shared comparison guide prevents inconsistent choices across teams.
 // ==============================================================================
 
 using System;
@@ -38,14 +67,14 @@ public class TestingFrameworksComparison
         {
             // Arrange
             var calculator = new Calculator();
-            
+
             // Act
             var result = calculator.Add(2, 3);
-            
+
             // Assert
             // Assert.Equal(5, result);
         }
-        
+
         // Parameterized test with [Theory]
         // [Theory]
         // [InlineData(2, true)]
@@ -57,21 +86,21 @@ public class TestingFrameworksComparison
             var result = calculator.IsEven(number);
             // Assert.Equal(expected, result);
         }
-        
+
         // Setup/Teardown with constructor/IDisposable
         public XUnitExamples()
         {
             // Constructor = Setup
             Console.WriteLine("XUnit: Test setup (constructor)");
         }
-        
+
         // IDisposable for teardown (if needed)
         public void Dispose()
         {
             Console.WriteLine("XUnit: Test teardown (Dispose)");
         }
     }
-    
+
     /// <summary>
     /// NUNIT EXAMPLES - Traditional, feature-rich
     /// Installation: dotnet add package NUnit
@@ -79,7 +108,7 @@ public class TestingFrameworksComparison
     public class NUnitExamples
     {
         private Calculator _calculator = null!;
-        
+
         // Setup before each test
         // [SetUp]
         public void Setup()
@@ -87,14 +116,14 @@ public class TestingFrameworksComparison
             _calculator = new Calculator();
             Console.WriteLine("NUnit: Test setup ([SetUp])");
         }
-        
+
         // Teardown after each test
         // [TearDown]
         public void Teardown()
         {
             Console.WriteLine("NUnit: Test teardown ([TearDown])");
         }
-        
+
         // Basic test with [Test]
         // [Test]
         public void Add_TwoNumbers_ReturnsSum()
@@ -102,7 +131,7 @@ public class TestingFrameworksComparison
             var result = _calculator.Add(2, 3);
             // Assert.That(result, Is.EqualTo(5));
         }
-        
+
         // Parameterized test with [TestCase]
         // [TestCase(2, true)]
         // [TestCase(3, false)]
@@ -113,7 +142,7 @@ public class TestingFrameworksComparison
             // Assert.That(result, Is.EqualTo(expected));
         }
     }
-    
+
     /// <summary>
     /// MSTEST EXAMPLES - Visual Studio integrated
     /// Installation: dotnet add package MSTest.TestFramework
@@ -121,7 +150,7 @@ public class TestingFrameworksComparison
     public class MSTestExamples
     {
         private Calculator _calculator = null!;
-        
+
         // Setup before each test
         // [TestInitialize]
         public void Initialize()
@@ -129,14 +158,14 @@ public class TestingFrameworksComparison
             _calculator = new Calculator();
             Console.WriteLine("MSTest: Test setup ([TestInitialize])");
         }
-        
+
         // Teardown after each test
         // [TestCleanup]
         public void Cleanup()
         {
             Console.WriteLine("MSTest: Test teardown ([TestCleanup])");
         }
-        
+
         // Basic test with [TestMethod]
         // [TestMethod]
         public void Add_TwoNumbers_ReturnsSum()
@@ -144,7 +173,7 @@ public class TestingFrameworksComparison
             var result = _calculator.Add(2, 3);
             // Assert.AreEqual(5, result);
         }
-        
+
         // Parameterized test with [DataRow]
         // [DataTestMethod]
         // [DataRow(2, true)]
@@ -156,14 +185,14 @@ public class TestingFrameworksComparison
             // Assert.AreEqual(expected, result);
         }
     }
-    
+
     /// <summary>
     /// COMPARISON TABLE
     /// </summary>
     public static void ShowComparison()
     {
         Console.WriteLine("\n=== TESTING FRAMEWORKS COMPARISON ===\n");
-        
+
         Console.WriteLine("╔════════════════╦═══════════╦═══════════╦═══════════╗");
         Console.WriteLine("║ Feature        ║ xUnit     ║ NUnit     ║ MSTest    ║");
         Console.WriteLine("╠════════════════╬═══════════╬═══════════╬═══════════╣");
@@ -175,13 +204,13 @@ public class TestingFrameworksComparison
         Console.WriteLine("║ Community      ║ ✅ Popular║ ✅ Popular║ ⚠️ VS-Only║");
         Console.WriteLine("║ VS Integration ║ ✅ Good   ║ ✅ Good   ║ ✅ Excel  ║");
         Console.WriteLine("╚════════════════╩═══════════╩═══════════╩═══════════╝");
-        
+
         Console.WriteLine("\n📌 RECOMMENDATIONS:");
         Console.WriteLine("   ✅ xUnit - Best for NEW projects (modern, parallel by default)");
         Console.WriteLine("   ✅ NUnit - Great for EXISTING projects (mature, feature-rich)");
         Console.WriteLine("   ✅ MSTest - Good for VS-CENTRIC teams (tight integration)");
     }
-    
+
     public static void RunAllExamples()
     {
         Console.WriteLine("\n=== TESTING FRAMEWORKS COMPARISON ===\n");

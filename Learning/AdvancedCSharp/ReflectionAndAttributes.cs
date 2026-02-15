@@ -2,9 +2,28 @@
 // REFLECTION AND ATTRIBUTES
 // Reference: Revision Notes - .NET Framework - Page 7
 // ============================================================================
-// REFLECTION: Runtime type inspection and invocation
-// ATTRIBUTES: Metadata tags for types, methods, properties
-// USE CASES: Serialization, validation, DI, testing frameworks
+// WHAT IS THIS?
+// -------------
+// Reflection for runtime inspection and attributes for metadata.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Powers serializers, DI containers, and validation frameworks
+// ✅ Enables dynamic behaviors and tooling
+//
+// WHEN TO USE
+// -----------
+// ✅ Framework-level tooling or dynamic behaviors
+// ✅ Metadata-driven validation and discovery
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Hot paths where reflection cost is too high
+// ❌ When static typing can handle the scenario
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Attribute-based validation with reflection.
 // ============================================================================
 
 using System.Reflection;

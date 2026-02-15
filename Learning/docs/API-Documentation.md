@@ -1,8 +1,8 @@
 # API Documentation and OpenAPI
 
-**Last Updated**: 2026-02-14
+**Last Updated**: 2026-02-15
 
-Comprehensive guide to documenting APIs with Swagger/OpenAPI, including versioning strategies, 
+Comprehensive guide to documenting APIs with Swagger/OpenAPI, including versioning strategies,
 XML documentation, schema customization, and testing patterns. Essential for professional API development.
 
 ---
@@ -10,18 +10,21 @@ XML documentation, schema customization, and testing patterns. Essential for pro
 ## Why API Documentation Matters
 
 **For Developers**:
+
 - Clear contract between frontend and backend
 - Interactive testing with Swagger UI
 - Automatic client SDK generation
 - Faster onboarding for new team members
 
 **For API Consumers**:
+
 - Self-service discovery
 - Try-it-out functionality
 - Type definitions and examples
 - Version comparison
 
 **Business Impact**:
+
 - Reduced support tickets
 - Faster integration
 - Better developer experience
@@ -31,12 +34,12 @@ XML documentation, schema customization, and testing patterns. Essential for pro
 
 ## Swagger vs OpenAPI
 
-| Aspect | Swagger | OpenAPI |
-|--------|---------|---------|
-| **What is it?** | Toolset for OpenAPI | Specification standard |
-| **Specification** | Uses OpenAPI 3.x | Format definition (JSON/YAML) |
-| **Tools** | SwaggerUI, Codegen | Industry standard |
-| **Usage** | Implementation | Contract |
+| Aspect            | Swagger             | OpenAPI                       |
+| ----------------- | ------------------- | ----------------------------- |
+| **What is it?**   | Toolset for OpenAPI | Specification standard        |
+| **Specification** | Uses OpenAPI 3.x    | Format definition (JSON/YAML) |
+| **Tools**         | SwaggerUI, Codegen  | Industry standard             |
+| **Usage**         | Implementation      | Contract                      |
 
 **Relationship**: Swagger is the toolset, OpenAPI is the specification it implements.
 
@@ -95,6 +98,7 @@ app.Run();
 ```
 
 **Access Points**:
+
 - Swagger UI: `http://localhost:5000/`
 - OpenAPI JSON: `http://localhost:5000/swagger/v1/swagger.json`
 
@@ -132,9 +136,9 @@ builder.Services.AddSwaggerGen(options =>
 /// </summary>
 /// <remarks>
 /// Sample request:
-/// 
+///
 ///     GET /api/users
-///     
+///
 /// Returns paginated results. Use query parameters for filtering.
 /// </remarks>
 /// <param name="page">Page number (default: 1)</param>
@@ -170,7 +174,7 @@ public async Task<ActionResult<List<UserDto>>> GetUsers(
 public async Task<ActionResult<UserDto>> GetUser(int id)
 {
     var user = await _repository.GetByIdAsync(id);
-    
+
     if (user == null)
         return NotFound(new ProblemDetails
         {
@@ -178,7 +182,7 @@ public async Task<ActionResult<UserDto>> GetUser(int id)
             Status = 404,
             Detail = $"User with ID {id} does not exist"
         });
-    
+
     return Ok(user);
 }
 
@@ -204,7 +208,7 @@ public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserRequest
     // 400: Invalid request
     if (!ModelState.IsValid)
         return ValidationProblem(ModelState);
-    
+
     // 409: User already exists
     if (await _repository.ExistsAsync(request.Email))
         return Conflict(new ProblemDetails
@@ -212,9 +216,9 @@ public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserRequest
             Title = "User already exists",
             Detail = $"User with email {request.Email} already exists"
         });
-    
+
     var user = await _repository.CreateAsync(request);
-    
+
     // 201: Created successfully
     return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
 }
@@ -251,7 +255,7 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "⚠️ DEPRECATED - Please migrate to V2"
     });
-    
+
     options.SwaggerDoc("v2", new OpenApiInfo
     {
         Title = "My API",
@@ -310,10 +314,10 @@ builder.Services.AddSwaggerGen(options =>
         Format = "date-time",
         Example = new OpenApiString("2026-02-14T10:30:00Z")
     });
-    
+
     // ✅ Customize enums
     options.SchemaFilter<EnumSchemaFilter>();
-    
+
     // ✅ Hide internal properties
     options.SchemaFilter<HideInternalPropertiesFilter>();
 });
@@ -357,7 +361,7 @@ public class RegisterUserRequest
     [Required]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Password (min 8 chars, must contain uppercase, lowercase, digit, special char)
     /// </summary>
@@ -386,7 +390,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT"
     });
-    
+
     // ✅ Apply security globally
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -488,27 +492,27 @@ public class AddResponseHeadersFilter : IOperationFilter
 public class SwaggerTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
-    
+
     public SwaggerTests(WebApplicationFactory<Program> factory)
     {
         _factory = factory;
     }
-    
+
     [Fact]
     public async Task Swagger_JSON_IsAccessible()
     {
         // Arrange
         var client = _factory.CreateClient();
-        
+
         // Act
         var response = await client.GetAsync("/swagger/v1/swagger.json");
-        
+
         // Assert
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
         Assert.Contains("\"openapi\":", content);
     }
-    
+
     [Fact]
     public async Task Swagger_UI_IsAccessible()
     {

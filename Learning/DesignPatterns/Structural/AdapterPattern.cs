@@ -1,10 +1,115 @@
 // ============================================================================
-// ADAPTER PATTERN
+// ADAPTER PATTERN - Make Incompatible Interfaces Work Together
 // Reference: Revision Notes - Design Patterns (Structural) - Page 3
 // ============================================================================
-// PURPOSE: "Allows incompatible interfaces to work together."
-// EXAMPLE: Connecting a legacy payment system to a new API.
-// NOTE: From Revision Notes - "Adapter – most .NET libraries already provide abstractions"
+//
+// WHAT IS THE ADAPTER PATTERN?
+// -----------------------------
+// Allows two incompatible interfaces to work together by wrapping one interface
+// and translating it to match the other. Acts as a bridge between two incompatible
+// interfaces without modifying their source code.
+//
+// Think of it as: "A power adapter for UK plugs in US sockets - same electricity,
+// different plug shapes"
+//
+// Core Concepts:
+//   • Target Interface: What your application expects/needs
+//   • Adaptee: Existing class with incompatible interface
+//   • Adapter: Wraps Adaptee and implements Target interface
+//   • Client: Uses Target interface, unaware of Adaptee
+//   • Translation: Converts calls from Target to Adaptee format
+//
+// WHY IT MATTERS
+// --------------
+// ✅ LEGACY INTEGRATION: Use old code without rewriting it
+// ✅ THIRD-PARTY LIBRARIES: Adapt external APIs to your interfaces
+// ✅ OPEN/CLOSED PRINCIPLE: Extend functionality without modifying existing code
+// ✅ INTERFACE CONSISTENCY: Provide uniform interface to incompatible systems
+// ✅ MIGRATION PATH: Gradually replace old systems with new ones
+// ✅ TESTABILITY: Mock adapted interface for testing
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Need to use existing class but interface doesn't match
+// ✅ Integrating with legacy systems or third-party libraries
+// ✅ Want to reuse several existing subclasses lacking common functionality
+// ✅ Cannot modify source code of existing class
+// ✅ Need consistent interface across multiple incompatible implementations
+// ✅ Migrating from old API to new one gradually
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Can modify the incompatible class directly
+// ❌ Interfaces are already compatible
+// ❌ Too many method translations needed (consider refactoring instead)
+// ❌ Modern .NET libraries already provide abstractions (per Revision Notes)
+// ❌ Adapter adds more complexity than value
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Imagine a weather forecasting application using multiple data providers:
+//   • Your app expects IWeatherService interface
+//   • OpenWeatherMap API has GetCurrentWeather(lat, lon)
+//   • WeatherAPI.com has FetchWeatherData(coordinates)
+//   • AccuWeather has RetrieveForecast(location)
+//   • Each returns data in different JSON format
+//
+// Without Adapter:
+//   → if (provider == "OpenWeather") {
+//         var data = openWeatherApi.GetCurrentWeather(lat, lon);
+//         // Parse OpenWeather JSON format
+//     } else if (provider == "WeatherAPI") {
+//         var data = weatherApi.FetchWeatherData(coords);
+//         // Parse WeatherAPI JSON format
+//     } else if (provider == "AccuWeather") {
+//         var data = accuWeather.RetrieveForecast(loc);
+//         // Parse AccuWeather JSON format
+//     }
+//   → Client code tightly coupled to all APIs
+//   → Different method names and parameters everywhere
+//   → Switching providers requires code changes throughout app
+//
+// With Adapter:
+//   → IWeatherService service = GetWeatherService(provider);
+//   → var weather = service.GetWeather(location);  // Uniform interface
+//   → // OpenWeatherAdapter translates to GetCurrentWeather()
+//   → // WeatherAPIAdapter translates to FetchWeatherData()
+//   → // AccuWeatherAdapter translates to RetrieveForecast()
+//   → ✅ Client code uses single interface
+//   → ✅ Easy to add/switch providers (just add new adapter)
+//   → ✅ Each adapter handles its own JSON parsing
+//   → ✅ Can mock IWeatherService for testing
+//
+// ADAPTER TYPES
+// -------------
+// Object Adapter (Composition - Recommended):
+//   class Adapter : ITarget
+//   {
+//       private readonly Adaptee _adaptee;
+//       public Adapter(Adaptee adaptee) => _adaptee = adaptee;
+//   }
+//   • Uses composition (has-a relationship)
+//   • More flexible, follows composition over inheritance
+//
+// Class Adapter (Inheritance - Less Common in C#):
+//   class Adapter : ITarget, Adaptee  // Multiple inheritance
+//   • C# doesn't support multiple class inheritance
+//   • Possible with interfaces only
+//
+// MODERN .NET CONSIDERATION
+// -------------------------
+// From Revision Notes: "Adapter – most .NET libraries already provide abstractions"
+//
+// Many modern libraries provide standard interfaces:
+//   • ILogger, IConfiguration, IMemoryCache
+//   • IHttpClientFactory
+//   • IOptions<T>
+//
+// But Adapter still useful for:
+//   • Legacy code integration
+//   • Third-party libraries without standard interfaces
+//   • External APIs with custom formats
+//
 // ============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Structural;

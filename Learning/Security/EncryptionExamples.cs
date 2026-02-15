@@ -1,32 +1,28 @@
 // ==============================================================================
 // ENCRYPTION & HASHING EXAMPLES - Data Protection
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate encryption, hashing, and secure data protection patterns
-//   for protecting sensitive data at rest and in transit.
+// WHAT IS THIS?
+// -------------
+// Encryption, hashing, and data protection patterns for sensitive data.
 //
-// WHY ENCRYPTION:
-//   - Protect sensitive data (passwords, PII, financial)
-//   - Comply with regulations (GDPR, HIPAA, PCI-DSS)
-//   - Prevent data breaches
-//   - Secure communication  
-//   - Digital signatures and verification
+// WHY IT MATTERS
+// --------------
+// ✅ Protects sensitive data at rest and in transit
+// ✅ Supports compliance and breach mitigation
 //
-// WHAT YOU'LL LEARN:
-//   1. Symmetric encryption (AES)
-//   2. Asymmetric encryption (RSA)
-//   3. Hashing (SHA256, bcrypt)
-//   4. Password hashing best practices
-//   5. Data Protection API
-//   6. HMAC for message authentication
-//   7. Secure random generation
+// WHEN TO USE
+// -----------
+// ✅ Password storage, tokens, and PII protection
+// ✅ Integrity checks and secure data exchange
 //
-// KEY CONCEPTS:
-//   - Encryption: Reversible (can decrypt)
-//   - Hashing: One-way (cannot reverse)
-//   - Symmetric: Same key for encrypt/decrypt (fast, shared secret)
-//   - Asymmetric: Public/private key pair (slow, no shared secret needed)
+// WHEN NOT TO USE
+// ---------------
+// ❌ Non-sensitive data where plaintext is required
+// ❌ Weak or homegrown crypto implementations
 //
+// REAL-WORLD EXAMPLE
+// ------------------
+// Hash passwords with PBKDF2 and protect tokens with AES.
 // ==============================================================================
 
 using System.Security.Cryptography;
@@ -61,25 +57,25 @@ namespace RevisionNotesDemo.Security;
 public class AesEncryptionService
 {
     public record EncryptedData(byte[] Ciphertext, byte[] IV);
-    
+
     /// <summary>
     /// Encrypt data using AES-256
     /// </summary>
     public EncryptedData Encrypt(string plaintext, byte[] key)
     {
         if (key.Length != 32) throw new ArgumentException("Key must be 256 bits (32 bytes)");
-        
+
         using var aes = Aes.Create();
         aes.Key = key;
         aes.GenerateIV(); // ✅ GOOD: Generate random IV for each encryption
-        
+
         using var encryptor = aes.CreateEncryptor();
         var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
         var ciphertext = encryptor.TransformFinalBlock(plaintextBytes, 0, plaintextBytes.Length);
-        
+
         return new EncryptedData(ciphertext, aes.IV);
     }
-    
+
     /// <summary>
     /// Decrypt data using AES-256
     /// </summary>
@@ -88,14 +84,14 @@ public class AesEncryptionService
         using var aes = Aes.Create();
         aes.Key = key;
         aes.IV = encryptedData.IV; // Use same IV that was used for encryption
-        
+
         using var decryptor = aes.CreateDecryptor();
         var decryptedBytes = decryptor.TransformFinalBlock(
             encryptedData.Ciphertext, 0, encryptedData.Ciphertext.Length);
-        
+
         return Encoding.UTF8.GetString(decryptedBytes);
     }
-    
+
     /// <summary>
     /// Generate secure random 256-bit key
     /// </summary>
@@ -106,11 +102,11 @@ public class AesEncryptionService
         aes.GenerateKey();
         return aes.Key;
     }
-    
+
     // ❌ BAD: Reusing same IV
     // private static byte[] _staticIV = new byte[16];
     // aes.IV = _staticIV; // NEVER do this!
-    
+
     // ❌ BAD: Hardcoded key in code
     // private const string HardcodedKey = "my-secret-key-123";
 }
@@ -141,7 +137,7 @@ public class PasswordHashingService
     private const int SaltSize = 32; // 256 bits
     private const int HashSize = 32; // 256 bits
     private const int Iterations = 100_000;
-    
+
     /// <summary>
     /// Hash password with salt and iterations
     /// </summary>
@@ -149,7 +145,7 @@ public class PasswordHashingService
     {
         // ✅ GOOD: Generate random salt
         var salt = RandomNumberGenerator.GetBytes(SaltSize);
-        
+
         // ✅ GOOD: Use PBKDF2 with high iteration count
         var hash = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(password),
@@ -157,30 +153,30 @@ public class PasswordHashingService
             Iterations,
             HashAlgorithmName.SHA256,
             HashSize);
-        
+
         // ✅ GOOD: Store hash and salt together (salt is not secret)
         var hashWithSalt = new byte[SaltSize + HashSize];
         Array.Copy(salt, 0, hashWithSalt, 0, SaltSize);
         Array.Copy(hash, 0, hashWithSalt, SaltSize, HashSize);
-        
+
         return Convert.ToBase64String(hashWithSalt);
     }
-    
+
     /// <summary>
     /// Verify password matches hash
     /// </summary>
     public bool VerifyPassword(string password, string hashedPassword)
     {
         var hashWithSalt = Convert.FromBase64String(hashedPassword);
-        
+
         // Extract salt
         var salt = new byte[SaltSize];
         Array.Copy(hashWithSalt, 0, salt, 0, SaltSize);
-        
+
         // Extract stored hash
         var storedHash = new byte[HashSize];
         Array.Copy(hashWithSalt, SaltSize, storedHash, 0, HashSize);
-        
+
         // Hash provided password with same salt
         var computedHash = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(password),
@@ -188,14 +184,14 @@ public class PasswordHashingService
             Iterations,
             HashAlgorithmName.SHA256,
             HashSize);
-        
+
         // ✅ GOOD: Constant-time comparison (prevents timing attacks)
         return CryptographicOperations.FixedTimeEquals(storedHash, computedHash);
     }
-    
+
     // ❌ BAD: Storing plain text passwords
     // public void SavePassword(string password) => _db.Save(password);
-    
+
     // ❌ BAD: Simple hashing without salt
     // public string WeakHash(string password) => SHA256.HashData(Encoding.UTF8.GetBytes(password));
 }
@@ -226,7 +222,7 @@ public class PasswordHashingService
 public class RsaEncryptionService
 {
     public record RsaKeyPair(string PublicKeyXml, string PrivateKeyXml);
-    
+
     /// <summary>
     /// Generate RSA key pair
     /// </summary>
@@ -238,7 +234,7 @@ public class RsaEncryptionService
             rsa.ToXmlString(true)   // Private key
         );
     }
-    
+
     /// <summary>
     /// Encrypt data with public key
     /// </summary>
@@ -246,13 +242,13 @@ public class RsaEncryptionService
     {
         using var rsa = RSA.Create();
         rsa.FromXmlString(publicKeyXml);
-        
+
         var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
-        
+
         // ✅ GOOD: Use OAEP padding (secure)
         return rsa.Encrypt(plaintextBytes, RSAEncryptionPadding.OaepSHA256);
     }
-    
+
     /// <summary>
     /// Decrypt data with private key
     /// </summary>
@@ -260,11 +256,11 @@ public class RsaEncryptionService
     {
         using var rsa = RSA.Create();
         rsa.FromXmlString(privateKeyXml);
-        
+
         var decryptedBytes = rsa.Decrypt(ciphertext, RSAEncryptionPadding.OaepSHA256);
         return Encoding.UTF8.GetString(decryptedBytes);
     }
-    
+
     /// <summary>
     /// Sign data with private key (proves authenticity)
     /// </summary>
@@ -272,11 +268,11 @@ public class RsaEncryptionService
     {
         using var rsa = RSA.Create();
         rsa.FromXmlString(privateKeyXml);
-        
+
         var dataBytes = Encoding.UTF8.GetBytes(data);
         return rsa.SignData(dataBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
     }
-    
+
     /// <summary>
     /// Verify signature with public key
     /// </summary>
@@ -284,7 +280,7 @@ public class RsaEncryptionService
     {
         using var rsa = RSA.Create();
         rsa.FromXmlString(publicKeyXml);
-        
+
         var dataBytes = Encoding.UTF8.GetBytes(data);
         return rsa.VerifyData(dataBytes, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
     }
@@ -312,19 +308,19 @@ public class RsaEncryptionService
 public class DataProtectionExample
 {
     private readonly IDataProtector _protector;
-    
+
     public DataProtectionExample(IDataProtectionProvider provider)
     {
         // ✅ GOOD: Create protector with purpose string
         _protector = provider.CreateProtector("MyApp.UserData");
     }
-    
+
     public string Protect(string plaintext)
     {
         // ✅ GOOD: Encrypt with automatic key management
         return _protector.Protect(plaintext);
     }
-    
+
     public string Unprotect(string ciphertext)
     {
         try
@@ -337,7 +333,7 @@ public class DataProtectionExample
             return null!;
         }
     }
-    
+
     // ✅ GOOD: Time-limited protection
     public string ProtectWithExpiration(string plaintext, TimeSpan lifetime)
     {
@@ -374,7 +370,7 @@ public static class SecureRandomExamples
         // ✅ GOOD: Cryptographically secure random
         return RandomNumberGenerator.GetBytes(length);
     }
-    
+
     /// <summary>
     /// Generate secure random token (for API keys, session IDs)
     /// </summary>
@@ -386,7 +382,7 @@ public static class SecureRandomExamples
             .Replace('+', '-') // URL-safe
             .Replace('/', '_'); // URL-safe
     }
-    
+
     // ❌ BAD: Using System.Random for security
     // var random = new Random();
     // var token = random.Next().ToString(); // PREDICTABLE!

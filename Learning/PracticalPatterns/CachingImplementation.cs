@@ -1,9 +1,29 @@
 // ============================================================================
-// IMPLEMENTING CACHING IN .NET
+// CACHING IMPLEMENTATION
 // Reference: Revision Notes - Practical & Scenario-Based - Page 13
 // ============================================================================
-// In-memory caching with IMemoryCache
-// Distributed caching with Redis or SQL Server
+// WHAT IS THIS?
+// -------------
+// In-memory and distributed caching patterns in .NET.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Reduces latency for repeated reads
+// ✅ Protects backends during traffic spikes
+//
+// WHEN TO USE
+// -----------
+// ✅ Read-heavy data with acceptable staleness
+// ✅ Expensive computations or shared lookups
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Highly volatile data needing strict consistency
+// ❌ Per-user secrets stored in shared caches
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Cache user profiles and feature flags with short TTLs.
 // ============================================================================
 
 namespace RevisionNotesDemo.PracticalPatterns;

@@ -2,79 +2,28 @@
 // GARBAGE COLLECTION IN .NET
 // Reference: Revision Notes - Memory Management & Performance - Page 8
 // ============================================================================
-// DEFINITION:
-//   Automatic memory management system that reclaims memory occupied by objects
-//   no longer in use. Eliminates manual memory management bugs like memory leaks
-//   and dangling pointers.
+// WHAT IS THIS?
+// -------------
+// The .NET GC that reclaims memory for unreachable objects.
 //
-// HOW IT WORKS:
-//   1. MARK PHASE: GC traces from root references, marking reachable objects
-//   2. SWEEP PHASE: Unreachable objects are identified as garbage
-//   3. COMPACT PHASE: Moves surviving objects together to reduce fragmentation
+// WHY IT MATTERS
+// --------------
+// ✅ Explains allocation costs and GC pauses
+// ✅ Informs performance tuning decisions
 //
-// GENERATIONAL GC:
-//   
-//   GENERATION 0 (Gen 0):
-//     • Short-lived objects (temporary variables, new allocations)
-//     • Collected most frequently (very fast)
-//     • Most objects die young (generational hypothesis)
-//     • Size: Few MB
-//   
-//   GENERATION 1 (Gen 1):
-//     • "Buffer" between short-lived and long-lived
-//     • Objects that survived one Gen0 collection
-//     • Collected less frequently
-//   
-//   GENERATION 2 (Gen 2):
-//     • Long-lived objects (static data, singletons, caches)
-//     • Collected infrequently (expensive)
-//     • Full GC collects all generations
-//     • Size: Can be very large (GBs)
-//   
-//   LARGE OBJECT HEAP (LOH):
-//     • Objects > 85,000 bytes go directly here
-//     • Not compacted by default (too expensive)
-//     • Collected with Gen2
-//     • Can cause fragmentation
+// WHEN TO USE
+// -----------
+// ✅ Diagnosing memory pressure or allocation hotspots
+// ✅ Understanding Gen0/Gen2 behavior
 //
-// GC ROOTS:
-//   • Static fields
-//   • Local variables on stack
-//   • CPU registers
-//   • GC handles
-//   • Finalization queue
+// WHEN NOT TO USE
+// ---------------
+// ❌ Manual GC.Collect in production code
+// ❌ Tuning without profiling data
 //
-// WHEN GC RUNS:
-//   • Gen0 is full
-//   • Memory pressure (system running low on memory)
-//   • Explicitly called (GC.Collect() - not recommended)
-//
-// FINALIZATION:
-//   Objects with finalizers (~ClassName) go to finalization queue and survive
-//   one more collection. Finalizers run on separate thread. Slows down GC.
-//
-// BEST PRACTICES:
-//   ❌ DON'T: Call GC.Collect() manually (except specific testing scenarios)
-//   ✅ DO: Let GC manage itself - it's optimized and self-tuning
-//   ❌ DON'T: Create many short-lived large objects (LOH fragmentation)
-//   ✅ DO: Reuse large buffers (ArrayPool<T>)
-//   ✅ DO: Implement IDisposable for unmanaged resources
-//   ✅ DO: Use 'using' statements for automatic cleanup
-//   ❌ DON'T: Use finalizers unless you absolutely need them
-//   ✅ DO: Dispose of event handlers (unsubscribe)
-//
-// PERFORMANCE TIPS:
-//   • Reduce Gen0 allocations (use object pooling for high-frequency scenarios)
-//   • Keep Gen2 small (avoid long-lived references)
-//   • Avoid LOH allocations when possible
-//   • Use ArrayPool<T> for large temporary buffers
-//   • Avoid boxing value types
-//
-// MONITORING:
-//   • Performance counters (% Time in GC, Gen 0/1/2 Collections)
-//   • Visual Studio Diagnostic Tools
-//   • PerfView
-//   • dotMemory (JetBrains)
+// REAL-WORLD EXAMPLE
+// ------------------
+// Gen0 vs Gen2 collections during load spikes.
 // ============================================================================
 
 namespace RevisionNotesDemo.MemoryManagement;

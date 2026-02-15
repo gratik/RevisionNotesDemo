@@ -1,10 +1,109 @@
 // ==============================================================================
-// UNIT OF WORK PATTERN
+// UNIT OF WORK PATTERN - Coordinate Multiple Repository Changes
 // Reference: Revision Notes - Design Patterns
 // ==============================================================================
-// PURPOSE: Maintains a list of objects affected by business transaction and coordinates writing changes
-// BENEFIT: Ensures consistency, groups related changes, single commit/rollback point
-// USE WHEN: Multiple repositories need coordinated transactions, want atomic operations
+//
+// WHAT IS THE UNIT OF WORK PATTERN?
+// ----------------------------------
+// Maintains a list of objects affected by a business transaction and coordinates
+// writing changes and resolving concurrency problems. Acts as a transaction
+// coordinator for multiple repository operations, ensuring all changes succeed
+// or fail together (atomicity).
+//
+// Think of it as: "A shopping cart - collect all items (changes), then checkout
+// once (commit all together or cancel all)"
+//
+// Core Concepts:
+//   • Transaction Boundary: All operations succeed or fail together
+//   • Change Tracking: Keeps track of all modified objects
+//   • Single Commit Point: One SaveChanges() call for all repositories
+//   • Rollback Capability: Discard all changes if any operation fails
+//   • Repository Coordination: Multiple repositories share same transaction
+//
+// WHY IT MATTERS
+// --------------
+// ✅ ATOMICITY: All changes succeed together or none do (ACID compliance)
+// ✅ CONSISTENCY: Database always in valid state (no partial updates)
+// ✅ REDUCED DB CALLS: Batch multiple operations into single transaction
+// ✅ BUSINESS LOGIC INTEGRITY: Complex operations maintain data integrity
+// ✅ TRANSACTION MANAGEMENT: Centralized commit/rollback logic
+// ✅ CLEANER CODE: Business logic doesn't manage transactions directly
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Multiple repositories involved in single business transaction
+// ✅ Need atomic operations across multiple entities
+// ✅ Want to ensure data consistency across related changes
+// ✅ Complex business operations spanning multiple tables
+// ✅ Need centralized transaction management
+// ✅ Using Repository Pattern with coordinated updates
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Single entity operations (repository's SaveChanges() is enough)
+// ❌ Using Entity Framework DbContext directly (it's already a Unit of Work!)
+// ❌ Simple CRUD operations without transaction needs
+// ❌ Microservices with eventual consistency (distributed transactions complex)
+// ❌ Adding unnecessary abstraction over EF Core
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Imagine an e-commerce order processing system (like Amazon):
+//   • Customer places order for multiple products
+//   • Must update: Orders table, OrderItems table, Inventory table, CustomerCredit table
+//   • If ANY step fails, ALL changes must be rolled back
+//   • Example failure: Credit card declined AFTER inventory reduced
+//
+// Without Unit of Work:
+//   → orderRepository.Add(order);
+//   → orderRepository.SaveChanges();           // ✅ Order saved
+//   → itemRepository.Add(item1);
+//   → itemRepository.SaveChanges();             // ✅ Item saved
+//   → inventoryRepository.ReduceStock(productId);
+//   → inventoryRepository.SaveChanges();       // ✅ Stock reduced
+//   → creditRepository.ChargeCustomer(amount);
+//   → creditRepository.SaveChanges();          // ❌ FAILS - insufficient credit
+//   → PROBLEM: Order and inventory changed, but payment failed!
+//   → Database inconsistent (order exists with no payment)
+//   → Manual rollback required (complex, error-prone)
+//
+// With Unit of Work:
+//   → using (var uow = new UnitOfWork())
+//   → {
+//       → uow.Orders.Add(order);                  // Track change
+//       → uow.OrderItems.Add(item1);             // Track change
+//       → uow.Inventory.ReduceStock(productId);  // Track change
+//       → uow.Credit.ChargeCustomer(amount);     // Track change
+//       → uow.Complete();                        // Single transaction commit
+//   → }  // If ANY step fails, ALL changes rolled back automatically!
+//   → ✅ All changes succeed together or none do
+//   → ✅ Database always consistent
+//   → ✅ No manual rollback needed
+//
+// ENTITY FRAMEWORK CONTEXT NOTE
+// -----------------------------
+// Important: Entity Framework's DbContext already implements Unit of Work!
+//   • DbContext.SaveChanges() commits all tracked changes as one transaction
+//   • Adding another Unit of Work layer is often redundant
+//   • Only add if you need abstraction over DbContext or multiple contexts
+//
+// EF Core Example:
+//   _context.Orders.Add(order);          // Tracked
+//   _context.OrderItems.Add(item);       // Tracked
+//   _context.SaveChanges();              // Single transaction for both!
+//
+// COMPARISON WITH SIMILAR PATTERNS
+// --------------------------------
+// Unit of Work vs Repository:
+//   • Repository: Abstracts data access for single entity type
+//   • Unit of Work: Coordinates multiple repositories in one transaction
+//   • Often used together: UnitOfWork contains multiple Repositories
+//
+// Unit of Work vs Transaction:
+//   • Transaction: Database-level concept (BEGIN/COMMIT/ROLLBACK)
+//   • Unit of Work: Application-level pattern coordinating transactions
+//   • Unit of Work wraps and manages transactions
+//
 // ==============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Structural;

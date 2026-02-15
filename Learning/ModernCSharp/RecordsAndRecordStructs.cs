@@ -1,31 +1,28 @@
 // ==============================================================================
 // RECORDS & RECORD STRUCTS - Modern C# Data Types
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate C# 9+ records and C# 10+ record structs for immutable data models,
-//   value semantics, and concise syntax.
+// WHAT IS THIS?
+// -------------
+// Record types that provide immutability and value-based equality.
 //
-// WHY RECORDS:
-//   - Immutability by default (thread-safe, predictable)
-//   - Value-based equality (compare by contents, not reference)
-//   - Concise syntax (properties in constructor)
-//   - Built-in deconstruction
-//   - Non-destructive mutation (with expressions)
-//   - Perfect for DTOs, domain models, value objects
+// WHY IT MATTERS
+// --------------
+// ✅ Reduces boilerplate for data models
+// ✅ Encourages safe, immutable design
 //
-// WHAT YOU'LL LEARN:
-//   1. Record classes (reference types)
-//   2. Record structs (value types)
-//   3. Positional records
-//   4. With expressions (non-destructive mutation)
-//   5. Inheritance with records
-//   6. When to use records vs classes vs structs
+// WHEN TO USE
+// -----------
+// ✅ DTOs, value objects, and domain events
+// ✅ Small value types that benefit from value equality
 //
-// C# VERSIONS:
-//   - C# 9: Record classes
-//   - C# 10: Record structs, sealed ToString()
-//   - C# 11: Required members
+// WHEN NOT TO USE
+// ---------------
+// ❌ Entities with mutable identity or behavior
+// ❌ Large mutable objects with frequent state changes
 //
+// REAL-WORLD EXAMPLE
+// ------------------
+// API DTOs using records with with-expressions.
 // ==============================================================================
 
 namespace RevisionNotesDemo.ModernCSharp;
@@ -59,25 +56,25 @@ public class PersonClass
     public string FirstName { get; init; }
     public string LastName { get; init; }
     public int Age { get; init; }
-    
+
     public PersonClass(string firstName, string lastName, int age)
     {
         FirstName = firstName;
         LastName = lastName;
         Age = age;
     }
-    
+
     // Manual Equals
     public override bool Equals(object? obj) =>
         obj is PersonClass other &&
         FirstName == other.FirstName &&
         LastName == other.LastName &&
         Age == other.Age;
-    
+
     // Manual GetHashCode
     public override int GetHashCode() =>
         HashCode.Combine(FirstName, LastName, Age);
-    
+
     // Manual ToString
     public override string ToString() =>
         $"Person {{ FirstName = {FirstName}, LastName = {LastName}, Age = {Age} }}";
@@ -101,17 +98,17 @@ public static class RecordExamples
         // ✅ GOOD: Create record (concise)
         var person1 = new Person("John", "Doe", 30);
         var person2 = new Person("John", "Doe", 30);
-        
+
         // ✅ Value equality (compares contents, not reference)
         Console.WriteLine(person1 == person2); // True! (different instances, same values)
-        
+
         // ✅ Built-in ToString()
         Console.WriteLine(person1); // Person { FirstName = John, LastName = Doe, Age = 30 }
-        
+
         // ✅ Built-in deconstruction
         var (firstName, lastName, age) = person1;
         Console.WriteLine($"{firstName} {lastName}, {age}");
-        
+
         // ✅ Non-destructive mutation with 'with' expression
         var person3 = person1 with { Age = 31 }; // Creates new record, only Age changed
         Console.WriteLine(person3); // Person { FirstName = John, LastName = Doe, Age = 31 }
@@ -152,17 +149,17 @@ public static class RecordStructExamples
         // ✅ Stack allocation
         var p1 = new Point(10, 20);
         var p2 = new Point(10, 20);
-        
+
         // ✅ Value equality (built-in)
         Console.WriteLine(p1 == p2); // True
-        
+
         // ✅ With expressions work!
         var p3 = p1 with { X = 15 };
         Console.WriteLine(p3); // Point { X = 15, Y = 20 }
-        
+
         // ✅ ToString() generated
         Console.WriteLine(p1); // Point { X = 10, Y = 20 }
-        
+
         // Performance: No heap allocation, faster for small types
     }
 }
@@ -188,10 +185,10 @@ public record Product(string Name, decimal Price, int Stock, string Category = "
 {
     // Computed property
     public decimal TotalValue => Price * Stock;
-    
+
     // Validation
     public bool IsInStock => Stock > 0;
-    
+
     // Method
     public Product ReduceStock(int quantity) =>
         this with { Stock = Math.Max(0, Stock - quantity) };
@@ -202,20 +199,20 @@ public record BankAccount
 {
     public string AccountNumber { get; init; }
     public decimal Balance { get; private set; } // Private setter!
-    
+
     public BankAccount(string accountNumber, decimal initialBalance)
     {
         AccountNumber = accountNumber;
         Balance = initialBalance;
     }
-    
+
     // Methods can modify private state
     public void Deposit(decimal amount)
     {
         if (amount <= 0) throw new ArgumentException("Amount must be positive");
         Balance += amount;
     }
-    
+
     public void Withdraw(decimal amount)
     {
         if (amount <= 0) throw new ArgumentException("Amount must be positive");
@@ -270,15 +267,15 @@ public static class RecordInheritanceExamples
     {
         Shape circle = new Circle("Red", 5.0);
         Shape rectangle = new Rectangle("Blue", 10.0, 20.0);
-        
+
         Console.WriteLine($"Circle area: {circle.Area}"); // Polymorphism works!
         Console.WriteLine($"Rectangle area: {rectangle.Area}");
-        
+
         // ✅ Value equality considers full hierarchy
         var circle1 = new Circle("Red", 5.0);
         var circle2 = new Circle("Red", 5.0);
         Console.WriteLine(circle1 == circle2); // True
-        
+
         // ✅ With expressions work with inheritance
         var blueCircle = circle1 with { Color = "Blue" };
         Console.WriteLine(blueCircle); // Circle { Color = Blue, Radius = 5.0 }
@@ -298,10 +295,10 @@ public static class RecordVsClassVsStructGuide
     // - Data container with little behavior
     // - Thread safety important
     // Examples: User, Order, ProductDto, DomainEvent
-     
+
     public record UserDto(int Id, string Email, string Name);
     public record OrderCreatedEvent(int OrderId, DateTime Timestamp);
-    
+
     // ✅ USE CLASS WHEN:
     // - Mutable state required
     // - Complex behavior/logic
@@ -309,29 +306,29 @@ public static class RecordVsClassVsStructGuide
     // - Large object (> 1KB)
     // - Entity with identity
     // Examples: Repository, Service, Controller, Entity
-    
+
     public class UserService
     {
         private readonly IUserRepository _repository;
         public UserService(IUserRepository repository) => _repository = repository;
         // ... methods
     }
-    
+
     // ✅ USE RECORD STRUCT WHEN:
     // - Small, immutable value type (< 16 bytes)
     // - Value equality desired
     // - High performance needed (stack allocation)
     // - Frequently created/destroyed
     // Examples: Point, Color, Money, Coordinate
-    
+
     public readonly record struct Money(decimal Amount, string Currency);
     public readonly record struct Coordinate(double Latitude, double Longitude);
-    
+
     // ✅ USE STRUCT WHEN:
     // - Small value type with mutable state
     // - Legacy/interop requirements
     // Examples: DateTime, TimeSpan, Guid (framework types)
-    
+
     // ❌ AVOID:
     // - Large structs (causes performance issues)
     // - Mutable structs (confusing behavior)
@@ -347,7 +344,7 @@ public static class PositionalVsNominalRecords
 {
     // ✅ GOOD: Positional record (concise, immutable)
     public record PersonPositional(string FirstName, string LastName, int Age);
-    
+
     // ✅ GOOD: Nominal record (traditional property syntax)
     public record PersonNominal
     {
@@ -355,7 +352,7 @@ public static class PositionalVsNominalRecords
         public string LastName { get; init; }
         public int Age { get; init; }
     }
-    
+
     // ✅ GOOD: Mixing positional with additional properties
     public record Employee(string FirstName, string LastName)
     {
@@ -363,7 +360,7 @@ public static class PositionalVsNominalRecords
         public string Department { get; init; } = string.Empty;
         public decimal Salary { get; init; }
     }
-    
+
     // ✅ GOOD: Required members (C# 11+)
     public record Configuration
     {

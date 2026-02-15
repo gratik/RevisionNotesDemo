@@ -2,77 +2,28 @@
 // STACK VS HEAP
 // Reference: Revision Notes - Stack vs Heap - Page 5, Memory Management & Performance - Page 8
 // ============================================================================
-// DEFINITION:
-//   Stack and Heap are two memory regions where .NET stores data. Understanding
-//   the difference is crucial for writing efficient, memory-safe applications.
+// WHAT IS THIS?
+// -------------
+// Stack vs heap memory regions and how .NET stores values and objects.
 //
-// STACK:
-//   • What it stores: Value types (int, bool, struct, enum), method parameters, 
-//     local variables, return addresses
-//   • Characteristics: Fast (LIFO - Last In, First Out), automatically managed, 
-//     limited size (~1MB per thread)
-//   • Lifetime: Variables exist only within their scope
-//   • Access: Very fast (just move stack pointer)
-//   • Thread: Each thread has its own stack
+// WHY IT MATTERS
+// --------------
+// ✅ Explains allocation cost and copying behavior
+// ✅ Helps reason about GC and lifetime
 //
-// HEAP:
-//   • What it stores: Reference types (class, string, array, delegates)
-//   • Characteristics: Larger size, managed by Garbage Collector, slower allocation
-//   • Lifetime: Until Garbage Collector determines no references exist
-//   • Access: Slower (pointer dereference required)
-//   • Thread: Shared across all threads
+// WHEN TO USE
+// -----------
+// ✅ Performance investigations and memory profiling
+// ✅ Choosing between struct and class
 //
-// MEMORY STORAGE:
-//   • Value types → Stack (when local variable or method parameter)
-//   • Reference types → Heap (object itself)
-//   • Reference variable → Stack (pointer to heap object)
+// WHEN NOT TO USE
+// ---------------
+// ❌ Over-optimizing trivial code paths
+// ❌ Assuming all structs are stack-allocated
 //
-// EXAMPLE:
-//   int x = 10;              // Stack - value type
-//   string name = \"John\";    // \"name\" reference on stack, \"John\" object on heap
-//   Person p = new Person(); // \"p\" reference on stack, Person object on heap
-//
-// COPYING BEHAVIOUR:
-//   • Value types: Create full copy when assigned
-//   • Reference types: Copy reference (both variables point to same object)
-//
-// EQUALITY COMPARISON:
-//   • Value types: By value (same contents = equal)
-//   • Reference types: By reference (same memory address = equal, unless overridden)
-//
-// KEY POINTS:
-//   • Stack overflow = too much recursion or large value types
-//   • Heap fragmentation = GC's job to compact
-//   • Boxing = value type wrapped in reference type (goes to heap)
-//   • Unboxing = extracting value type from boxed object
-//
-// WHEN TO USE STRUCT (STACK):
-//   • Small data structures (< 16 bytes recommended)
-//   • Immutable types (readonly struct)
-//   • Value semantics required (copies should be independent)
-//   • Short-lived, high-frequency allocations
-//   • Examples: Point, Rectangle, Money, Complex numbers
-//
-// WHEN TO USE CLASS (HEAP):
-//   • Larger objects (> 16 bytes)
-//   • Reference semantics needed (share same instance)
-//   • Inheritance required (structs can't inherit)
-//   • Long-lived objects
-//   • Polymorphism needed
-//   • Examples: Customer, Order, Service classes
-//
-// PERFORMANCE CONSIDERATIONS:
-//   • Stack allocation/deallocation is very fast
-//   • Heap allocation triggers GC (overhead)
-//   • Large structs cause excessive copying (slow)
-//   • Boxing/unboxing has performance cost
-//
-// BEST PRACTICES:
-//   • Default to class unless you have specific reason for struct
-//   • Keep structs small and immutable
-//   • Use readonly struct to enforce immutability
-//   • Avoid boxing when possible
-//   • Be aware of closure allocations in lambdas
+// REAL-WORLD EXAMPLE
+// ------------------
+// Struct copy on stack vs shared class on heap.
 // ============================================================================
 
 namespace RevisionNotesDemo.MemoryManagement;

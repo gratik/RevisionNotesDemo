@@ -2,8 +2,28 @@
 // QUICK REFERENCE TABLES
 // Reference: Revision Notes - Appendix B
 // ============================================================================
-// PURPOSE:
-//   Provide compact lookup tables for common decisions and best practices.
+// WHAT IS THIS?
+// -------------
+// Compact tables for quick decisions and best practices.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Speeds up recall during design and reviews
+// ✅ Provides consistent defaults for teams
+//
+// WHEN TO USE
+// -----------
+// ✅ Fast lookup for common tradeoffs
+// ✅ Checklists during reviews
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ When deeper context and constraints are required
+// ❌ As a replacement for performance testing
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Choose async vs blocking I/O in a service.
 // ============================================================================
 
 namespace RevisionNotesDemo.Appendices;

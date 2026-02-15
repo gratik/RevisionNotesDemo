@@ -1,82 +1,39 @@
 // ============================================================================
-// KISS (Keep It Simple, Stupid), DRY (Don't Repeat Yourself), YAGNI (You Aren't Gonna Need It)
+// KISS, DRY, YAGNI
 // Reference: Revision Notes - Page 2
 // ============================================================================
-// 
-// KISS - KEEP IT SIMPLE, STUPID
-// ==============================
-// DEFINITION:
-//   "Simplicity should be a key goal; avoid unnecessary complexity."
-//   Choose the simplest solution that works.
 //
-// EXPLANATION:
-//   Complex code is harder to understand, maintain, test, and debug. Simple code is
-//   more maintainable and less bug-prone. Favor readability over cleverness.
+// WHAT ARE THESE PRINCIPLES?
+// ---------------------------
+// KISS: Keep it simple. Prefer the simplest solution that works.
+// DRY: Do not repeat yourself. One source of truth.
+// YAGNI: You are not going to need it. Do not build features early.
 //
-// BENEFITS:
-//   • Easier to understand and maintain
-//   • Fewer bugs
-//   • Easier to test
-//   • Faster onboarding for new developers
+// WHY IT MATTERS
+// --------------
+// - Simpler code is easier to maintain and test
+// - Reduces bugs caused by duplicated logic
+// - Focuses effort on current, real requirements
+// - Prevents over-engineering and wasted work
 //
-// GUIDELINES:
-//   • Favor readability over cleverness
-//   • Use clear naming
-//   • Break complex logic into smaller methods
-//   • Avoid premature optimization
-//   • Write code for humans, not machines
+// WHEN TO USE
+// -----------
+// - YES: Always, especially under time pressure or unclear requirements
+// - YES: When refactoring repeated logic or complex flows
+// - YES: When tempted to add "just in case" features
 //
-// 
-// DRY - DON'T REPEAT YOURSELF
-// ===========================
-// DEFINITION:
-//   "Every piece of knowledge should have a single, authoritative representation."
-//   Avoid duplicating logic.
+// WHEN NOT TO USE
+// ---------------
+// - NO: Do not oversimplify if correctness or safety requires complexity
+// - NO: Do not deduplicate code when duplication is intentional for clarity
+// - NO: Do not avoid needed abstractions that reduce real complexity
 //
-// EXPLANATION:
-//   When you need to change something, you should only need to change it in one place.
-//   Duplication leads to maintenance nightmares - fixing bugs in multiple places.
-//
-// BENEFITS:
-//   • Single source of truth
-//   • Easier maintenance
-//   • Reduces bugs (fix once, fixed everywhere)
-//   • Better consistency
-//
-// GUIDELINES:
-//   • Extract common code into methods/classes
-//   • Use inheritance or composition appropriately
-//   • Create reusable utilities
-//   • Avoid copy-paste programming
-//   • Use constants for magic numbers/strings
-//
-//
-// YAGNI - YOU AREN'T GONNA NEED IT
-// =================================
-// DEFINITION:
-//   "Don't implement something until it's actually needed."
-//   Don't add functionality speculatively.
-//
-// EXPLANATION:
-//   Adding features "just in case" adds complexity and maintenance burden for features
-//   that may never be used. Build what's needed now; refactor when requirements change.
-//
-// BENEFITS:
-//   • Reduces complexity
-//   • Faster development
-//   • Less code to maintain
-//   • Focus on actual requirements
-//
-// GUIDELINES:
-//   • Build what's needed now
-//   • Refactor when requirements actually change
-//   • Avoid speculative generality
-//   • Focus on current use cases
-//   • Let requirements drive features
-//
-// REAL-WORLD ANALOGY:
-//   Don't build a 10-bedroom mansion when you need a 2-bedroom house.
-//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Shipping calculator:
+// - KISS: Start with one clear rule (flat rate)
+// - DRY: Shared validation for weight and address
+// - YAGNI: Do not add international customs logic until required
 // ============================================================================
 
 namespace RevisionNotesDemo.OOPPrinciples;

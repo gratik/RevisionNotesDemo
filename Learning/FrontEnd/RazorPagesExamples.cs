@@ -1,8 +1,28 @@
 // ==============================================================================
 // FRONT-END UI - ASP.NET CORE RAZOR PAGES (PAGE-FOCUSED MODEL)
 // ==============================================================================
-// PURPOSE: Show Razor Pages patterns with good/bad illustrative examples.
-// NOTE: Examples are illustrative only and not meant to be run as-is.
+// WHAT IS THIS?
+// -------------
+// Page-focused UI patterns using Razor Pages and PageModel classes.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Reduces ceremony for page-centric apps
+// ✅ Keeps handlers close to page intent
+//
+// WHEN TO USE
+// -----------
+// ✅ Simple page workflows and CRUD screens
+// ✅ Sites with minimal routing complexity
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Large SPAs or highly interactive client apps
+// ❌ Complex API-first architectures
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// PageModel delegates to a service with ModelState checks.
 // ==============================================================================
 
 namespace RevisionNotesDemo.FrontEnd;

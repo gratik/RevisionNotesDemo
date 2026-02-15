@@ -1,34 +1,35 @@
 // ==============================================================================
 // MVC BEST PRACTICES - Model-View-Controller Pattern in ASP.NET Core
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate MVC best practices for building web applications with views.
-//   MVC separates concerns into Models (data), Views (UI), and Controllers (logic),
-//   providing a structured approach to building maintainable web applications.
 //
-// WHY MVC:
-//   - Clear separation of concerns
-//   - Testable application logic
-//   - Reusable views and components
-//   - Rich ecosystem of helpers and tag helpers
-//   - Server-side rendering for SEO
-//   - Familiar pattern for many developers
+// WHAT IS MVC?
+// ------------
+// A pattern that separates concerns into Models (data), Views (UI), and
+// Controllers (application flow). MVC is ideal for server-rendered web apps.
 //
-// WHAT YOU'LL LEARN:
-//   1. Controller structure and actions
-//   2. Returning views with models
-//   3. Form handling and model binding
-//   4. Validation and error handling
-//   5. Partial views and view components
-//   6. Filters and middleware
-//   7. Areas for large applications
-//   8. Razor Pages alternative
+// WHY IT MATTERS
+// --------------
+// - Clear separation of concerns
+// - Strong testability for controllers and services
+// - Reusable views and view components
+// - Server-rendered HTML for SEO and accessibility
 //
-// MVC VS API VS MINIMAL API:
-//   - MVC: Web apps with server-rendered HTML views
-//   - API: RESTful services returning JSON (no views)
-//   - Minimal API: Lightweight APIs with functional style
+// WHEN TO USE
+// -----------
+// - YES: Web apps with server-rendered views
+// - YES: Apps needing strong SEO and fast first paint
+// - YES: Teams comfortable with MVC conventions
 //
+// WHEN NOT TO USE
+// ---------------
+// - NO: Pure JSON APIs (use Web API or Minimal API)
+// - NO: SPA-only apps where server renders little HTML
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// E-commerce storefront:
+// - Controllers assemble product and cart data
+// - Views render HTML pages with partials and components
 // ==============================================================================
 
 using System.ComponentModel.DataAnnotations;

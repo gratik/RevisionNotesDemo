@@ -1,31 +1,28 @@
 // ==============================================================================
 // LOGGING BEST PRACTICES - Production Patterns and Anti-Patterns
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate production-grade logging patterns for reliability, performance,
-//   security, and troubleshooting. Learn what to log, when, and how.
+// WHAT IS THIS?
+// -------------
+// Guidance on what, when, and how to log in production.
 //
-// WHY BEST PRACTICES:
-//   - Prevent log-induced outages (excessive logging)
-//   - Ensure debuggability (sufficient logging)
-//   - Protect sensitive data
-//   - Optimize performance
-//   - Enable monitoring and alerting
+// WHY IT MATTERS
+// --------------
+// ✅ Prevents noisy logs and log-induced outages
+// ✅ Protects sensitive data while improving diagnostics
 //
-// WHAT YOU'LL LEARN:
-//   1. Correlation IDs for request tracing
-//   2. Performance logging patterns
-//   3. Sensitive data handling
-//   4. Exception logging
-//   5. Log levels strategy
-//   6. Avoiding common mistakes
+// WHEN TO USE
+// -----------
+// ✅ Any production service with observability needs
+// ✅ Systems requiring audit trails and troubleshooting
 //
-// GOLDEN RULES:
-//   - Log events, not data dumps
-//   - Use structured logging
-//   - Include correlation IDs
-//   - Don't log secrets
-//   - Balance detail vs volume
+// WHEN NOT TO USE
+// ---------------
+// ❌ Skipping these practices in production
+// ❌ Logging secrets or personally identifiable data
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Correlation IDs for end-to-end tracing.
 // ==============================================================================
 
 using Microsoft.Extensions.Logging;
@@ -61,71 +58,71 @@ public static class CorrelationIdExamples
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<CorrelationIdMiddleware> _logger;
-        
+
         public CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
         {
             _next = next;
             _logger = logger;
         }
-        
+
         public async Task InvokeAsync(HttpContext context)
         {
             // ✅ Check if correlation ID already exists (from upstream service)
             var correlationId = context.Request.Headers["X-Correlation-ID"].FirstOrDefault()
                 ?? Guid.NewGuid().ToString();
-            
+
             // ✅ Add to response headers for downstream services
             context.Response.Headers["X-Correlation-ID"] = correlationId;
-            
+
             // ✅ Add to HttpContext.Items for use throughout request
             context.Items["CorrelationId"] = correlationId;
-            
+
             // ✅ Add to logging scope - all logs include this
             using (_logger.BeginScope(new Dictionary<string, object> { ["CorrelationId"] = correlationId }))
             {
                 _logger.LogInformation("Request started: {Method} {Path}", context.Request.Method, context.Request.Path);
-                
+
                 await _next(context);
-                
+
                 _logger.LogInformation("Request completed: {StatusCode}", context.Response.StatusCode);
             }
         }
     }
-    
+
     // ✅ GOOD: Using correlation ID in service
     public class OrderService
     {
         private readonly ILogger<OrderService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+
         public OrderService(ILogger<OrderService> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
         }
-        
+
         public async Task PlaceOrder(int orderId)
         {
             // ✅ Correlation ID automatically included from scope
             _logger.LogInformation("Processing order {OrderId}", orderId);
-            
+
             // ✅ Pass to downstream service
             await CallPaymentService(orderId);
         }
-        
+
         private async Task CallPaymentService(int orderId)
         {
             var correlationId = _httpContextAccessor.HttpContext?.Items["CorrelationId"] as string;
-            
+
             // ✅ Include in HTTP request to downstream service
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("X-Correlation-ID", correlationId);
-            
+
             _logger.LogInformation("Calling payment service for order {OrderId}", orderId);
             // await client.PostAsync("https://payment-service/pay", ...);
         }
     }
-    
+
     // QUERY EXAMPLE in Seq/AppInsights:
     // CorrelationId = "abc-123-def"
     // Returns ALL logs across ALL services for that request
@@ -154,32 +151,32 @@ public static class PerformanceLoggingExamples
     public class ProductService
     {
         private readonly ILogger<ProductService> _logger;
-        
+
         public ProductService(ILogger<ProductService> logger)
         {
             _logger = logger;
         }
-        
+
         public async Task<List<Product>> GetProducts()
         {
             var stopwatch = Stopwatch.StartNew();
-            
+
             try
             {
                 var products = await FetchFromDatabase();
-                
+
                 stopwatch.Stop();
-                
+
                 // ✅ Log duration for successful operations
                 _logger.LogInformation("Fetched {Count} products in {ElapsedMs}ms",
                     products.Count, stopwatch.ElapsedMilliseconds);
-                
+
                 // ⚠️ Warning if slow
                 if (stopwatch.ElapsedMilliseconds > 1000)
                 {
                     _logger.LogWarning("Slow query detected: {ElapsedMs}ms (> 1000ms)", stopwatch.ElapsedMilliseconds);
                 }
-                
+
                 return products;
             }
             catch (Exception ex)
@@ -189,10 +186,10 @@ public static class PerformanceLoggingExamples
                 throw;
             }
         }
-        
+
         private Task<List<Product>> FetchFromDatabase() => Task.FromResult(new List<Product>());
     }
-    
+
     // ✅ BETTER: Disposable timing helper
     public class TimingLogger : IDisposable
     {
@@ -200,7 +197,7 @@ public static class PerformanceLoggingExamples
         private readonly string _operation;
         private readonly Stopwatch _stopwatch;
         private readonly LogLevel _level;
-        
+
         public TimingLogger(ILogger logger, string operation, LogLevel level = LogLevel.Information)
         {
             _logger = logger;
@@ -208,23 +205,23 @@ public static class PerformanceLoggingExamples
             _level = level;
             _stopwatch = Stopwatch.StartNew();
         }
-        
+
         public void Dispose()
         {
             _stopwatch.Stop();
             _logger.Log(_level, "{Operation} completed in {ElapsedMs}ms", _operation, _stopwatch.ElapsedMilliseconds);
         }
     }
-    
+
     public class ServiceWithTimingLogger
     {
         private readonly ILogger<ServiceWithTimingLogger> _logger;
-        
+
         public ServiceWithTimingLogger(ILogger<ServiceWithTimingLogger> logger)
         {
             _logger = logger;
         }
-        
+
         public async Task ProcessOrder(int orderId)
         {
             // ✅ Automatic timing with using statement
@@ -236,25 +233,25 @@ public static class PerformanceLoggingExamples
             }
             // Logs: "ProcessOrder completed in 1234ms"
         }
-        
+
         private Task ValidateOrder(int orderId) => Task.CompletedTask;
         private Task ChargePayment(int orderId) => Task.CompletedTask;
         private Task SendConfirmation(int orderId) => Task.CompletedTask;
     }
-    
+
     // ✅ GOOD: Activity/DiagnosticSource for distributed tracing
     public class DistributedTracingExample
     {
         private static readonly ActivitySource ActivitySource = new("MyApp.OrderService");
-        
+
         public async Task ProcessOrderWithTracing(int orderId)
         {
             using var activity = ActivitySource.StartActivity("ProcessOrder");
             activity?.SetTag("order.id", orderId);
-            
+
             // Automatic timing + distributed tracing
             await Task.Delay(100);
-            
+
             activity?.SetTag("order.status", "completed");
         }
         // Works with Application Insights, OpenTelemetry
@@ -290,42 +287,42 @@ public static class SensitiveDataExamples
     public class InsecureLogging
     {
         private readonly ILogger _logger;
-        
+
         public InsecureLogging(ILogger logger)
         {
             _logger = logger;
         }
-        
+
         public void BadLogin(string username, string password)
         {
             // ❌ NEVER!!
             _logger.LogInformation("Login attempt: Username={Username}, Password={Password}", username, password);
         }
-        
+
         public void BadPayment(string cardNumber, string cvv)
         {
             // ❌ NEVER!!
             _logger.LogInformation("Processing payment: Card={CardNumber}, CVV={CVV}", cardNumber, cvv);
         }
     }
-    
+
     // ✅ GOOD: Safe logging
     public class SecureLogging
     {
         private readonly ILogger _logger;
-        
+
         public SecureLogging(ILogger logger)
         {
             _logger = logger;
         }
-        
+
         public void GoodLogin(string username)
         {
             // ✅ Log event, not credentials
             _logger.LogInformation("Login attempt: Username={Username}", username);
             // Password not logged at all
         }
-        
+
         public void GoodPayment(string cardNumber)
         {
             // ✅ Mask sensitive data
@@ -333,13 +330,13 @@ public static class SensitiveDataExamples
             _logger.LogInformation("Processing payment: Card={MaskedCard}", maskedCard);
             // Output: "Processing payment: Card=****-****-****-1234"
         }
-        
+
         private string MaskCardNumber(string cardNumber)
         {
             if (cardNumber.Length < 4) return "****";
             return "****-****-****-" + cardNumber.Substring(cardNumber.Length - 4);
         }
-        
+
         // ✅ GOOD: Log sanitized user objects
         public void GoodUserUpdate(User user)
         {
@@ -355,7 +352,7 @@ public static class SensitiveDataExamples
                 });
         }
     }
-    
+
     // ✅ GOOD: Custom sanitizer for complex objects
     public class LogSanitizer
     {
@@ -364,7 +361,7 @@ public static class SensitiveDataExamples
             "Password", "PasswordHash", "Secret", "Token", "ApiKey",
             "CreditCard", "CardNumber", "CVV", "SSN", "SocialSecurity"
         };
-        
+
         public static object Sanitize(object obj)
         {
             // Use reflection to mask sensitive properties
@@ -400,12 +397,12 @@ public static class ExceptionLoggingExamples
     public class PaymentService
     {
         private readonly ILogger<PaymentService> _logger;
-        
+
         public PaymentService(ILogger<PaymentService> logger)
         {
             _logger = logger;
         }
-        
+
         // ❌ BAD: Insufficient context
         public async Task BadProcessPayment(int orderId, decimal amount)
         {
@@ -420,7 +417,7 @@ public static class ExceptionLoggingExamples
                 throw;
             }
         }
-        
+
         // ✅ GOOD: Rich context
         public async Task GoodProcessPayment(int orderId, int userId, decimal amount, string currency)
         {
@@ -428,9 +425,9 @@ public static class ExceptionLoggingExamples
             {
                 _logger.LogInformation("Processing payment: OrderId={OrderId}, UserId={UserId}, Amount={Amount}, Currency={Currency}",
                     orderId, userId, amount, currency);
-                
+
                 await ChargeCard(amount);
-                
+
                 _logger.LogInformation("Payment successful: OrderId={OrderId}", orderId);
             }
             catch (PaymentGatewayException ex)
@@ -450,20 +447,20 @@ public static class ExceptionLoggingExamples
                 throw;
             }
         }
-        
+
         // ✅ GOOD: Log BEFORE exception for partially completed operations
         public async Task RefundOrder(int orderId, decimal amount)
         {
             _logger.LogInformation("Starting refund: OrderId={OrderId}, Amount={Amount}", orderId, amount);
-            
+
             try
             {
                 await UpdateOrderStatus(orderId, "Refunding");
                 _logger.LogInformation("Order status updated to Refunding");
-                
+
                 await ProcessRefund(orderId, amount);
                 _logger.LogInformation("Refund processed successfully");
-                
+
                 await UpdateOrderStatus(orderId, "Refunded");
                 _logger.LogInformation("Refund completed: OrderId={OrderId}", orderId);
             }
@@ -474,7 +471,7 @@ public static class ExceptionLoggingExamples
                 throw;
             }
         }
-        
+
         private Task ChargeCard(decimal amount) => Task.CompletedTask;
         private Task UpdateOrderStatus(int orderId, string status) => Task.CompletedTask;
         private Task ProcessRefund(int orderId, decimal amount) => Task.CompletedTask;
@@ -501,32 +498,32 @@ public static class LogLevelStrategy
     public class WellLoggedService
     {
         private readonly ILogger<WellLoggedService> _logger;
-        
+
         public WellLoggedService(ILogger<WellLoggedService> logger)
         {
             _logger = logger;
         }
-        
+
         public async Task ProcessData(int dataId)
         {
             // ✅ TRACE: Very detailed, method entry/exit
             // Only enabled during deep debugging
             _logger.LogTrace("Entering ProcessData: DataId={DataId}", dataId);
-            
+
             // ✅ DEBUG: Developer diagnostics
             // Useful during development, disabled in prod
             _logger.LogDebug("Fetching data from cache");
             var data = await FetchData(dataId);
-            
+
             if (data == null)
             {
                 // ✅ WARNING: Unexpected but handled
                 _logger.LogWarning("Data {DataId} not found in cache, fetching from database", dataId);
                 data = await FetchFromDatabase(dataId);
             }
-            
+
             // ✅ INFORMATION: Significant business event  _logger.LogInformation("Processing data: DataId={DataId}, Size={Size}", dataId, data.Length);
-            
+
             try
             {
                 await ProcessInternal(data);
@@ -550,15 +547,15 @@ public static class LogLevelStrategy
                 _logger.LogCritical(ex, "Critical error processing data {DataId} - system may be unstable", dataId);
                 throw;
             }
-            
+
             _logger.LogTrace("Exiting ProcessData");
         }
-        
+
         private Task<byte[]> FetchData(int id) => Task.FromResult(new byte[0]);
         private Task<byte[]> FetchFromDatabase(int id) => Task.FromResult(new byte[0]);
         private Task ProcessInternal(byte[] data) => Task.CompletedTask;
     }
-    
+
     // PRODUCTION MINIMUM LEVELS:
     // ASP.NET Core app:
     // - Your code: Information
@@ -585,7 +582,7 @@ public static class LogLevelStrategy
 public class AntiPatterns
 {
     private static ILogger<AntiPatterns> _logger = null!;
-    
+
     // ❌ ANTI-PATTERN 1: Logging in loops
     public static async Task BadLoggingInLoop(List<int> ids)
     {
@@ -596,34 +593,34 @@ public class AntiPatterns
             await Task.Delay(1);
         }
     }
-    
+
     // ✅ BETTER: Log summary
     public static async Task GoodLoggingInLoop(List<int> ids)
     {
         _logger.LogInformation("Processing {Count} items", ids.Count);
-        
+
         foreach (var id in ids)
         {
             await Task.Delay(1);
         }
-        
+
         _logger.LogInformation("Completed processing {Count} items", ids.Count);
     }
-    
+
     // ❌ ANTI-PATTERN 2: Logging huge objects
     public static void BadLogLargeObject(byte[] data)
     {
         // ❌ If data is 10MB, your log entry is 10MB!
         _logger.LogInformation("Received data: {Data}", data);
     }
-    
+
     // ✅ BETTER: Log metadata only
     public static void GoodLogLargeObject(byte[] data)
     {
         _logger.LogInformation("Received data: Size={Size} bytes, Hash={Hash}",
             data.Length, ComputeHash(data));
     }
-    
+
     // ❌ ANTI-PATTERN 3: Catching and logging, then rethrowing
     public static async Task BadExceptionPattern()
     {
@@ -639,7 +636,7 @@ public class AntiPatterns
         }
         // Result: Duplicate logs for same exception
     }
-    
+
     // ✅ BETTER: Let global handler log, or handle here
     public static async Task GoodExceptionPattern()
     {
@@ -655,20 +652,20 @@ public class AntiPatterns
         }
         // OR: Don't catch, let global handler log
     }
-    
+
     // ❌ ANTI-PATTERN 4: String interpolation instead of templates
     public static void BadTemplating(int userId, string action)
     {
         // ❌ Not structured!
         _logger.LogInformation($"User {userId} performed {action}");
     }
-    
+
     // ✅ GOOD: Use templates
     public static void GoodTemplating(int userId, string action)
     {
         _logger.LogInformation("User {UserId} performed {Action}", userId, action);
     }
-    
+
     // ❌ ANTI-PATTERN 5: Checking if logging enabled manually
     public static void BadIsEnabledCheck()
     {
@@ -678,14 +675,14 @@ public class AntiPatterns
             _logger.LogDebug("Debug message");
         }
     }
-    
+
     // ✅ GOOD: Just log - automatic check
     public static void GoodDirectLogging()
     {
         // ✅ No allocation if Debug is disabled
         _logger.LogDebug("Debug message");
     }
-    
+
     // ✅ EXCEPTION: Only use IsEnabled for expensive computations
     public static void WhenToUseIsEnabled()
     {
@@ -696,7 +693,7 @@ public class AntiPatterns
             _logger.LogDebug("Debug info: {Data}", expensiveData);
         }
     }
-    
+
     private static string ComputeHash(byte[] data) => "hash";
     private static Task DoWork() => Task.CompletedTask;
     private static string ComputeExpensiveDebugInfo() => "expensive";
@@ -738,7 +735,7 @@ public class AntiPatterns
 // Supporting types
 public class Product
 {
-    public int Id {get; set; }
+    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
 }
 

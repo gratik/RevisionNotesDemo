@@ -1,9 +1,177 @@
 // ============================================================================
-// PROXY PATTERN
+// PROXY PATTERN - Control Access to Objects with Surrogate
 // Reference: Revision Notes - Design Patterns (Structural) - Page 3
 // ============================================================================
-// PURPOSE: "Provides a placeholder for another object to control access to it."
-// EXAMPLE: Lazy-loading large images in a gallery.
+//
+// WHAT IS THE PROXY PATTERN?
+// ---------------------------
+// Provides a surrogate or placeholder for another object to control access to it.
+// The proxy has the same interface as the real object but adds additional
+// functionality like lazy loading, access control, caching, or logging.
+//
+// Think of it as: "Credit card (proxy) for bank account (real object) - same
+// purchasing power but adds security checks and logging"
+//
+// Core Concepts:
+//   • Subject: Interface that both Proxy and RealSubject implement
+//   • RealSubject: The actual object being proxied
+//   • Proxy: Controls access to RealSubject
+//   • Transparent: Client uses proxy exactly like real object
+//   • Delegation: Proxy forwards requests to RealSubject (when appropriate)
+//
+// WHY IT MATTERS
+// --------------
+// ✅ LAZY INITIALIZATION: Create expensive objects only when needed
+// ✅ ACCESS CONTROL: Check permissions before allowing operations
+// ✅ CACHING: Store results to avoid repeated expensive operations
+// ✅ LOGGING: Track all access to object for audit/debug
+// ✅ REMOTE ACCESS: Represent remote objects locally (RPC, WCF)
+// ✅ REFERENCE COUNTING: Track object usage for resource management
+//
+// TYPES OF PROXIES
+// ----------------
+// 1. VIRTUAL PROXY (Lazy Loading):
+//    Delays creation of expensive object until first use
+//    Example: Load 100MB image only when user scrolls to it
+//
+// 2. PROTECTION PROXY (Access Control):
+//    Controls access based on permissions/roles
+//    Example: Admin-only operations
+//
+// 3. REMOTE PROXY:
+//    Represents object in different address space
+//    Example: WCF service proxy, REST API client
+//
+// 4. CACHING PROXY:
+//    Stores results of expensive operations
+//    Example: Cache database query results
+//
+// 5. LOGGING PROXY:
+//    Logs all method calls
+//    Example: Audit trail for sensitive operations
+//
+// 6. SMART REFERENCE:
+//    Additional actions when object is accessed
+//    Example: Reference counting for garbage collection
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Lazy initialization: Expensive object creation should be deferred
+// ✅ Access control: Need to check permissions before operations
+// ✅ Remote object: Object is in different process/machine
+// ✅ Caching: Avoid repeated expensive operations
+// ✅ Logging/Monitoring: Track object usage
+// ✅ Resource management: Control lifecycle of expensive resources
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Object creation is cheap (unnecessary overhead)
+// ❌ No need for access control, lazy loading, or caching
+// ❌ Direct access is acceptable
+// ❌ Proxy logic becomes more complex than real object
+// ❌ Performance overhead not justified
+//
+// REAL-WORLD EXAMPLE - Image Gallery
+// -----------------------------------
+// Photo gallery app with 1000 high-res images:
+//   • Each image: 10MB (10GB total!)
+//   • User scrolls through thumbnails
+//   • Loading all images upfront = app crash (out of memory)
+//
+// Without Proxy:
+//   → var images = new List<RealImage>();
+//   → for (int i = 0; i < 1000; i++) {
+//         images.Add(new RealImage($"photo{i}.jpg")); // Loads 10MB immediately!
+//     }
+//   → 10GB loaded into memory
+//   → App crashes or becomes unusably slow
+//   → User only views 5-10 images per session
+//   → Wasted 99% of memory on unseen images
+//
+// With Proxy (Virtual Proxy):
+//   → var images = new List<IImage>();
+//   → for (int i = 0; i < 1000; i++) {
+//         images.Add(new ImageProxy($"photo{i}.jpg")); // Just filename, no load!
+//     }
+//   → ImageProxy.Display() checks if loaded:
+//       - If not loaded: Load image from disk (10MB)
+//       - If loaded: Use cached instance
+//   → Only images actually viewed are loaded
+//   → Memory usage: 50-100MB instead of 10GB
+//   → Fast startup, responsive scrolling
+//
+// ANOTHER EXAMPLE - Database Access Control
+// -----------------------------------------
+// Banking system:
+//   • CustomerRepository allows all operations
+//   • Only admins should delete customers
+//   • Regular users can only read
+//
+// Protection Proxy:
+//   public class ProtectedCustomerRepository : ICustomerRepository
+//   {
+//       private readonly ICustomerRepository _realRepo;
+//       private readonly IUser _currentUser;
+//
+//       public void Delete(int id)
+//       {
+//           if (!_currentUser.IsAdmin)
+//               throw new UnauthorizedAccessException("Admin only!");
+//           
+//           _realRepo.Delete(id); // Only executes if authorized
+//       }
+//
+//       public Customer Get(int id)
+//       {
+//           // Anyone can read
+//           return _realRepo.Get(id);
+//       }
+//   }
+//
+// ANOTHER EXAMPLE - Caching Proxy
+// -------------------------------
+// Expensive web API calls:
+//   public class CachingWeatherProxy : IWeatherService
+//   {
+//       private readonly IWeatherService _realService;
+//       private readonly Dictionary<string, (Weather data, DateTime cached)> _cache;
+//
+//       public Weather GetWeather(string city)
+//       {
+//           if (_cache.TryGetValue(city, out var cached))
+//           {
+//               if (DateTime.Now - cached.cached < TimeSpan.FromHours(1))
+//                   return cached.data; // Return cached data
+//           }
+//
+//           var weather = _realService.GetWeather(city); // Expensive API call
+//           _cache[city] = (weather, DateTime.Now);
+//           return weather;
+//       }
+//   }
+//
+// .NET FRAMEWORK EXAMPLES
+// -----------------------
+// Proxy pattern used extensively in .NET:
+//   • WCF Service Proxies: Represent remote services
+//   • Entity Framework: DbContext uses proxies for lazy loading
+//   • Lazy<T>: Virtual proxy for lazy initialization
+//   • Dynamic proxies: Castle DynamicProxy, DispatchProxy
+//
+// PROXY VS SIMILAR PATTERNS
+// -------------------------
+// Proxy vs Decorator:
+//   • Proxy: Same interface, controls access (protection, lazy loading)
+//   • Decorator: Same interface, adds functionality
+//
+// Proxy vs Adapter:
+//   • Proxy: Same interface as real object
+//   • Adapter: Converts one interface to another
+//
+// Proxy vs Facade:
+//   • Proxy: One-to-one relationship with real object
+//   • Facade: Simplifies access to entire subsystem
+//
 // ============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Structural;

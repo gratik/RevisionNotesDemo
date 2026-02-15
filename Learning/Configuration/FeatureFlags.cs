@@ -1,27 +1,28 @@
 // ==============================================================================
 // FEATURE FLAGS - Safe Feature Deployment
 // ==============================================================================
-// PURPOSE:
-//   Master feature flags for safe, gradual feature rollout.
-//   Deploy code disabled, enable for testing, gradually roll out.
+// WHAT IS THIS?
+// -------------
+// Feature flags for controlled rollout and safe releases.
 //
-// WHY FEATURE FLAGS:
-//   - Deploy without releasing
-//   - Test in production safely
-//   - Gradual rollout (1% → 10% → 100%)
-//   - Instant killswitch
-//   - A/B testing
+// WHY IT MATTERS
+// --------------
+// ✅ Decouples deployment from release
+// ✅ Provides instant kill switches
 //
-// WHAT YOU'LL LEARN:
-//   1. Basic feature toggles
-//   2. Microsoft.FeatureManagement library
-//   3. Per-user/per-tenant flags
-//   4. Time-based activation
-//   5. Percentage rollout
-//   6. Integration with config/database
+// WHEN TO USE
+// -----------
+// ✅ Gradual rollouts and beta programs
+// ✅ Risky changes that need rollback
 //
-// KEY PRINCIPLE:
-//   Separate deployment from release. Deploy dark, light up gradually.
+// WHEN NOT TO USE
+// ---------------
+// ❌ Permanent flags that never get removed
+// ❌ Flags with no fallback path
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Percentage rollout for a new checkout flow.
 // ==============================================================================
 
 using Microsoft.AspNetCore.Mvc;
@@ -58,25 +59,25 @@ public class BasicFeatureFlagsExamples
     //     "BetaFeatures": false
     //   }
     // }
-    
+
     // ✅ Configure Microsoft.FeatureManagement
     public static void Configure(WebApplicationBuilder builder)
     {
         // Install: dotnet add package Microsoft.FeatureManagement.AspNetCore
-        
+
         builder.Services.AddFeatureManagement();  // ✅ Register service
     }
-    
+
     // ✅ GOOD: Check feature flag in code
     public class CheckoutService
     {
         private readonly IFeatureManager _featureManager;
-        
+
         public CheckoutService(IFeatureManager featureManager)
         {
             _featureManager = featureManager;
         }
-        
+
         public async Task<CheckoutResult> ProcessCheckout(Order order)
         {
             // ✅ Check if new feature is enabled
@@ -84,17 +85,17 @@ public class BasicFeatureFlagsExamples
             {
                 return await ProcessCheckoutV2(order);  // ✅ New implementation
             }
-            
+
             return await ProcessCheckoutV1(order);  // ✅ Old implementation (fallback)
         }
-        
+
         private Task<CheckoutResult> ProcessCheckoutV1(Order order) =>
             Task.FromResult(new CheckoutResult { Success = true });
-        
+
         private Task<CheckoutResult> ProcessCheckoutV2(Order order) =>
             Task.FromResult(new CheckoutResult { Success = true, Enhanced = true });
     }
-    
+
     // ✅ GOOD: Feature flag in controller with attribute
     [ApiController]
     [Route("api/[controller]")]
@@ -106,7 +107,7 @@ public class BasicFeatureFlagsExamples
             // Always available
             return Ok(new[] { "Result 1", "Result 2" });
         }
-        
+
         [HttpGet("advanced")]
         [FeatureGate("AdvancedSearch")]  // ✅ Only available if feature enabled
         public IActionResult AdvancedSearch(string query, string? category, decimal? minPrice)
@@ -115,7 +116,7 @@ public class BasicFeatureFlagsExamples
             return Ok(new[] { "Advanced Result 1", "Advanced Result 2" });
         }
     }
-    
+
     public class Order { }
     public class CheckoutResult { public bool Success { get; set; } public bool Enhanced { get; set; } }
 }
@@ -146,33 +147,33 @@ public class PercentageRolloutExamples
     //     }
     //   }
     // }
-    
+
     public class DashboardService
     {
         private readonly IFeatureManager _featureManager;
-        
+
         public DashboardService(IFeatureManager featureManager)
         {
             _featureManager = featureManager;
         }
-        
+
         public async Task<Dashboard> GetDashboard(string userId)
         {
             // ✅ Percentage-based: Same user always gets same result (sticky)
             var context = new TargetingContext { UserId = userId };
-            
+
             if (await _featureManager.IsEnabledAsync("NewDashboard", context))
             {
                 return GetDashboardV2();  // ✅ 25% see new version
             }
-            
+
             return GetDashboardV1();  // ✅ 75% see old version
         }
-        
+
         private Dashboard GetDashboardV1() => new() { Version = 1 };
         private Dashboard GetDashboardV2() => new() { Version = 2 };
     }
-    
+
     public class Dashboard { public int Version { get; set; } }
 }
 
@@ -212,20 +213,20 @@ public class UserTargetingExamples
     //     }
     //   }
     // }
-    
+
     // ✅ Configure targeting
     public static void ConfigureTargeting(WebApplicationBuilder builder)
     {
         builder.Services.AddFeatureManagement()
             .AddFeatureFilter<TargetingFilter>();  // ✅ Enable targeting filter
     }
-    
+
     // ✅ GOOD: Check feature with user context
     public class FeatureService
     {
         private readonly IFeatureManager _featureManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+
         public FeatureService(
             IFeatureManager featureManager,
             IHttpContextAccessor httpContextAccessor)
@@ -233,32 +234,32 @@ public class UserTargetingExamples
             _featureManager = featureManager;
             _httpContextAccessor = httpContextAccessor;
         }
-        
+
         public async Task<bool> CanAccessBetaFeatures()
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
                 return false;
-            
+
             // ✅ Build targeting context from current user
             var context = new TargetingContext
             {
                 UserId = httpContext.User.Identity?.Name ?? "",
                 Groups = new[] { GetUserGroup(httpContext) }
             };
-            
+
             return await _featureManager.IsEnabledAsync("BetaFeatures", context);
         }
-        
+
         private string GetUserGroup(Microsoft.AspNetCore.Http.HttpContext context)
         {
             // Check if user is in beta group (from claims, database, etc.)
             if (context.User.HasClaim("Group", "BetaTesters"))
                 return "BetaTesters";
-            
+
             if (context.User.IsInRole("Internal"))
                 return "InternalTeam";
-            
+
             return "Standard";
         }
     }
@@ -302,43 +303,43 @@ public class TimeWindowExamples
     //     }
     //   }
     // }
-    
+
     // ✅ Configure time window filter
     public static void ConfigureTimeWindow(WebApplicationBuilder builder)
     {
         builder.Services.AddFeatureManagement()
             .AddFeatureFilter<TimeWindowFilter>();  // ✅ Enable time filter
     }
-    
+
     public class PricingService
     {
         private readonly IFeatureManager _featureManager;
-        
+
         public PricingService(IFeatureManager featureManager)
         {
             _featureManager = featureManager;
         }
-        
+
         public async Task<decimal> GetPrice(Product product)
         {
             var basePrice = product.Price;
-            
+
             // ✅ Automatically enabled during Black Friday
             if (await _featureManager.IsEnabledAsync("BlackFridaySale"))
             {
                 return basePrice * 0.7m;  // 30% off
             }
-            
+
             // ✅ Automatically enabled during New Year
             if (await _featureManager.IsEnabledAsync("NewYearPromo"))
             {
                 return basePrice * 0.85m;  // 15% off
             }
-            
+
             return basePrice;
         }
     }
-    
+
     public class Product { public decimal Price { get; set; } }
 }
 
@@ -357,38 +358,38 @@ public class CustomFeatureFilterExamples
     public class SubscriptionTierFilter : IFeatureFilter
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+
         public SubscriptionTierFilter(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
-        
+
         public Task<bool> EvaluateAsync(FeatureFilterEvaluationContext context)
         {
             var parameters = context.Parameters.Get<SubscriptionTierFilterSettings>();
-            
+
             if (parameters == null)
                 return Task.FromResult(false);
-            
+
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
                 return Task.FromResult(false);
-            
+
             // ✅ Get user's subscription tier
             var userTier = httpContext.User.FindFirst("SubscriptionTier")?.Value;
-            
+
             // ✅ Check if tier matches required tiers
             var isEnabled = parameters.RequiredTiers.Contains(userTier ?? "Free");
-            
+
             return Task.FromResult(isEnabled);
         }
     }
-    
+
     public class SubscriptionTierFilterSettings
     {
         public List<string> RequiredTiers { get; set; } = new();
     }
-    
+
     // appsettings.json:
     // {
     //   "FeatureManagement": {
@@ -404,26 +405,26 @@ public class CustomFeatureFilterExamples
     //     }
     //   }
     // }
-    
+
     // ✅ Register custom filter
     public static void RegisterCustomFilter(WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        
+
         builder.Services.AddFeatureManagement()
             .AddFeatureFilter<SubscriptionTierFilter>();  // ✅ Register custom filter
     }
-    
+
     // ✅ Use in service
     public class AnalyticsService
     {
         private readonly IFeatureManager _featureManager;
-        
+
         public AnalyticsService(IFeatureManager featureManager)
         {
             _featureManager = featureManager;
         }
-        
+
         public async Task<AnalyticsReport> GetReport()
         {
             // ✅ Only Premium/Enterprise users see advanced analytics
@@ -431,14 +432,14 @@ public class CustomFeatureFilterExamples
             {
                 return GetAdvancedReport();
             }
-            
+
             return GetBasicReport();
         }
-        
+
         private AnalyticsReport GetBasicReport() => new() { Type = "Basic" };
         private AnalyticsReport GetAdvancedReport() => new() { Type = "Advanced" };
     }
-    
+
     public class AnalyticsReport { public string Type { get; set; } = ""; }
 }
 
@@ -477,19 +478,19 @@ public class KillswitchExamples
         builder.Services.AddFeatureManagement();
     }
     */
-    
+
     // In Azure Portal:
     // 1. Navigate to App Configuration
     // 2. Feature Manager
     // 3. Toggle "NewPaymentFlow" : ON → OFF
     // 4. All instances pick up change in 30 seconds
-    
+
     // ✅ GOOD: Fallback when feature disabled
     public class PaymentService
     {
         private readonly IFeatureManager _featureManager;
         private readonly ILogger<PaymentService> _logger;
-        
+
         public PaymentService(
             IFeatureManager featureManager,
             ILogger<PaymentService> logger)
@@ -497,7 +498,7 @@ public class KillswitchExamples
             _featureManager = featureManager;
             _logger = logger;
         }
-        
+
         public async Task<PaymentResult> ProcessPayment(decimal amount)
         {
             if (await _featureManager.IsEnabledAsync("NewPaymentFlow"))
@@ -512,17 +513,17 @@ public class KillswitchExamples
                     // Fall through to V1
                 }
             }
-            
+
             return await ProcessPaymentV1(amount);  // ✅ Old system (safe fallback)
         }
-        
+
         private Task<PaymentResult> ProcessPaymentV1(decimal amount) =>
             Task.FromResult(new PaymentResult { Success = true, Version = 1 });
-        
+
         private Task<PaymentResult> ProcessPaymentV2(decimal amount) =>
             Task.FromResult(new PaymentResult { Success = true, Version = 2 });
     }
-    
+
     public class PaymentResult { public bool Success { get; set; } public int Version { get; set; } }
 }
 

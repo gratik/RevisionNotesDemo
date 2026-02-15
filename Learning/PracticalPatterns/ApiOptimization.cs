@@ -2,8 +2,28 @@
 // API OPTIMIZATION
 // Reference: Revision Notes - Practical Scenarios - Page 13
 // ============================================================================
-// PURPOSE: "Optimize APIs using async I/O, output caching, and efficient resource handling."
-// TECHNIQUES: Async/await for I/O, response caching, connection pooling, pagination
+// WHAT IS THIS?
+// -------------
+// Performance patterns for APIs (async I/O, pagination, pooling).
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Reduces latency and resource usage under load
+// ✅ Improves scalability for busy endpoints
+//
+// WHEN TO USE
+// -----------
+// ✅ High-traffic endpoints or large datasets
+// ✅ API responses that can be streamed or paginated
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Low-traffic prototypes where simplicity wins
+// ❌ Premature optimization without measurements
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Paginated list endpoints with async data access.
 // ============================================================================
 
 using System.Diagnostics;

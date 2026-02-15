@@ -2,105 +2,28 @@
 // GENERICS WITH CONSTRAINTS
 // Reference: Revision Notes - .NET Framework - Page 6-7
 // ==============================================================================
-// DEFINITION:
-//   Write code that works with any type, determined at compile-time. Type parameters
-//   can be constrained to specific types using 'where' clauses.
+// WHAT IS THIS?
+// -------------
+// Generic types and methods with constraints using `where` clauses.
 //
-// PURPOSE:
-//   Provide type-safe reusable code without boxing/unboxing overhead. Allows creating
-//   classes, interfaces, and methods that work with multiple types while maintaining
-//   type safety.
+// WHY IT MATTERS
+// --------------
+// ✅ Enables reusable, type-safe code
+// ✅ Avoids boxing for value types
 //
-// BASIC SYNTAX:
-//   public class Repository<T> { }                    // Generic class
-//   public interface IRepository<T> { }               // Generic interface
-//   public T GetValue<T>() { }                        // Generic method
+// WHEN TO USE
+// -----------
+// ✅ Repositories, factories, and utilities across types
+// ✅ Algorithms that need type capabilities enforced
 //
-// CONSTRAINTS (where T : ...):
-//   
-//   where T : class
-//     • T must be a reference type (class, interface, delegate)
-//     • Can assign null to T
-//   
-//   where T : struct
-//     • T must be a value type (int, bool, enum, struct)
-//     • Cannot be nullable
-//   
-//   where T : new()
-//     • T must have a public parameterless constructor
-//     • Allows creating instances: new T()
-//   
-//   where T : BaseClass
-//     • T must inherit from BaseClass
-//     • Enables calling BaseClass methods
-//   
-//   where T : IInterface
-//     • T must implement IInterface
-//     • Can call interface methods
-//   
-//   where T : U
-//     • T must inherit from type parameter U
-//     • For multiple type parameters
-//   
-//   where T : notnull
-//     • T must be a non-nullable type (C# 8+)
-//   
-//   where T : unmanaged
-//     • T must be an unmanaged type (value types, no references)
+// WHEN NOT TO USE
+// ---------------
+// ❌ When a concrete type is simpler
+// ❌ Overly restrictive constraints that limit reuse
 //
-// MULTIPLE CONSTRAINTS:
-//   public class Manager<T> where T : class, IDisposable, new() { }
-//   Order matters: class/struct first, then interface, then new()
-//
-// BENEFITS:
-//   • Type safety: Compile-time checking (no casting)
-//   • Performance: No boxing/unboxing for value types
-//   • Code reuse: Write once, use with many types
-//   • IntelliSense support: Better IDE experience
-//   • Eliminates code duplication
-//
-// EXAMPLES:
-//   
-//   // Generic repository
-//   public class Repository<T> where T : class, new() {
-//       public T Create() => new T();
-//   }
-//   
-//   // Generic method
-//   public static void Swap<T>(ref T a, ref T b) {
-//       T temp = a; a = b; b = temp;
-//   }
-//   
-//   // Multiple constraints
-//   public class Manager<T> where T : IDisposable {
-//       public void DisposeAll(List<T> items) {
-//           foreach (var item in items) item.Dispose();
-//       }
-//   }
-//
-// VARIANCE:
-//   • Covariance (out T): Can return more derived types
-//   • Contravariance (in T): Can accept less derived types
-//   • Used in interfaces and delegates
-//
-// REAL-WORLD USAGE:
-//   • Collections: List<T>, Dictionary<TKey, TValue>, HashSet<T>
-//   • LINQ: IEnumerable<T>, IQueryable<T>
-//   • Repositories: IRepository<T>
-//   • Factory patterns: IFactory<T>
-//
-// CAUTIONS:
-//   • Cannot use type T in static members
-//   • Cannot create arrays of generic types directly
-//   • Be careful with constraints - too restrictive limits usability
-//   • Generic methods can infer type arguments (often don't need to specify <T>)
-//
-// BEST PRACTICES:
-//   • Use constraints to express requirements clearly
-//   • Prefer specific constraints over object
-//   • Use meaningful type parameter names (TEntity, TKey, TValue)
-//   • Don't over-constrain unless necessary
-//   • Consider covariance/contravariance for interfaces
+// REAL-WORLD EXAMPLE
+// ------------------
+// IRepository<T> constrained to `class` and `new()`.
 // ==============================================================================
 
 namespace RevisionNotesDemo.CoreCSharpFeatures;

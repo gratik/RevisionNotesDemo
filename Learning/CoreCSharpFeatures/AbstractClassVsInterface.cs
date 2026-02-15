@@ -2,9 +2,28 @@
 // ABSTRACT CLASSES VS INTERFACES
 // Reference: Revision Notes - Advanced OOP & Language Features - Page 6
 // ============================================================================
-// Abstract Class: Can have both abstract and non-abstract members, fields, constructors
-// Interface: Only signatures (until C# 8 default implementations), no fields
-// When to use: Abstract class for shared base functionality; interface for contracts
+// WHAT IS THIS?
+// -------------
+// Comparison of shared base classes vs contract-only interfaces.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Guides correct abstraction and reuse choices
+// ✅ Prevents misuse of inheritance
+//
+// WHEN TO USE
+// -----------
+// ✅ Abstract class for shared behavior and state
+// ✅ Interface for capabilities across unrelated types
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Inheritance only for code reuse
+// ❌ Forcing a base class where composition fits better
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// `Shape` base class with `IColored` contract.
 // ============================================================================
 
 namespace RevisionNotesDemo.CoreCSharpFeatures;

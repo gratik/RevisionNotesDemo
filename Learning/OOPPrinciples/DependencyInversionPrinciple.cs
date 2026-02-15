@@ -2,57 +2,36 @@
 // DEPENDENCY INVERSION PRINCIPLE (DIP)
 // Reference: Revision Notes - OOP (Object Oriented Principals) - Page 2
 // ============================================================================
-// DEFINITION:
-//   "High-level modules should not depend on low-level modules. Both should depend
-//   on abstractions. Abstractions should not depend on details. Details should depend
-//   on abstractions."
 //
-// EXPLANATION:
-//   Depend on interfaces or abstract classes, not concrete implementations. This
-//   inverts the traditional dependency flow where high-level code depends on low-level
-//   code. Now both depend on abstractions, allowing implementations to be swapped easily.
+// WHAT IS DIP?
+// ------------
+// High-level modules should not depend on low-level modules. Both should depend
+// on abstractions. Details should depend on abstractions, not the other way around.
 //
-// EXAMPLE:
-//   ❌ BAD: OrderService directly creates SqlDatabase instance
-//   ✅ GOOD: OrderService depends on IDatabase interface; concrete implementation injected
+// WHY IT MATTERS
+// --------------
+// - Reduces coupling between layers
+// - Enables easy testing with mocks/fakes
+// - Allows swapping implementations without changes
+// - Supports modular, maintainable architectures
 //
-// REAL-WORLD ANALOGY:
-//   Wall electrical outlets (abstraction) - you don't care about the power plant
-//   (implementation). Any compliant device works with any outlet.
-//   USB standard - devices work with any USB port.
+// WHEN TO USE
+// -----------
+// - YES: When you need multiple implementations of a dependency
+// - YES: When code must be unit tested in isolation
+// - YES: In layered architectures (UI, domain, infrastructure)
 //
-// BENEFITS:
-//   • Loose coupling between modules
-//   • Easy to test (mock dependencies)
-//   • Flexible - swap implementations easily
-//   • Better maintainability
-//   • Supports plugin architectures
+// WHEN NOT TO USE
+// ---------------
+// - NO: For tiny utilities where abstraction adds no value
+// - NO: If the dependency is stable and unlikely to change
 //
-// WHEN TO USE:
-//   • Always! This is a fundamental principle
-//   • When you need to swap implementations
-//   • When unit testing (need to mock dependencies)
-//   • When building layered architectures
-//   • When multiple implementations of same behavior exist
-//
-// COMMON VIOLATIONS:
-//   • Using 'new' keyword to create dependencies inside classes
-//   • Direct references to concrete classes
-//   • Hardcoded file paths, connection strings
-//   • Static method calls to concrete implementations
-//
-// HOW TO ACHIEVE DIP:
-//   • Dependency Injection (Constructor, Property, Method injection)
-//   • IoC (Inversion of Control) containers
-//   • Factory patterns
-//   • Service Locator pattern (less preferred)
-//
-// BEST PRACTICES:
-//   • Inject dependencies via constructor (preferred)
-//   • Program to interfaces
-//   • Use DI containers (built-in .NET Core DI)
-//   • Keep abstractions stable, let implementations change
-//   • Follow Hollywood Principle: "Don't call us, we'll call you"
+// REAL-WORLD EXAMPLE
+// ------------------
+// Notifications:
+// - NotificationService depends on IMessageSender
+// - Implementations: EmailSender, SmsSender, SlackSender
+// - Add a new channel without modifying NotificationService
 // ============================================================================
 
 namespace RevisionNotesDemo.OOPPrinciples;

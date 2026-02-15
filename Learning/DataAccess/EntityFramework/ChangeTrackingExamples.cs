@@ -2,24 +2,36 @@
 // ENTITY FRAMEWORK CORE - CHANGE TRACKING EXAMPLES
 // Reference: Revision Notes - Entity Framework Core (Section 8.6.1)
 // ==============================================================================
-// PURPOSE: Master EF Core's change tracking system - the foundation of how EF
-//          knows what to save to the database. Understanding this is CRITICAL
-//          for performance and correctness in real applications.
 //
-// WHAT YOU'LL LEARN:
-//   • The 5 entity states: Detached, Added, Modified, Deleted, Unchanged
-//   • When and WHY to use AsNoTracking (30-40% performance gain)
-//   • How to handle disconnected scenarios (API updates, web forms)
-//   • Manual state management for advanced scenarios
-//   • Context-level tracking configuration
+// WHAT IS CHANGE TRACKING?
+// ------------------------
+// EF Core tracks entity state to decide which SQL to generate on SaveChanges.
+// Entities are marked as Detached, Added, Modified, Deleted, or Unchanged.
 //
-// REAL-WORLD SCENARIOS:
-//   - Read-only queries (reports, lists, dashboards) → Use AsNoTracking
-//   - Web APIs receiving entity updates → Manual state management
-//   - Long-running contexts → Disable tracking by default
-//   - Performance-critical queries → AsNoTracking + projection
+// WHY IT MATTERS
+// --------------
+// - Correctness: EF updates the right rows and columns
+// - Performance: tracking adds overhead for read-only queries
+// - Disconnected scenarios: APIs must set state explicitly
+// - Concurrency: avoids overwriting unintended fields
 //
-// KEY CONCEPTS: Entity states, AsNoTracking, manual state management, disconnected scenarios
+// WHEN TO USE
+// -----------
+// - YES: Normal CRUD with DbContext per request
+// - YES: Disconnected updates (API receives DTOs)
+// - YES: Read-only queries with AsNoTracking
+//
+// WHEN NOT TO USE
+// ---------------
+// - NO: Do not use tracking for large, read-only lists
+// - NO: Do not keep long-lived contexts with many tracked entities
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Product update API:
+// - Client sends ProductDto with Id and Price
+// - Server attaches entity and marks only Price as modified
+// - Avoids overwriting Name/Stock fields not sent by client
 // ==============================================================================
 
 using Microsoft.EntityFrameworkCore;

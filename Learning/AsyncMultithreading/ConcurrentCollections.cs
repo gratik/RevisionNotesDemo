@@ -1,9 +1,34 @@
 // ============================================================================
-// CONCURRENTDICTIONARY VS DICTIONARY
+// CONCURRENT COLLECTIONS
 // Reference: Revision Notes - Page 10
 // ============================================================================
-// Dictionary: Not thread-safe for writes
-// ConcurrentDictionary: Allows safe concurrent reads/writes
+//
+// WHAT ARE CONCURRENT COLLECTIONS?
+// --------------------------------
+// Thread-safe collection types for multi-threaded access, such as
+// ConcurrentDictionary, ConcurrentQueue, and ConcurrentBag.
+//
+// WHY IT MATTERS
+// --------------
+// - Prevents race conditions and data corruption
+// - Reduces manual locking complexity
+// - Improves throughput under parallel workloads
+//
+// WHEN TO USE
+// -----------
+// - YES: When multiple threads read/write shared collections
+// - YES: Parallel.For, Task.WhenAll, background worker patterns
+//
+// WHEN NOT TO USE
+// ---------------
+// - NO: Single-threaded code paths
+// - NO: If a simple lock is more readable and sufficient
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Telemetry aggregation:
+// - Multiple threads update counters by key
+// - ConcurrentDictionary safely stores counts
 // ============================================================================
 
 namespace RevisionNotesDemo.AsyncMultithreading;

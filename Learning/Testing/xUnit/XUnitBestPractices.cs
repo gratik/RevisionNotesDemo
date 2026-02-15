@@ -1,11 +1,35 @@
 // ==============================================================================
 // XUNIT BEST PRACTICES - Comprehensive Testing Patterns
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate xUnit testing framework best practices with real-world examples.
-//   xUnit is the modern, minimal testing framework used by Microsoft for .NET Core,
-//   ASP.NET Core, and Entity Framework Core. It emphasizes simplicity and follows
-//   modern software development principles.
+// WHAT IS XUNIT?
+// --------------
+// xUnit is a modern, minimal test framework for .NET that emphasizes simple
+// attributes, strong isolation, and parallel execution by default.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ LOW CEREMONY: Only [Fact] and [Theory] for most tests
+// ✅ ISOLATION: New instance per test prevents shared-state bugs
+// ✅ PERFORMANCE: Parallelization improves suite runtime
+// ✅ MODERN DEFAULT: Used by Microsoft for .NET Core libraries
+//
+// WHEN TO USE
+// -----------
+// ✅ Greenfield .NET projects
+// ✅ Teams prioritizing speed and minimal ceremony
+// ✅ Suites that benefit from default parallelization
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Teams dependent on rich attribute sets (NUnit may fit better)
+// ❌ Projects requiring VS/TestContext-style metadata (MSTest)
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Microservices platform:
+// - Hundreds of fast unit tests per service
+// - Parallelization keeps CI under a few minutes
+// - Minimal attributes simplify onboarding
 //
 // WHY XUNIT:
 //   - Modern design (created 2007, redesigned for .NET Core)

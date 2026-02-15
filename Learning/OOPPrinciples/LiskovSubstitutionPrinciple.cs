@@ -2,54 +2,37 @@
 // LISKOV SUBSTITUTION PRINCIPLE (LSP)
 // Reference: Revision Notes - OOP (Object Oriented Principals) - Page 2
 // ============================================================================
-// DEFINITION:
-//   "Objects of a superclass should be replaceable with objects of a subclass without
-//   breaking the application."
-//   Derived classes must be substitutable for their base classes.
 //
-// EXPLANATION:
-//   Subclasses should extend, not replace or violate, the behavior of the parent class.
-//   If code works with a base class, it should work with any derived class without
-//   modification. Violations lead to unexpected behavior and runtime errors.
+// WHAT IS LSP?
+// ------------
+// Objects of a superclass should be replaceable with objects of a subclass
+// without breaking the application. Subtypes must honor the contracts of
+// their base types (behavioral compatibility, not just method signatures).
 //
-// EXAMPLE:
-//   ❌ BAD: Square inheriting from Rectangle and breaking width/height independence
-//   ✅ GOOD: Square and Rectangle both implement IShape independently
+// WHY IT MATTERS
+// --------------
+// - Safe polymorphism without surprises
+// - Fewer runtime errors and special cases
+// - Cleaner inheritance hierarchies
+// - More reliable reuse of base classes
 //
-// REAL-WORLD ANALOGY:
-//   If you have a "Bird" that flies, a "Penguin" (which can't fly) violates LSP.
-//   All birds should fulfill the contract of what a bird does.
+// WHEN TO USE
+// -----------
+// - YES: Designing inheritance hierarchies and base classes
+// - YES: When a subtype must be used anywhere the base type is expected
+// - YES: When defining contracts for frameworks or libraries
 //
-// BENEFITS:
-//   • Predictable behavior across inheritance hierarchies
-//   • Safe polymorphism
-//   • Reliable code reuse
-//   • Reduced need for type checking
+// WHEN NOT TO USE
+// ---------------
+// - NO: When behavior differs fundamentally (prefer composition or interfaces)
+// - NO: When subtype must throw new exceptions or change preconditions
 //
-// WHEN TO USE:
-//   • Designing inheritance hierarchies
-//   • Creating base classes and interfaces
-//   • Ensuring polymorphic code correctness
-//
-// COMMON VIOLATIONS:
-//   • Throwing exceptions not thrown by base class
-//   • Strengthening preconditions (requiring more than base class)
-//   • Weakening postconditions (guaranteeing less than base class)
-//   • Changing expected behavior (e.g., readonly property becomes writable)
-//   • Returning different types than base class declares
-//
-// HOW TO IDENTIFY LSP VIOLATIONS:
-//   • Do you need type checks (is/as) after using base class reference?
-//   • Does derived class throw exceptions base class doesn't?
-//   • Are there empty implementations just to satisfy interface?
-//   • Does derived class change expected behavior?
-//
-// BEST PRACTICES:
-//   • Follow "Design by Contract"
-//   • Ensure derived classes can do everything base class can
-//   • Don't remove functionality in derived classes
-//   • Consider composition over inheritance if behavior differs significantly
-//   • Use interfaces for "can-do" relationships vs inheritance for "is-a"
+// REAL-WORLD EXAMPLE
+// ------------------
+// Shipping providers:
+// - IShippingProvider.CalculateCost() must always return a non-negative cost
+// - A FreeShippingProvider can return 0 but must not throw or change semantics
+// - A provider that throws on small packages violates the base contract
 // ============================================================================
 
 namespace RevisionNotesDemo.OOPPrinciples;

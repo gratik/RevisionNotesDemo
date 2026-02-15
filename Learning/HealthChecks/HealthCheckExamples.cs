@@ -1,27 +1,28 @@
 // ==============================================================================
 // HEALTH CHECKS - Application Health Monitoring
 // ==============================================================================
-// PURPOSE:
-//   Master ASP.NET Core health checks for production monitoring.
-//   Liveness and readiness probes for Kubernetes/container orchestration.
+// WHAT IS THIS?
+// -------------
+// Health endpoints for liveness/readiness and dependency checks.
 //
-// WHY HEALTH CHECKS:
-//   - Kubernetes/Docker orchestration
-//   - Load balancer health monitoring
-//   - Automatic restart unhealthy instances
-//   - Dependency health visibility
+// WHY IT MATTERS
+// --------------
+// ✅ Enables orchestration and proactive monitoring
+// ✅ Provides visibility into dependency health
 //
-// WHAT YOU'LL LEARN:
-//   1. Built-in health checks
-//   2. Custom IHealthCheck implementation
-//   3. Liveness vs Readiness probes
-//   4. Dependency health checks
-//   5. Health check UI
-//   6. Production patterns
+// WHEN TO USE
+// -----------
+// ✅ Any service running in production or containers
+// ✅ Apps requiring load balancer health probes
 //
-// KEY PRINCIPLE:
-//   Liveness = "Should this instance be restarted?"
-//   Readiness = "Can this instance serve traffic?"
+// WHEN NOT TO USE
+// ---------------
+// ❌ Never; health checks are a baseline requirement
+// ❌ Exposing sensitive details on public endpoints
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// /health/ready for database readiness.
 // ==============================================================================
 
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -57,17 +58,17 @@ public class BasicHealthChecksExamples
         // ✅ Add health checks
         builder.Services.AddHealthChecks();
     }
-    
+
     public static void MapBasic(WebApplication app)
     {
         // ✅ Map endpoint
         app.MapHealthChecks("/health");
-        
+
         // Returns:
         // 200 OK: "Healthy"
         // 503 Service Unavailable: "Unhealthy"
     }
-    
+
     // ✅ GOOD: Detailed health check response
     public static void MapDetailed(WebApplication app)
     {
@@ -76,7 +77,7 @@ public class BasicHealthChecksExamples
             ResponseWriter = async (context, report) =>
             {
                 context.Response.ContentType = "application/json";
-                
+
                 var result = System.Text.Json.JsonSerializer.Serialize(new
                 {
                     status = report.Status.ToString(),
@@ -90,11 +91,11 @@ public class BasicHealthChecksExamples
                         exception = e.Value.Exception?.Message
                     })
                 });
-                
+
                 await context.Response.WriteAsync(result);
             }
         });
-        
+
         // Returns JSON:
         // {
         //   "status": "Healthy",
@@ -163,7 +164,7 @@ public class DependencyHealthChecksExamples
                 failureStatus: HealthStatus.Degraded);
     }
     */
-    
+
     // NuGet Packages:
     // - AspNetCore.HealthChecks.SqlServer
     // - AspNetCore.HealthChecks.Redis
@@ -186,12 +187,12 @@ public class CustomHealthCheckExamples
     public class MessageQueueHealthCheck : IHealthCheck
     {
         private readonly IMessageQueue _messageQueue;
-        
+
         public MessageQueueHealthCheck(IMessageQueue messageQueue)
         {
             _messageQueue = messageQueue;
         }
-        
+
         public async Task<HealthCheckResult> CheckHealthAsync(
             HealthCheckContext context,
             CancellationToken cancellationToken = default)
@@ -199,21 +200,21 @@ public class CustomHealthCheckExamples
             try
             {
                 var queueLength = await _messageQueue.GetLengthAsync();
-                
+
                 // ✅ Healthy: Queue is processing normally
                 if (queueLength < 100)
                 {
                     return HealthCheckResult.Healthy(
                         $"Queue length is {queueLength}");
                 }
-                
+
                 // ⚠️ Degraded: Queue is backed up but functional
                 if (queueLength < 1000)
                 {
                     return HealthCheckResult.Degraded(
                         $"Queue length is {queueLength} (above threshold)");
                 }
-                
+
                 // ❌ Unhealthy: Queue is severely backed up
                 return HealthCheckResult.Unhealthy(
                     $"Queue length is {queueLength} (critical)");
@@ -227,67 +228,67 @@ public class CustomHealthCheckExamples
             }
         }
     }
-    
+
     // ✅ GOOD: Custom health check for license validity
     public class LicenseHealthCheck : IHealthCheck
     {
         private readonly ILicenseService _licenseService;
-        
+
         public LicenseHealthCheck(ILicenseService licenseService)
         {
             _licenseService = licenseService;
         }
-        
+
         public Task<HealthCheckResult> CheckHealthAsync(
             HealthCheckContext context,
             CancellationToken cancellationToken = default)
         {
             var license = _licenseService.GetLicense();
-            
+
             if (license.IsExpired)
             {
                 return Task.FromResult(HealthCheckResult.Unhealthy(
                     $"License expired on {license.ExpirationDate}"));
             }
-            
+
             if (license.ExpiresInDays < 7)
             {
                 return Task.FromResult(HealthCheckResult.Degraded(
                     $"License expires in {license.ExpiresInDays} days"));
             }
-            
+
             return Task.FromResult(HealthCheckResult.Healthy(
                 $"License valid until {license.ExpirationDate}"));
         }
     }
-    
+
     // ✅ Register custom health checks
     public static void RegisterCustomChecks(WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<IMessageQueue, MessageQueue>();
         builder.Services.AddSingleton<ILicenseService, LicenseService>();
-        
+
         builder.Services.AddHealthChecks()
             .AddCheck<MessageQueueHealthCheck>("message-queue", tags: new[] { "queue" })
             .AddCheck<LicenseHealthCheck>("license", tags: new[] { "license" });
     }
-    
+
     // Supporting interfaces
     public interface IMessageQueue
     {
         Task<int> GetLengthAsync();
     }
-    
+
     public interface ILicenseService
     {
         License GetLicense();
     }
-    
+
     public class MessageQueue : IMessageQueue
     {
         public Task<int> GetLengthAsync() => Task.FromResult(50);
     }
-    
+
     public class LicenseService : ILicenseService
     {
         public License GetLicense() => new License
@@ -297,7 +298,7 @@ public class CustomHealthCheckExamples
             ExpiresInDays = 30
         };
     }
-    
+
     public class License
     {
         public DateTime ExpirationDate { get; set; }
@@ -329,22 +330,22 @@ public class LivenessReadinessExamples
         builder.Services.AddHealthChecks()
             // Liveness: Basic app health (can it even run?)
             .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "liveness" });
-            
-            /* Requires: dotnet add package AspNetCore.HealthChecks.SqlServer
-            //           dotnet add package AspNetCore.HealthChecks.Redis
-            
-            // Readiness: Dependencies must be healthy
-            .AddSqlServer(
-                connectionString: builder.Configuration.GetConnectionString("DefaultConnection") ?? "",
-                name: "database",
-                tags: new[] { "readiness" })
-            .AddRedis(
-                redisConnectionString: builder.Configuration.GetConnectionString("Redis") ?? "",
-                name: "redis",
-                tags: new[] { "readiness" });
-            */
+
+        /* Requires: dotnet add package AspNetCore.HealthChecks.SqlServer
+        //           dotnet add package AspNetCore.HealthChecks.Redis
+
+        // Readiness: Dependencies must be healthy
+        .AddSqlServer(
+            connectionString: builder.Configuration.GetConnectionString("DefaultConnection") ?? "",
+            name: "database",
+            tags: new[] { "readiness" })
+        .AddRedis(
+            redisConnectionString: builder.Configuration.GetConnectionString("Redis") ?? "",
+            name: "redis",
+            tags: new[] { "readiness" });
+        */
     }
-    
+
     public static void MapKubernetesProbes(WebApplication app)
     {
         // ✅ Liveness probe: /health/live
@@ -352,13 +353,13 @@ public class LivenessReadinessExamples
         {
             Predicate = check => check.Tags.Contains("liveness")
         });
-        
+
         // ✅ Readiness probe: /health/ready
         app.MapHealthChecks("/health/ready", new HealthCheckOptions
         {
             Predicate = check => check.Tags.Contains("readiness")
         });
-        
+
         // Kubernetes deployment.yaml:
         // livenessProbe:
         //   httpGet:
@@ -374,12 +375,12 @@ public class LivenessReadinessExamples
         //   initialDelaySeconds: 5
         //   periodSeconds: 5
     }
-    
+
     // LIVENESS CHECKS (should almost never fail):
     // ✅ App can respond to HTTP
     // ✅ Core services initialized
     // ❌ NOT dependency health (database, cache)
-    
+
     // READINESS CHECKS (can fail temporarily):
     // ✅ Database is reachable
     // ✅ Cache is available
@@ -403,13 +404,13 @@ public class HealthCheckUIExamples
     {
         // Install: dotnet add package AspNetCore.HealthChecks.UI
         //          dotnet add package AspNetCore.HealthChecks.UI.InMemory.Storage
-        
+
         builder.Services.AddHealthChecks();
-            /* Requires additional packages:
-            .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? "")
-            .AddRedis(builder.Configuration.GetConnectionString("Redis") ?? "");
-            */
-        
+        /* Requires additional packages:
+        .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? "")
+        .AddRedis(builder.Configuration.GetConnectionString("Redis") ?? "");
+        */
+
         /* Requires: dotnet add package AspNetCore.HealthChecks.UI
         //          dotnet add package AspNetCore.HealthChecks.UI.InMemory.Storage
         // ✅ Add UI
@@ -422,7 +423,7 @@ public class HealthCheckUIExamples
         .AddInMemoryStorage();  // Store results in-memory
         */
     }
-    
+
     public static void MapUI(WebApplication app)
     {
         app.MapHealthChecks("/health", new HealthCheckOptions
@@ -442,7 +443,7 @@ public class HealthCheckUIExamples
                 await context.Response.WriteAsync(result);
             }
         });
-        
+
         /* Requires: dotnet add package AspNetCore.HealthChecks.UI
         // ✅ UI endpoints
         app.MapHealthChecksUI(options =>
@@ -451,7 +452,7 @@ public class HealthCheckUIExamples
             options.ApiPath = "/health-ui-api";
         });
         */
-        
+
         // Visit: https://localhost:5001/health-ui
         // Beautiful dashboard showing:
         // - Current status (Healthy/Degraded/Unhealthy)
@@ -470,13 +471,13 @@ public class ProductionPatternsExamples
     public static void ConfigureProduction(WebApplicationBuilder builder)
     {
         builder.Services.AddHealthChecks();
-            /* Requires: dotnet add package AspNetCore.HealthChecks.SqlServer
-            .AddSqlServer(
-                connectionString: builder.Configuration.GetConnectionString("DefaultConnection") ?? "",
-                name: "database");
-            */
+        /* Requires: dotnet add package AspNetCore.HealthChecks.SqlServer
+        .AddSqlServer(
+            connectionString: builder.Configuration.GetConnectionString("DefaultConnection") ?? "",
+            name: "database");
+        */
     }
-    
+
     public static void MapProduction(WebApplication app)
     {
         // ✅ Public endpoint: Limited info
@@ -490,7 +491,7 @@ public class ProductionPatternsExamples
                 await context.Response.WriteAsync(report.Status.ToString());
             }
         });
-        
+
         // ✅ Internal endpoint: Full details (behind auth/firewall)
         app.MapHealthChecks("/health/detailed", new HealthCheckOptions
         {
@@ -512,12 +513,12 @@ public class ProductionPatternsExamples
                     }),
                     timestamp = DateTime.UtcNow
                 });
-                
+
                 await context.Response.WriteAsync(result);
             }
         });
     }
-    
+
     // ✅ MONITORING INTEGRATION:
     // - Application Insights: Auto-tracks /health endpoint
     // - Prometheus: Use AspNetCore.HealthChecks.Prometheus

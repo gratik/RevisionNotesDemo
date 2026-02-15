@@ -129,36 +129,95 @@ var query = new QueryBuilder()
 
 ### Repository Pattern
 
-**Problem**: Abstract data access logic
+**Purpose**: Mediates between domain and data mapping layers using a collection-like interface
+
+**Problem**: Abstract data access logic and isolate business layer from database technology
+
+**What It Is**: A façade over your database that makes it look like an in-memory collection. It encapsulates queries and data access logic, returning domain entities rather than database records.
+
+**When To Use**:
+- ✅ Complex domain models with rich business logic
+- ✅ Multiple data sources (SQL + NoSQL + cache)
+- ✅ Need to swap storage technologies
+- ✅ High test coverage requirements (mockable)
+- ✅ Multi-tenant applications
+
+**When NOT To Use**:
+- ❌ Simple CRUD apps where EF Core DbContext is sufficient
+- ❌ Over-abstracting EF Core (it already implements repository/unit of work)
+
+**Implementations Available**:
+1. **In-Memory**: For unit testing
+2. **Entity Framework Core**: LINQ queries, change tracking, migrations
+3. **Dapper**: High-performance, lightweight micro-ORM
+4. **ADO.NET**: Maximum control, lowest-level access
+
+**Code Examples**: See [RepositoryPattern.cs](../DesignPatterns/Structural/RepositoryPattern.cs)
 
 ```csharp
-// ✅ Generic repository
+// ✅ Generic repository interface
 public interface IRepository<T> where T : class
 {
     Task<T?> GetByIdAsync(int id);
     Task<IEnumerable<T>> GetAllAsync();
-    Task<T> AddAsync(T entity);
+    Task AddAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(int id);
 }
 
-public class UserRepository : IRepository<User>
+// EF Core implementation example
+public class ProductRepository : IRepository<Product>
 {
     private readonly AppDbContext _context;
     
-    public UserRepository(AppDbContext context)
+    public ProductRepository(AppDbContext context)
     {
         _context = context;
     }
     
-    public async Task<User?> GetByIdAsync(int id)
+    public async Task<Product?> GetByIdAsync(int id)
     {
-        return await _context.Users.FindAsync(id);
+        return await _context.Products.FindAsync(id);
+    }
+    
+    public async Task<IEnumerable<Product>> GetAllAsync()
+    {
+        return await _context.Products.AsNoTracking().ToListAsync();
     }
     
     // ... other methods
 }
+
+// Business layer uses abstraction
+public class ProductService
+{
+    private readonly IRepository<Product> _repository;
+    
+    public ProductService(IRepository<Product> repository)
+    {
+        _repository = repository; // ✅ Depends on interface, not concrete implementation
+    }
+}
 ```
+
+**Benefits**:
+- ✅ Testability: Mock IRepository for unit tests
+- ✅ Flexibility: Swap SQL → NoSQL without changing business logic
+- ✅ Separation of Concerns: Business layer independent of data access
+- ✅ DRY: Query reusability across services
+
+**Common Anti-Patterns**:
+- ❌ Generic repository with 50 methods that don't fit all entities
+- ❌ Exposing `IQueryable<T>` (leaky abstraction)
+- ❌ Putting business logic in repositories
+- ❌ Double abstraction over EF Core unnecessarily
+
+**Performance Comparison**:
+- ADO.NET: ~100ms (fastest, most verbose)
+- Dapper: ~110ms (5-10% slower, much easier)
+- EF Core: ~150ms (30-50% slower, richest features)
+
+💡 **Hybrid Approach**: Use EF Core for writes + complex domains, Dapper for read-heavy queries, In-Memory for tests
 
 ### Unit of Work
 

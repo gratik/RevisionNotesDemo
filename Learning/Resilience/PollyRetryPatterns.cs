@@ -1,35 +1,28 @@
 // ==============================================================================
 // POLLY RETRY PATTERNS - Transient Fault Handling
 // ==============================================================================
-// PURPOSE:
-//   Master retry patterns using Polly for resilient applications.
-//   Handle transient failures in network calls, database operations, external services.
+// WHAT IS THIS?
+// -------------
+// Retry strategies with Polly for transient failures.
 //
-// WHY POLLY:
-//   - Industry-standard resilience library
-//   - Declarative policy-based approach
-//   - Async-first design
-//   - Integration with HttpClient, IHttpClientFactory
-//   - Powerful policy composition
+// WHY IT MATTERS
+// --------------
+// ✅ Improves resilience for flaky networks and services
+// ✅ Reduces user-visible errors for transient faults
 //
-// WHAT YOU'LL LEARN:
-//   1. Simple retry (immediate)
-//   2. Wait and retry (fixed delays)
-//   3. Exponential backoff
-//   4. Jitter (randomization)
-//   5. Retry with specific exceptions
-//   6. Retry with fallback
+// WHEN TO USE
+// -----------
+// ✅ 5xx responses, timeouts, and rate limits (429)
+// ✅ Intermittent network or dependency failures
 //
-// INSTALL: Install-Package Polly
-//          Install-Package Microsoft.Extensions.Http.Polly
+// WHEN NOT TO USE
+// ---------------
+// ❌ Permanent 4xx errors or validation failures
+// ❌ Authentication failures that require user action
 //
-// WHEN TO USE RETRY:
-//   ✅ HTTP 5xx errors, timeouts
-//   ✅ Database deadlocks, connection failures
-//   ✅ Rate limit errors (HTTP 429)
-//   ❌ HTTP 4xx client errors (except 429)
-//   ❌ Authentication failures
-//   ❌ Validation errors
+// REAL-WORLD EXAMPLE
+// ------------------
+// Exponential backoff with jitter for HTTP calls.
 // ==============================================================================
 
 using Polly;
@@ -71,24 +64,24 @@ public static class SimpleRetryExamples
         return await response.Content.ReadAsStringAsync();
         // ❌ Network  blip = operation fails
     }
-    
+
     // ✅ GOOD: Simple retry policy
     public static async Task<string> WithSimpleRetry(HttpClient client)
     {
         var retryPolicy = Policy
             .Handle<HttpRequestException>()  // Retry on HTTP exceptions
             .RetryAsync(3);  // Retry up to 3 times
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         });
-        
+
         // Total attempts: 1 initial + 3 retries = 4 attempts
     }
-    
+
     // ✅ GOOD: Retry with logging
     public static async Task<string> WithRetryAndLogging(HttpClient client, Microsoft.Extensions.Logging.ILogger logger)
     {
@@ -101,7 +94,7 @@ public static class SimpleRetryExamples
                     "Retry {RetryCount} due to: {Message}",
                     retryCount, exception.Message);
             });
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
@@ -109,7 +102,7 @@ public static class SimpleRetryExamples
             return await response.Content.ReadAsStringAsync();
         });
     }
-    
+
     // ✅ GOOD: Retry specific HTTP status codes
     public static async Task<HttpResponseMessage> RetryOnServerErrors(HttpClient client)
     {
@@ -118,7 +111,7 @@ public static class SimpleRetryExamples
                 r.StatusCode >= HttpStatusCode.InternalServerError ||  // 5xx errors
                 r.StatusCode == HttpStatusCode.RequestTimeout)          // 408 timeout
             .RetryAsync(3);
-        
+
         return await retryPolicy.ExecuteAsync(() =>
             client.GetAsync("https://api.example.com/data"));
     }
@@ -151,21 +144,21 @@ public static class WaitAndRetryExamples
             .WaitAndRetryAsync(
                 retryCount: 3,
                 sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(2));  // Wait 2s between each retry
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         });
-        
+
         // Timeline:
         // 0s:   Attempt 1 (fails)
         // 2s:   Attempt 2 (fails)
         // 4s:   Attempt 3 (fails)
         // 6s:   Attempt 4 (succeeds or final failure)
     }
-    
+
     // ✅ GOOD: Progressive delays
     public static async Task<string> ProgressiveDelayRetry(HttpClient client)
     {
@@ -178,7 +171,7 @@ public static class WaitAndRetryExamples
                 TimeSpan.FromSeconds(2),          // 3rd retry: wait 2s
                 TimeSpan.FromSeconds(5)           // 4th retry: wait 5s
             });
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
@@ -186,7 +179,7 @@ public static class WaitAndRetryExamples
             return await response.Content.ReadAsStringAsync();
         });
     }
-    
+
     // ✅ GOOD: With detailed logging
     public static async Task<string> WaitAndRetryWithContext(HttpClient client, Microsoft.Extensions.Logging.ILogger logger)
     {
@@ -201,7 +194,7 @@ public static class WaitAndRetryExamples
                         "Retry {RetryCount} after {Delay}ms. Operation: {Operation}",
                         retryCount, timeSpan.TotalMilliseconds, context["Operation"]);
                 });
-        
+
         return await retryPolicy.ExecuteAsync(
             context => client.GetStringAsync("https://api.example.com/data"),
             new Context { ["Operation"] = "FetchData" });  // Pass context for logging
@@ -236,14 +229,14 @@ public static class ExponentialBackoffExamples
                 retryCount: 5,
                 sleepDurationProvider: retryAttempt =>
                     TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));  // 2^1=2s, 2^2=4s, 2^3=8s, 2^4=16s, 2^5=32s
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         });
-        
+
         // Timeline:
         // 0s:   Attempt 1 (fails)
         // 2s:   Attempt 2 (fails)
@@ -252,12 +245,12 @@ public static class ExponentialBackoffExamples
         // 30s:  Attempt 5 (fails) - waited 16s
         // 62s:  Attempt 6 (final) - waited 32s
     }
-    
+
     // ✅ BETTER: Exponential backoff with max delay
     public static async Task<string> ExponentialBackoffWithCap(HttpClient client)
     {
         var maxDelay = TimeSpan.FromSeconds(30);
-        
+
         var retryPolicy = Policy
             .Handle<HttpRequestException>()
             .WaitAndRetryAsync(
@@ -267,7 +260,7 @@ public static class ExponentialBackoffExamples
                     var delay = TimeSpan.FromSeconds(Math.Pow(2, retryAttempt));
                     return delay > maxDelay ? maxDelay : delay;  // ✅ Cap at 30s
                 });
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
@@ -275,7 +268,7 @@ public static class ExponentialBackoffExamples
             return await response.Content.ReadAsStringAsync();
         });
     }
-    
+
     // ✅ BEST: Exponential backoff with jitter (see next example)
 }
 
@@ -302,7 +295,7 @@ public static class ExponentialBackoffExamples
 public static class JitterExamples
 {
     private static readonly Random Jitterer = new();
-    
+
     // ✅ GOOD: Exponential backoff with full jitter
     public static async Task<string> ExponentialBackoffWithJitter(HttpClient client)
     {
@@ -317,18 +310,18 @@ public static class JitterExamples
                     var jitterDelay = TimeSpan.FromMilliseconds(Jitterer.Next(0, (int)exponentialDelay.TotalMilliseconds));
                     return jitterDelay;
                 });
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         });
-        
+
         // Instead of all clients retrying at 2s, 4s, 8s...
         // Clients retry at scattered times: 1.2s, 1.8s, 3.1s, 3.7s, 6.2s, 7.4s...
     }
-    
+
     // ✅ BETTER: Using Polly's built-in jitter (Polly v8+)
     public static async Task<string> PollyBuiltInJitter(HttpClient client)
     {
@@ -341,7 +334,7 @@ public static class JitterExamples
                 {
                     // Add jitter using Polly extension
                 });
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
@@ -349,15 +342,15 @@ public static class JitterExamples
             return await response.Content.ReadAsStringAsync();
         });
     }
-    
+
     // ✅ BEST: Decorrelated jitter (AWS recommendation)
     public static async Task<string> DecorrelatedJitter(HttpClient client)
     {
         var random = new Random();
         var baseDelay = TimeSpan.FromSeconds(1);
-        
+
         TimeSpan previousDelay = baseDelay;
-        
+
         var retryPolicy = Policy
             .Handle<HttpRequestException>()
             .WaitAndRetryAsync(
@@ -370,7 +363,7 @@ public static class JitterExamples
                     previousDelay = TimeSpan.FromMilliseconds(jitter);
                     return previousDelay;
                 });
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
@@ -409,14 +402,14 @@ public static class SelectiveRetryExamples
             .WaitAndRetryAsync(
                 retryCount: 3,
                 sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-        
+
         var response = await retryPolicy.ExecuteAsync(() =>
             client.GetAsync("https://api.example.com/data"));
-        
+
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
-    
+
     // ✅ GOOD: Retry specific exceptions only
     public static async Task<string> RetrySpecificExceptions()
     {
@@ -425,7 +418,7 @@ public static class SelectiveRetryExamples
             .Or<HttpRequestException>(ex =>
                 ex.StatusCode == HttpStatusCode.ServiceUnavailable)  // Retry 503 only
             .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(2));
-        
+
         return await retryPolicy.ExecuteAsync(async () =>
         {
             // Your operation
@@ -433,7 +426,7 @@ public static class SelectiveRetryExamples
             return "Success";
         });
     }
-    
+
     // ✅ GOOD: Don't retry authorization failures
     public static async Task<string> AvoidRetryingAuthFailures(HttpClient client)
     {
@@ -444,10 +437,10 @@ public static class SelectiveRetryExamples
                 r.StatusCode != HttpStatusCode.Unauthorized &&
                 r.StatusCode != HttpStatusCode.Forbidden)
             .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(2));
-        
+
         var response = await retryPolicy.ExecuteAsync(() =>
             client.GetAsync("https://api.example.com/data"));
-        
+
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
@@ -476,7 +469,7 @@ public static class RetryWithFallbackExamples
         var retryPolicy = Policy
             .Handle<HttpRequestException>()
             .WaitAndRetryAsync(2, retryAttempt => TimeSpan.FromSeconds(1));
-        
+
         var fallbackPolicy = Policy<string>
             .Handle<HttpRequestException>()
             .FallbackAsync(
@@ -487,31 +480,31 @@ public static class RetryWithFallbackExamples
                     Console.WriteLine("Falling back to cached data");
                     await Task.CompletedTask;
                 });
-        
+
         // ✅ Wrap retry with fallback
         var policyWrap = fallbackPolicy.WrapAsync(retryPolicy);
-        
+
         return await policyWrap.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/data");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         });
-        
+
         // Flow:
         // 1. Try  API call
         // 2. Fail → Retry (wait 1s)
         // 3. Fail → Retry (wait 1s)
         // 4. Fail → Fallback to cache
     }
-    
+
     // ✅ GOOD: Retry with fallback to default
     public static async Task<Product?> RetryThenDefault(HttpClient client)
     {
         var retryPolicy = Policy<Product?>
             .Handle<HttpRequestException>()
             .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(2));
-        
+
         var fallbackPolicy = Policy<Product?>
             .Handle<HttpRequestException>()
             .FallbackAsync(
@@ -521,9 +514,9 @@ public static class RetryWithFallbackExamples
                     Console.WriteLine("API unavailable, returning default product");
                     return Task.CompletedTask;
                 });
-        
+
         var policyWrap = fallbackPolicy.WrapAsync(retryPolicy);
-        
+
         return await policyWrap.ExecuteAsync(async () =>
         {
             var response = await client.GetAsync("https://api.example.com/products/123");
@@ -567,17 +560,17 @@ public static class HttpClientFactoryExamples
                 retryCount: 2,
                 sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(5)));
     }
-    
+
     // Usage in service:
     public class ApiService
     {
         private readonly HttpClient _client;
-        
+
         public ApiService(IHttpClientFactory httpClientFactory)
         {
             _client = httpClientFactory.CreateClient("ExternalApi");  // ✅ Gets retry policies
         }
-        
+
         public async Task<string> GetData()
         {
             // ✅ Automatic retry on transient failures

@@ -1,26 +1,28 @@
 // ==============================================================================
 // BENCHMARKING WITH BENCHMARKDOTNET - Measure Real Performance
 // ==============================================================================
-// PURPOSE:
-//   Master scientific performance measurement with BenchmarkDotNet.
-//   No more Console.WriteLine(stopwatch) - get accurate, statistical results.
+// WHAT IS THIS?
+// -------------
+// Repeatable performance measurement with BenchmarkDotNet.
 //
-// WHY BENCHMARK:
-//   - Micro-optimizations can backfire
-//   - JIT optimizations vary by runtime
-//   - Need statistical significance
-//   - Memory allocations matter
+// WHY IT MATTERS
+// --------------
+// ✅ Avoids false assumptions about speed
+// ✅ Captures allocations and variability
 //
-// WHAT YOU'LL LEARN:
-//   1. BenchmarkDotNet basics - [Benchmark] attribute
-//   2. Memory diagnostics - allocation tracking
-//   3. Comparing approaches - baseline comparison
-//   4. Parameters and scenarios
-//   5. Interpreting results
-//   6. Common pitfalls
+// WHEN TO USE
+// -----------
+// ✅ Comparing algorithms or validating performance claims
+// ✅ Tuning hot paths with measurable impact
 //
-// KEY PRINCIPLE:
-//   Measure, don't guess. "I think this is faster" ≠ "This is 2.3x faster with p<0.001"
+// WHEN NOT TO USE
+// ---------------
+// ❌ I/O-bound operations with high variance
+// ❌ Unprofiled business logic where correctness matters most
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Compare StringBuilder vs string concatenation.
 // ==============================================================================
 
 using BenchmarkDotNet.Attributes;
@@ -58,7 +60,7 @@ namespace RevisionNotesDemo.Performance;
 public class StringConcatBenchmarks
 {
     private const int Iterations = 100;
-    
+
     // ❌ BAD: String concatenation with +
     [Benchmark(Baseline = true)]  // ✅ Compare others to this
     public string StringConcat()
@@ -71,7 +73,7 @@ public class StringConcatBenchmarks
         }
         return result;
     }
-    
+
     // ✅ GOOD: StringBuilder
     [Benchmark]
     public string StringBuilder_Default()
@@ -84,7 +86,7 @@ public class StringConcatBenchmarks
         }
         return sb.ToString();
     }
-    
+
     // ✅ BETTER: StringBuilder with capacity
     [Benchmark]
     public string StringBuilder_WithCapacity()
@@ -97,14 +99,14 @@ public class StringConcatBenchmarks
         }
         return sb.ToString();
     }
-    
+
     // ✅ BEST: StringBuilder with span (C# 10+)
     [Benchmark]
     public string StringBuilder_WithSpan()
     {
         var sb = new StringBuilder(capacity: 500);
         Span<char> buffer = stackalloc char[20];
-        
+
         for (int i = 0; i < Iterations; i++)
         {
             if (i.TryFormat(buffer, out int written))
@@ -142,15 +144,15 @@ public class CollectionBenchmarks
 {
     [Params(10, 100, 1000)]  // ✅ Test with different sizes
     public int ItemCount { get; set; }
-    
+
     private List<int> _items = new();
-    
+
     [GlobalSetup]  // ✅ Run once before all benchmarks
     public void Setup()
     {
         _items = Enumerable.Range(0, ItemCount).ToList();
     }
-    
+
     // Test: LINQ vs for loop
     [Benchmark(Baseline = true)]
     public int Sum_ForLoop()
@@ -162,7 +164,7 @@ public class CollectionBenchmarks
         }
         return sum;
     }
-    
+
     [Benchmark]
     public int Sum_Foreach()
     {
@@ -173,13 +175,13 @@ public class CollectionBenchmarks
         }
         return sum;
     }
-    
+
     [Benchmark]
     public int Sum_Linq()
     {
         return _items.Sum();  // Is LINQ slower?
     }
-    
+
     [Benchmark]
     public int Sum_Span()
     {
@@ -214,7 +216,7 @@ public class CollectionBenchmarks
 public class AllocationBenchmarks
 {
     private const int Size = 1000;
-    
+
     // ❌ Hidden allocation: LINQ ToArray
     [Benchmark]
     public int[] Filter_Linq()
@@ -223,7 +225,7 @@ public class AllocationBenchmarks
             .Where(x => x % 2 == 0)  // ❌ IEnumerable allocation
             .ToArray();              // ❌ Array allocation
     }
-    
+
     // ✅ Less allocation: pre-sized list
     [Benchmark]
     public List<int> Filter_List()
@@ -236,7 +238,7 @@ public class AllocationBenchmarks
         }
         return result;
     }
-    
+
     // ✅ Zero allocation: Span (if caller can accept Span)
     [Benchmark]
     public int Filter_Span_Count()
@@ -244,7 +246,7 @@ public class AllocationBenchmarks
         Span<int> numbers = stackalloc int[Size];
         for (int i = 0; i < Size; i++)
             numbers[i] = i;
-        
+
         int count = 0;
         foreach (var n in numbers)
         {
@@ -271,10 +273,10 @@ public class SortingBenchmarks
 {
     [Params(100, 1000, 10000)]
     public int Size { get; set; }
-    
+
     private int[] _data = Array.Empty<int>();
     private readonly Random _random = new(42);  // ✅ Fixed seed for reproducibility
-    
+
     [GlobalSetup]
     public void Setup()
     {
@@ -282,34 +284,34 @@ public class SortingBenchmarks
             .OrderBy(_ => _random.Next())
             .ToArray();
     }
-    
+
     [IterationSetup]  // ✅ Run before EACH iteration
     public void IterationSetup()
     {
         // Restore data order (each benchmark modifies array)
         _random.Next();  // Re-shuffle logic would go here
     }
-    
+
     [Benchmark(Baseline = true)]
     public void Array_Sort()
     {
         var copy = (int[])_data.Clone();
         Array.Sort(copy);  // Built-in quicksort
     }
-    
+
     [Benchmark]
     public void Linq_OrderBy()
     {
         var sorted = _data.OrderBy(x => x).ToArray();
     }
-    
+
     [Benchmark]
     public void BubbleSort()
     {
         var copy = (int[])_data.Clone();
         BubbleSortImpl(copy);
     }
-    
+
     private void BubbleSortImpl(int[] arr)
     {
         int n = arr.Length;
@@ -346,16 +348,16 @@ public class ConfiguredBenchmarks
             // ✅ Add multiple runtimes
             AddJob(Job.Default.WithRuntime(CoreRuntime.Core80).WithId(".NET 8"));
             AddJob(Job.Default.WithRuntime(CoreRuntime.Core70).WithId(".NET 7"));
-            
+
             // ✅ Custom columns
             AddColumn(StatisticColumn.P95);  // 95th percentile
             AddColumn(RankColumn.Arabic);
-            
+
             // ✅ Export results
             AddExporter(BenchmarkDotNet.Exporters.MarkdownExporter.GitHub);
         }
     }
-    
+
     [Benchmark]
     public int TestMethod()
     {
@@ -375,25 +377,25 @@ public class BenchmarkingPitfalls
         int x = 5 + 3;  // ❌ JIT removes this - result unused!
         // Benchmark shows 0.1 ns - unrealistic
     }
-    
+
     // ✅ FIX: Return or consume result
     [Benchmark]
     public int DeadCodeFixed()
     {
         return 5 + 3;  // ✅ Return value
     }
-    
+
     // ❌ PITFALL 2: Not running in Release mode
     // Always: dotnet run -c Release
     // Debug mode has optimizations disabled
-    
+
     // ❌ PITFALL 3: Benchmarking async methods incorrectly
     [Benchmark]
     public async Task AsyncWrong()
     {
         await Task.Delay(10);  // ❌ Measures Task.Delay, not your code
     }
-    
+
     // ✅ Use async only for I/O-bound work you're testing
     [Benchmark]
     public async Task<string> AsyncCorrect()
@@ -402,12 +404,12 @@ public class BenchmarkingPitfalls
         using var client = new HttpClient();
         return await client.GetStringAsync("https://example.com");
     }
-    
+
     // ❌ PITFALL 4: Not enough iterations
     // BenchmarkDotNet handles this automatically
     // Runs warmup, then pilot, then actual iterations
     // Achieves statistical significance
-    
+
     // ❌ PITFALL 5: External factors (disk I/O, network)
     // Benchmarks should be CPU/memory-bound
     // Network calls have too much variance

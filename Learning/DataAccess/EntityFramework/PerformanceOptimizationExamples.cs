@@ -2,41 +2,36 @@
 // ENTITY FRAMEWORK CORE - PERFORMANCE OPTIMIZATION
 // Reference: Revision Notes - Entity Framework Core (Section 8.6.4)
 // ==============================================================================
-// PURPOSE: Master EF Core performance optimization techniques to make your app
-//          fast and scalable. Poor EF performance is one of the top reasons
-//          for slow web applications. This file shows you how to fix it.
 //
-// WHAT YOU'LL LEARN:
-//   • Projection (Select only needed columns) - 50-90% less data transfer
-//   • AsNoTracking for read-only queries - 30-40% faster
-//   • Avoiding N+1 queries with Include - 10-100x faster
-//   • Split queries for multiple includes - Prevents cartesian explosion
-//   • Compiled queries - Pre-compile frequently-used queries
-//   • Batch operations - Up to 50x faster than loops
-//   • Paging with Skip/Take - Essential for large datasets
-//   • Indexing - 100x faster lookups
+// WHAT IS IT?
+// -----------
+// Practical patterns for speeding up EF Core queries and updates. Focus on
+// reducing round trips, data transfer, and tracking overhead.
 //
-// PERFORMANCE MINDSET:
-//   1. Measure first (use profiling tools)
-//   2. Optimize database queries before code
-//   3. Network calls are expensive (minimize round trips)
-//   4. Database is faster than your app at filtering/sorting
+// WHY IT MATTERS
+// --------------
+// - Slow queries are a top cause of API latency
+// - N+1 problems multiply database load
+// - Over-fetching wastes network and memory
+// - Efficient batching improves throughput
 //
-// COMMON BOTTLENECKS:
-//   ❌ N+1 queries (loading related data in loops)
-//   ❌ SELECT * when only need few columns
-//   ❌ Change tracking for read-only queries
-//   ❌ SaveChanges in loops
-//   ❌ No indexes on queried columns
-//   ❌ Loading entire table when only need page
+// WHEN TO USE
+// -----------
+// - YES: Lists, dashboards, and reporting endpoints
+// - YES: Any EF query taking more than a few hundred ms
+// - YES: High-traffic services where small gains compound
 //
-// PROFILING TOOLS:
-//   • MiniProfiler (see SQL in browser)
-//   • Application Insights (Azure)
-//   • SQL Server Profiler
-//   • EF Core logging (options.LogTo(Console.WriteLine))
+// WHEN NOT TO USE
+// ---------------
+// - NO: Do not optimize without measuring
+// - NO: Do not use AsNoTracking if you need updates
 //
-// KEY CONCEPTS: Projection, AsNoTracking, avoiding N+1, split queries, compiled queries, indexing
+// REAL-WORLD EXAMPLE
+// ------------------
+// Admin dashboard:
+// - Use projection for list rows (Id, Name, Email)
+// - Use AsNoTracking for read-only data
+// - Add paging to avoid loading thousands of rows
 // ==============================================================================
 
 using Microsoft.EntityFrameworkCore;

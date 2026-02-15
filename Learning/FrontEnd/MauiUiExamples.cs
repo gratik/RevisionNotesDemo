@@ -1,8 +1,28 @@
 // ==============================================================================
 // FRONT-END UI - .NET MAUI (CROSS-PLATFORM)
 // ==============================================================================
-// PURPOSE: Show MAUI patterns with good/bad illustrative examples.
-// NOTE: Examples are illustrative only and not meant to be run as-is.
+// WHAT IS THIS?
+// -------------
+// Cross-platform UI patterns for .NET MAUI.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Encourages MVVM and async UI handling
+// ✅ Shares UI logic across platforms
+//
+// WHEN TO USE
+// -----------
+// ✅ Mobile/desktop apps targeting multiple platforms
+// ✅ Apps that benefit from shared .NET UI code
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Web-only applications
+// ❌ Apps requiring highly platform-specific UIs
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// XAML bindings to a view model command.
 // ==============================================================================
 
 namespace RevisionNotesDemo.FrontEnd;

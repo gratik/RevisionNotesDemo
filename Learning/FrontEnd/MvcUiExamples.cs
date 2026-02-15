@@ -1,8 +1,28 @@
 // ==============================================================================
 // FRONT-END UI - ASP.NET CORE MVC (SERVER-RENDERED VIEWS)
 // ==============================================================================
-// PURPOSE: Show MVC UI patterns with good/bad illustrative examples.
-// NOTE: Examples are illustrative only and not meant to be run as-is.
+// WHAT IS THIS?
+// -------------
+// MVC UI patterns with controllers, view models, and server-rendered views.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Encourages separation of concerns
+// ✅ Keeps controllers testable and focused
+//
+// WHEN TO USE
+// -----------
+// ✅ Traditional server-rendered web apps
+// ✅ SEO-friendly pages with minimal client logic
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ SPA-first apps or pure API backends
+// ❌ Highly interactive clients better served by Blazor/SPA
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Controller returns a view model to a Razor view.
 // ==============================================================================
 
 namespace RevisionNotesDemo.FrontEnd;

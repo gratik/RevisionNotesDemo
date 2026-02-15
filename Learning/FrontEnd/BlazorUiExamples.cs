@@ -1,8 +1,28 @@
 // ==============================================================================
 // FRONT-END UI - BLAZOR (COMPONENT-BASED UI)
 // ==============================================================================
-// PURPOSE: Show Blazor component patterns with good/bad illustrative examples.
-// NOTE: Examples are illustrative only and not meant to be run as-is.
+// WHAT IS THIS?
+// -------------
+// Component-based UI patterns for Blazor.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Enables reuse and reactive UI updates
+// ✅ Shares .NET code across client and server
+//
+// WHEN TO USE
+// -----------
+// ✅ Interactive web UIs with .NET components
+// ✅ Apps needing strong component reuse
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Simple static pages with no interactivity
+// ❌ Ultra-lightweight pages where SSR only is enough
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Async data loading in `OnInitializedAsync`.
 // ==============================================================================
 
 namespace RevisionNotesDemo.FrontEnd;

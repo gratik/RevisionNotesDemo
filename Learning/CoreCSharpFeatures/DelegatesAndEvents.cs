@@ -2,9 +2,28 @@
 // DELEGATES AND EVENTS
 // Reference: Revision Notes - .NET Framework - Page 11
 // ==============================================================================
-// DELEGATES: Type-safe references to methods (like C++ function pointers)
-// EVENTS: Publisher-subscriber pattern built on delegates
-// BUILT-IN: Action<T>, Func<T>, Predicate<T>, EventHandler
+// WHAT IS THIS?
+// -------------
+// Delegates for callbacks and events for publish-subscribe patterns.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Decouples producers and consumers
+// ✅ Enables multicast notifications
+//
+// WHEN TO USE
+// -----------
+// ✅ UI events, observer patterns, domain notifications
+// ✅ Callback-based APIs and extensibility points
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Simple direct calls with no subscribers
+// ❌ Overusing events where async messaging fits better
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Temperature sensor notifying displays.
 // ==============================================================================
 
 namespace RevisionNotesDemo.CoreCSharpFeatures;
@@ -27,10 +46,10 @@ public class TemperatureChangedEventArgs : EventArgs
 public class TemperatureSensor
 {
     private double _temperature;
-    
+
     // Event using built-in EventHandler<T>
     public event EventHandler<TemperatureChangedEventArgs>? TemperatureChanged;
-    
+
     public double Temperature
     {
         get => _temperature;
@@ -49,7 +68,7 @@ public class TemperatureSensor
             }
         }
     }
-    
+
     protected virtual void OnTemperatureChanged(TemperatureChangedEventArgs e)
     {
         TemperatureChanged?.Invoke(this, e);
@@ -62,12 +81,12 @@ public class TemperatureDisplay
     {
         sensor.TemperatureChanged += OnTemperatureChanged;
     }
-    
+
     public void Unsubscribe(TemperatureSensor sensor)
     {
         sensor.TemperatureChanged -= OnTemperatureChanged;
     }
-    
+
     private void OnTemperatureChanged(object? sender, TemperatureChangedEventArgs e)
     {
         Console.WriteLine($"[EVENT] 🌡️  Temperature changed: {e.OldTemperature:F1}°C → {e.NewTemperature:F1}°C");
@@ -94,15 +113,15 @@ public class DelegatesAndEventsDemo
 
         // 2. Built-in Delegates
         Console.WriteLine("--- 2. Built-in Delegates ---");
-        
+
         // Action<T> - void return
         Action<string> action = msg => Console.WriteLine($"[DELEGATE] Action: {msg}");
         action("Using Action<T>");
-        
+
         // Func<T, TResult> - returns value
         Func<int, int, int> multiply = (a, b) => a * b;
         Console.WriteLine($"[DELEGATE] Func result: {multiply(5, 3)}");
-        
+
         // Predicate<T> - returns bool
         Predicate<int> isEven = n => n % 2 == 0;
         Console.WriteLine($"[DELEGATE] Predicate (4 is even): {isEven(4)}\n");
@@ -118,13 +137,13 @@ public class DelegatesAndEventsDemo
         Console.WriteLine("--- 4. Events (Publisher-Subscriber) ---");
         var sensor = new TemperatureSensor();
         var display = new TemperatureDisplay();
-        
+
         display.Subscribe(sensor);
-        
+
         sensor.Temperature = 20.5;
         sensor.Temperature = 25.0;
         sensor.Temperature = 30.5;
-        
+
         Console.WriteLine("[EVENT] Unsubscribing display...");
         display.Unsubscribe(sensor);
         sensor.Temperature = 35.0;  // No output (unsubscribed)
@@ -135,7 +154,7 @@ public class DelegatesAndEventsDemo
         MathOperation operations = Add;
         operations += Multiply;
         operations += Subtract;
-        
+
         Console.WriteLine("[MULTICAST] Invoking all operations with (6, 3):");
         operations(6, 3);  // All methods called in order
         Console.WriteLine();
@@ -147,29 +166,29 @@ public class DelegatesAndEventsDemo
         Console.WriteLine("   ✅ Use EventHandler<T> for custom events");
         Console.WriteLine("   ✅ Make event-raising methods protected virtual");
     }
-    
+
     private static void PrintMessage(string msg)
     {
         Console.WriteLine($"[DELEGATE] PrintMessage: {msg}");
     }
-    
+
     private static void LogMessage(string msg)
     {
         Console.WriteLine($"[DELEGATE] LogMessage: Logged '{msg}'");
     }
-    
+
     private static int Add(int a, int b)
     {
         Console.WriteLine($"[MULTICAST]   Add: {a} + {b} = {a + b}");
         return a + b;
     }
-    
+
     private static int Multiply(int a, int b)
     {
         Console.WriteLine($"[MULTICAST]   Multiply: {a} * {b} = {a * b}");
         return a * b;
     }
-    
+
     private static int Subtract(int a, int b)
     {
         Console.WriteLine($"[MULTICAST]   Subtract: {a} - {b} = {a - b}");

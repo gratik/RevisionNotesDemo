@@ -2,35 +2,35 @@
 // ENTITY FRAMEWORK CORE - RELATIONSHIPS & NAVIGATION PROPERTIES
 // Reference: Revision Notes - Entity Framework Core (Section 8.6.2)
 // ==============================================================================
-// PURPOSE: Master the 3 types of relationships in EF Core and avoid the #1
-//          performance killer: N+1 queries. This is ESSENTIAL knowledge for
-//          any developer working with databases and ORMs.
 //
-// WHAT YOU'LL LEARN:
-//   • One-to-Many relationships (most common: Customer → Orders)
-//   • One-to-One relationships (User → UserProfile)
-//   • Many-to-Many relationships (Students ↔ Courses)
-//   • Navigation properties (how to traverse relationships in code)
-//   • Eager loading with Include/ThenInclude (prevents N+1)
-//   • The N+1 query problem (and how to avoid it)
+// WHAT IS IT?
+// -----------
+// Modeling relationships (one-to-many, one-to-one, many-to-many) and using
+// navigation properties to traverse related data efficiently.
 //
-// THE N+1 PROBLEM:
-//   ❌ BAD:  1 query for customers + N queries for each customer's orders = disaster
-//   ✅ GOOD: 1 query with JOIN to load customers + orders together
+// WHY IT MATTERS
+// --------------
+// - Correct relationship modeling drives correct SQL
+// - Avoids N+1 query performance problems
+// - Enables clean domain modeling with navigation properties
 //
-// LOADING STRATEGIES:
-//   1. Eager Loading  - Include(c => c.Orders) - Load related data upfront (best)
-//   2. Lazy Loading   - Automatic queries when accessing nav props (avoid!)
-//   3. Explicit Load  - context.Entry(c).Collection(c => c.Orders).Load() - Manual
-//   4. Select Loading - Select(c => new { c.Name, Orders = c.Orders }) - Projection
+// WHEN TO USE
+// -----------
+// - YES: Any EF Core model with related entities
+// - YES: When you need Include/ThenInclude to load related data
+// - YES: When designing schemas for real-world domains
 //
-// REAL-WORLD SCENARIOS:
-//   - E-commerce: Customer → Orders → OrderItems (nested includes)
-//   - Blog: Post → Comments → Replies (tree structures)
-//   - Social: User → Friends (self-referencing many-to-many)
-//   - Multi-tenant: Tenant → Users, Customers, etc. (one-to-many)
+// WHEN NOT TO USE
+// ---------------
+// - NO: Do not rely on lazy loading in performance-critical APIs
+// - NO: Do not load entire object graphs if only small data is needed
 //
-// KEY CONCEPTS: Navigation properties, Include, ThenInclude, loading strategies, N+1 queries
+// REAL-WORLD EXAMPLE
+// ------------------
+// E-commerce:
+// - Customer has many Orders
+// - Order has many OrderItems
+// - Use Include/ThenInclude to load customer with orders in one query
 // ==============================================================================
 
 using Microsoft.EntityFrameworkCore;

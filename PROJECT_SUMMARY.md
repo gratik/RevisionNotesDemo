@@ -4,15 +4,17 @@
 
 ### 📊 Statistics
 
-- **Total Files Created**: 140+ (114+ implementation + 26 documentation guides)
-- **Lines of Code**: ~19,000+ production code + comprehensive documentation
-- **Documentation Files**: 26 comprehensive guides (300-650 lines each)
+- **Total Files Created**: 147+ (119+ implementation + 28 documentation guides)
+- **Lines of Code**: ~21,000+ production code + comprehensive documentation
+- **Documentation Files**: 28 comprehensive guides (300-650 lines each)
 - **Concepts Demonstrated**: ALL from Revision Notes + Advanced Topics
 - **Build Status**: ✅ SUCCESS (warnings only)
 - **Runtime Status**: ✅ VERIFIED - All demonstrations running
 - **Version Control**: ✅ Git repository initialized and committed
 
-**Latest Update (February 14, 2026):** Expanded the front-end UI guide with comparisons, decision tree, validation table, migration notes, and testing stack
+**Latest Update (February 2025):** 
+- **Comprehensive Repository Pattern Enhancement** - Added extensive documentation with WHAT/WHY/WHEN/REAL-WORLD sections, good vs bad practice examples with anti-patterns, and complete implementations across all major data access frameworks (EF Core, Dapper, ADO.NET, In-Memory), plus performance comparison and hybrid approach recommendations
+- Previous: Added gRPC, Domain-Driven Design (Entities, Value Objects, Aggregates), and Advanced EF Core (Multi-Tenancy with Global Query Filters, Shadow Properties with clean domain models)
 
 ---
 
@@ -36,14 +38,18 @@
 ✅ **BuilderPattern.cs** - Meal orders and report building  
 ✅ **PrototypePattern.cs** - Game character cloning with registry
 
-### 3. Design Patterns - Structural (6 files)
+### 3. Design Patterns - Structural (10 files)
 
 ✅ **AdapterPattern.cs** - Legacy payment system integration  
+✅ **BridgePattern.cs** - Abstraction and implementation separation
+✅ **CompositePattern.cs** - File system and organization hierarchies  
+✅ **CQRSPattern.cs** - Command and query separation
 ✅ **DecoratorPattern.cs** - Data stream with encryption, compression, logging  
 ✅ **FacadePattern.cs** - Multimedia and home theater simplified interfaces  
-✅ **CompositePattern.cs** - File system and organization hierarchies  
+✅ **FlyweightPattern.cs** - Efficient memory sharing for similar objects
 ✅ **ProxyPattern.cs** - Virtual, protection, and caching proxies  
-✅ **CQRSPattern.cs** - Command and query separation
+✅ **RepositoryPattern.cs** - **ENHANCED** - Data access abstraction with EF Core, Dapper, ADO.NET implementations, good/bad practices
+✅ **UnitOfWorkPattern.cs** - Transaction management across repositories
 
 ### 4. Design Patterns - Behavioral (6 files)
 
@@ -86,13 +92,15 @@
 
 ✅ **ReflectionAndAttributes.cs** - Runtime type inspection and metadata
 
-### 10. Entity Framework (5 files)
+### 10. Entity Framework (7 files)
 
 ✅ **EntityFrameworkBestPractices.cs** - N+1 queries, tracking, projections  
 ✅ **ChangeTrackingExamples.cs** - Entity states and change detection  
 ✅ **RelationshipsNavigationExamples.cs** - Relationships and eager loading  
 ✅ **PerformanceOptimizationExamples.cs** - Query optimization techniques  
-✅ **MigrationsInDepthExamples.cs** - Code-first migrations
+✅ **MigrationsInDepthExamples.cs** - Code-first migrations  
+✅ **MultiTenancyPatterns.cs** - Global query filters for SaaS applications  
+✅ **ShadowPropertiesExamples.cs** - Clean domain models with shadow properties
 
 ### 11. Testing (9+ files)
 
@@ -134,58 +142,67 @@
 ✅ **WinFormsUiExamples.cs** - Form composition and presenter usage (illustrative)
 ✅ **WebFormsUiExamples.cs** - View state and server control patterns (illustrative)
 
+### 15. Domain-Driven Design (2 files)
+
+✅ **EntityValueObjectExamples.cs** - Entities vs Value Objects, rich domain models, domain validation  
+✅ **AggregateRootExamples.cs** - Aggregate boundaries, consistency enforcement, repository pattern
+
+### 16. gRPC (1 file)
+
+✅ **GrpcBestPractices.cs** - Protocol Buffers, service implementation, streaming, client usage, error handling
+
 ---
 
 ## 📱 Session Updates (Feb 14, 2026)
 
 ### Phase 1: Advanced Implementation Files (22 files)
 
-### 14. API Versioning (2 files)
+### 17. API Versioning (2 files)
 
 ✅ **APIVersioningStrategies.cs** - URL, header, query string versioning; default version configuration  
 ✅ **VersioningBestPractices.cs** - Migration strategies, deprecation policies, versioned testing patterns
 
-### 15. Modern C# Features (3 files)
+### 18. Modern C# Features (3 files)
 
 ✅ **PatternMatchingExamples.cs** - Type patterns, property patterns, list patterns, relational patterns  
 ✅ **NullableReferenceTypes.cs** - Nullable annotations, null-forgiving operator, nullable best practices  
 ✅ **InitOnlyProperties.cs** - Init-only setters, immutable records, required properties
 
-### 16. Logging (3 files)
+### 19. Logging (3 files)
 
 ✅ **ILoggerDeepDive.cs** - ILogger<T> basics, log levels, message templates, scopes, LoggerMessage performance  
 ✅ **StructuredLogging.cs** - Message templates, enrichment, correlation IDs, JSON output  
 ✅ **LoggingBestPractices.cs** - LogLevel selection, sensitive data filtering, performance patterns
 
-### 17. Resilience (3 files)
+### 20. Resilience (3 files)
 
 ✅ **PollyRetryPatterns.cs** - Exponential backoff, jitter, conditional retries, async retries  
 ✅ **CircuitBreakerPattern.cs** - Half-open state, failure thresholds, circuit breaker with fallback  
 ✅ **TimeoutAndBulkhead.cs** - Pessimistic timeout, bulkhead isolation, combined strategies
 
-### 18. Performance (3 files)
+### 21. Performance (3 files)
 
 ✅ **SpanAndMemory.cs** - Zero-allocation operations, Span<T>/Memory<T>, stackalloc, MemoryMarshal  
 ✅ **BenchmarkingExamples.cs** - BenchmarkDotNet, [MemoryDiagnoser], parametrized benchmarks  
 ✅ **OptimizationTechniques.cs** - ArrayPool<T>, ObjectPool<T>, ValueTask<T>, ConfigureAwait(false)
 
-### 19. Data Access (3 files)
+### 22. Data Access (3 files)
 
 ✅ **DapperExamples.cs** - Micro-ORM query patterns, multi-mapping, QueryMultiple for multiple result sets  
 ✅ **AdoNetPatterns.cs** - SqlConnection pooling, SqlCommand patterns, SqlDataReader optimization  
 ✅ **TransactionPatterns.cs** - ACID guarantees, isolation levels, TransactionScope, deadlock handling
 
-### 20. Configuration (3 files)
+### 23. Configuration (3 files)
 
 ✅ **ConfigurationPatterns.cs** - IConfiguration, hierarchical config, provider stack, hot reload  
 ✅ **OptionsPatternDeepDive.cs** - IOptions vs IOptionsSnapshot vs IOptionsMonitor, validation, named options  
 ✅ **FeatureFlags.cs** - Feature management, percentage rollout, targeting filters, killswitch patterns
 
-### 21. Health Checks (1 file)
+### 24. Health Checks (1 file)
 
 ✅ **HealthCheckExamples.cs** - IHealthCheck interface, dependency checks, liveness vs readiness probes
 
-### 22. Real-Time (1 file)
+### 25. Real-Time (1 file)
 
 ✅ **SignalRBasics.cs** - Hub creation, groups, strongly-typed hubs, authentication, scale-out patterns
 
@@ -213,19 +230,24 @@ All 26 documentation files created with comprehensive coverage (300-650 lines ea
 ✅ **Practical-Patterns.md** - Caching, Validation, Mapping, Background Services, Options  
 ✅ **DotNet-Concepts.md** - Dependency Injection, Service Lifetimes, Captive Dependencies
 
-#### Web Development (6 files)
+#### Web Development (7 files)
 
 ✅ **Web-API-MVC.md** - Minimal API vs Controllers, Middleware Pipeline, Versioning  
+✅ **gRPC.md** - Protocol Buffers, Service-to-Service Communication, Streaming, Performance Comparison  
 ✅ **Front-End-DotNet-UI.md** - MVC, Razor Pages, Blazor, MAUI, WPF, WinForms, Web Forms (comparisons, validation, migration, testing)  
 ✅ **API-Documentation.md** - Swagger/OpenAPI, XML Docs, Versioning, Security Documentation  
 ✅ **Security.md** - JWT, OAuth, Encryption, OWASP, Authentication vs Authorization  
 ✅ **RealTime.md** - SignalR, WebSockets, Hubs, Groups, Connection Lifecycle  
 ✅ **HealthChecks.md** - Liveness/Readiness/Startup Probes, Kubernetes Integration
 
+#### Architecture & Design (1 file)
+
+✅ **Domain-Driven-Design.md** - Entities, Value Objects, Aggregates, Rich Domain Models, Consistency Boundaries
+
 #### Data & Performance (4 files)
 
 ✅ **Data-Access.md** - ADO.NET, Dapper, EF Core comparison, N+1 Prevention  
-✅ **Entity-Framework.md** - Tracking, Relationships, Migrations, Query Optimization  
+✅ **Entity-Framework.md** - Tracking, Relationships, Migrations, Query Optimization, Multi-Tenancy, Shadow Properties  
 ✅ **Performance.md** - Span<T>, ArrayPool, Benchmarking, Zero-Allocation Techniques  
 ✅ **Resilience.md** - Polly Patterns (Retry, Circuit Breaker, Timeout, Bulkhead)
 
@@ -243,10 +265,10 @@ All 26 documentation files created with comprehensive coverage (300-650 lines ea
 
 **Documentation Statistics:**
 
-- Total Files: 26 comprehensive guides
+- Total Files: 28 comprehensive guides
 - Average Length: 400+ lines per file
-- Total Documentation: ~10,000+ lines
-- Topics Covered: 61+ major .NET concepts
+- Total Documentation: ~11,000+ lines
+- Topics Covered: 63+ major .NET concepts
 - Cross-References: Extensive linking between related topics
 - Code Examples: ✅ Good vs ❌ Bad patterns throughout
 - Updated: February 14, 2026

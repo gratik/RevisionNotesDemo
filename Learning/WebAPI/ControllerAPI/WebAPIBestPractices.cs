@@ -1,42 +1,36 @@
 // ==============================================================================
 // WEB API CONTROLLER BEST PRACTICES - Traditional ASP.NET Core Controllers
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate Controller-based Web API best practices.
-//   Controllers provide a structured, class-based approach to API development
-//   with built-in features for complex scenarios.
 //
-// WHY CONTROLLERS:
-//   - Better for large APIs (50+ endpoints)
-//   - Rich action filter pipeline
-//   - Model binding and validation built-in
-//   - Clear separation of concerns
-//   - Testing infrastructure maturity
-//   - Team familiarity with MVC pattern
+// WHAT IS IT?
+// -----------
+// A structured, controller-based approach to building Web APIs with routing,
+// filters, model binding, and validation baked in.
 //
-// WHAT YOU'LL LEARN:
-//   1. Controller structure and attributes
-//   2. Action methods and routing
-//   3. Model binding and validation
-//   4. Action filters and middleware
-//   5. Error handling and responses
-//   6. API versioning
-//   7. Content negotiation
-//   8. Testing controllers
+// WHY IT MATTERS
+// --------------
+// - Scales well for large APIs with many endpoints
+// - Supports rich filters and cross-cutting concerns
+// - Clear conventions for routing and response types
+// - Mature testing and tooling support
 //
-// WHEN TO USE CONTROLLERS:
-//   - Large, enterprise APIs
-//   - Complex routing scenarios
-//   - Need extensive middleware/filters
-//   - Team preference for OOP patterns
-//   - Legacy migration path
+// WHEN TO USE
+// -----------
+// - YES: Large or complex APIs
+// - YES: Need action filters, model validation, or MVC features
+// - YES: Team prefers OOP patterns and class-based structure
 //
-// WHEN TO USE MINIMAL API INSTEAD:
-//   - Microservices (< 50 endpoints)
-//   - Performance is critical
-//   - Simple routing
-//   - Prefer functional style
+// WHEN NOT TO USE
+// ---------------
+// - NO: Very small services with only a few endpoints
+// - NO: When minimal API provides simpler routing and less boilerplate
 //
+// REAL-WORLD EXAMPLE
+// ------------------
+// Enterprise product catalog API:
+// - Controllers for Products, Orders, Customers
+// - Filters for auth, logging, and validation
+// - Versioned endpoints for backward compatibility
 // ==============================================================================
 
 using System.ComponentModel.DataAnnotations;

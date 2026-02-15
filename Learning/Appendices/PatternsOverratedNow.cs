@@ -2,9 +2,28 @@
 // PATTERNS THAT ARE OVERUSED TODAY
 // Reference: Revision Notes - Appendix A
 // ============================================================================
-// PURPOSE:
-//   Show patterns that are commonly overused, and when simpler alternatives
-//   are usually a better choice.
+// WHAT IS THIS?
+// -------------
+// A short list of patterns that are often overapplied.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Encourages simpler, more maintainable designs
+// ✅ Reduces unnecessary abstraction layers
+//
+// WHEN TO USE
+// -----------
+// ✅ Design reviews and architectural discussions
+// ✅ Evaluating whether a pattern adds value
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ As a hard rule; context still matters
+// ❌ When constraints require the pattern
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Prefer DI over Service Locator.
 // ============================================================================
 
 namespace RevisionNotesDemo.Appendices;

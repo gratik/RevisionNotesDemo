@@ -2,8 +2,28 @@
 // COMMON INTERVIEW QUESTIONS
 // Reference: Revision Notes - Appendix C
 // ============================================================================
-// PURPOSE:
-//   Provide a concise set of C# and .NET interview questions with key points.
+// WHAT IS THIS?
+// -------------
+// A compact list of common C# and .NET interview questions.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Aids focused review and recall
+// ✅ Helps practice clear explanations
+//
+// WHEN TO USE
+// -----------
+// ✅ Interview prep or quick self-assessment
+// ✅ Revising fundamentals before a screen
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ As a replacement for deep, hands-on learning
+// ❌ As a sole source of truth for design decisions
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Practice explaining IQueryable vs IEnumerable.
 // ============================================================================
 
 namespace RevisionNotesDemo.Appendices;

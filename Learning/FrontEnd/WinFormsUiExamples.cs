@@ -1,8 +1,28 @@
 // ==============================================================================
 // FRONT-END UI - WINDOWS FORMS (WINDOWS DESKTOP)
 // ==============================================================================
-// PURPOSE: Show WinForms patterns with good/bad illustrative examples.
-// NOTE: Examples are illustrative only and not meant to be run as-is.
+// WHAT IS THIS?
+// -------------
+// WinForms UI patterns for classic desktop apps.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Encourages separation of UI and business logic
+// ✅ Helps maintain legacy Windows apps
+//
+// WHEN TO USE
+// -----------
+// ✅ Legacy desktop apps or simple Windows tools
+// ✅ Apps that already depend on WinForms ecosystem
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Modern cross-platform or web-first solutions
+// ❌ New development where WPF/MAUI is preferred
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Presenter pattern with user controls.
 // ==============================================================================
 
 namespace RevisionNotesDemo.FrontEnd;

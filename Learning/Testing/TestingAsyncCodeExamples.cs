@@ -2,8 +2,37 @@
 // TESTING ASYNC CODE - Comprehensive Async/Await Testing
 // Reference: Revision Notes - Unit Testing Best Practices
 // ==============================================================================
-// PURPOSE: Demonstrate testing async methods, cancellation, concurrency, timeouts
-// KEY CONCEPTS: async/await, CancellationToken, Task.WhenAll, TaskCompletionSource
+// WHAT IS IT?
+// -----------
+// Patterns and examples for testing async/await code: cancellations, timeouts,
+// concurrency, and task state verification without deadlocks.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ RELIABILITY: Async bugs are timing-sensitive and easy to miss
+// ✅ DEADLOCK AVOIDANCE: Blocking calls in tests can hang CI pipelines
+// ✅ CORRECTNESS: Cancellation and timeout paths must be verified
+// ✅ PERFORMANCE: Concurrency tests ensure parallel code is actually parallel
+//
+// WHEN TO USE
+// -----------
+// ✅ Any method returning Task/ValueTask or using async/await
+// ✅ Code that accepts CancellationToken
+// ✅ Concurrency and batching paths (Task.WhenAll, parallel pipelines)
+// ✅ Timeout logic and circuit breakers
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Avoid time-based assertions when behavior can be asserted deterministically
+// ❌ Don't use async void outside event handlers (hard to test)
+// ❌ Skip concurrency tests for pure, synchronous logic
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Checkout service:
+// - Calls payment gateway, inventory, and email concurrently
+// - Must cancel on timeout or user abort
+// - Tests verify parallel execution and proper cancellation handling
 // ==============================================================================
 
 using System;

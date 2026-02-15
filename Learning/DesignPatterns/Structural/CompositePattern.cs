@@ -1,9 +1,185 @@
 // ============================================================================
-// COMPOSITE PATTERN
+// COMPOSITE PATTERN - Treat Individual Objects and Compositions Uniformly
 // Reference: Revision Notes - Design Patterns (Structural) - Page 3
 // ============================================================================
-// PURPOSE: "Composes objects into tree structures to represent part-whole hierarchies."
-// EXAMPLE: File system directories and files.
+//
+// WHAT IS THE COMPOSITE PATTERN?
+// -------------------------------
+// Composes objects into tree structures to represent part-whole hierarchies.
+// Allows clients to treat individual objects and compositions of objects uniformly.
+// Both leaf nodes and branches implement the same interface.
+//
+// Think of it as: "File system - folders contain files OR other folders,
+// but you can perform same operations (delete, move, size) on both"
+//
+// Core Concepts:
+//   • Component: Interface for all objects in composition
+//   • Leaf: Individual object with no children (end node)
+//   • Composite: Object that contains children (branch node)
+//   • Tree Structure: Recursive hierarchy of components
+//   • Uniform Treatment: Same interface for leaf and composite
+//
+// WHY IT MATTERS
+// --------------
+// ✅ SIMPLICITY: Treat individual and composite objects uniformly
+// ✅ RECURSIVE STRUCTURES: Natural representation of tree hierarchies
+// ✅ FLEXIBILITY: Easy to add new component types
+// ✅ OPEN/CLOSED: Add new components without changing client code
+// ✅ POLYMORPHISM: Client works with Component interface, not concrete types
+// ✅ NATURAL NAVIGATION: Traverse entire tree with same operations
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Represent part-whole hierarchies (tree structures)
+// ✅ Want clients to ignore difference between compositions and individual objects
+// ✅ Structure can be represented recursively
+// ✅ Need to apply same operations to individual and composite objects
+// ✅ Building UI components, file systems, organization charts
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Structure is not hierarchical (flat list)
+// ❌ Need very different operations for leaf vs composite
+// ❌ Type safety more important than uniformity
+// ❌ Simple parent-child relationship suffices
+//
+// REAL-WORLD EXAMPLE - Company Organization Chart
+// -----------------------------------------------
+// Corporate hierarchy:
+//   • CEO (composite) → has VPs
+//   • VP Engineering (composite) → has Directors
+//   • Director (composite) → has Managers
+//   • Manager (composite) → has Individual Contributors
+//   • Individual Contributor (leaf) → no reports
+//
+// Operations needed:
+//   • GetSalaryTotal() - for budgeting
+//   • GetHeadcount() - for reporting
+//   • PrintHierarchy() - for org chart
+//
+// Without Composite:
+//   → decimal GetTotalSalary() {
+//         decimal total = CEO.Salary;
+//         foreach (VP vp in CEO.Reports) {
+//             total += vp.Salary;
+//             foreach (Director dir in vp.Reports) {
+//                 total += dir.Salary;
+//                 foreach (Manager mgr in dir.Reports) {
+//                     total += mgr.Salary;
+//                     foreach (IC ic in mgr.Reports) {
+//                         total += ic.Salary;  // Finally!
+//                     }
+//                 }
+//             }
+//         }
+//         return total;
+//     }
+//   → Nightmare code with nested loops
+//   → Breaks if hierarchy depth changes
+//   → Different logic for each level
+//
+// With Composite:
+//   → interface IEmployee {
+//         decimal GetSalaryTotal();
+//         void PrintHierarchy(int indent);
+//     }
+//   → class IndividualContributor : IEmployee {  // Leaf
+//         public decimal GetSalaryTotal() => Salary;
+//     }
+//   → class Manager : IEmployee {  // Composite
+//         private List<IEmployee> _reports;
+//         public decimal GetSalaryTotal() => Salary + _reports.Sum(r => r.GetSalaryTotal());
+//     }
+//   → decimal total = CEO.GetSalaryTotal();  // Recursively calculates entire tree!
+//   → Same code works for any level
+//   → Adding levels doesn't change code
+//
+// ANOTHER EXAMPLE - UI Component Tree
+// -----------------------------------
+// GUI framework (like WPF, React, SwiftUI):
+//   • Window (composite) → contains Panels
+//   • Panel (composite) → contains Buttons, TextBoxes, other Panels
+//   • Button (leaf) → no children
+//   • TextBox (leaf) → no children
+//
+// Operations:
+//   • Render() - draw to screen
+//   • HandleClick(x, y) - respond to mouse
+//   • SetVisibility(bool) - show/hide
+//
+// Example:
+//   Panel panel = new Panel();
+//   panel.Add(new Button("OK"));
+//   panel.Add(new Button("Cancel"));
+//   panel.Add(new TextBox("Enter name"));
+//   
+//   Panel nestedPanel = new Panel();
+//   nestedPanel.Add(new Button("Submit"));
+//   panel.Add(nestedPanel);  // Panel contains panel!
+//   
+//   panel.Render();  // Renders everything recursively
+//   panel.SetVisibility(false);  // Hides entire tree
+//
+// ANOTHER EXAMPLE - File System
+// -----------------------------
+// Windows/Linux file system:
+//   • Directory (composite) → contains files and subdirectories
+//   • File (leaf) → no children
+//
+// Operations:
+//   • GetSize() - calculate total size
+//   • Delete() - remove from disk
+//   • Display(indent) - show tree structure
+//
+// Example:
+//   Directory root = new Directory("C:\\");
+//   Directory docs = new Directory("Documents");
+//   docs.Add(new File("report.pdf", 1024000));
+//   docs.Add(new File("notes.txt", 5000));
+//   
+//   Directory pics = new Directory("Pictures");
+//   pics.Add(new File("photo1.jpg", 2048000));
+//   pics.Add(new File("photo2.jpg", 1536000));
+//   
+//   root.Add(docs);
+//   root.Add(pics);
+//   
+//   long totalSize = root.GetSize();  // Recursively sums: 1024000+5000+2048000+1536000
+//   root.Display();  // Shows entire tree structure
+//
+// .NET FRAMEWORK EXAMPLES
+// -----------------------
+// Composite pattern used in .NET:
+//   • WPF/WinForms controls: Panel contains Controls
+//   • ASP.NET controls: WebControl hierarchy
+//   • System.Drawing: Graphics objects
+//   • XML DOM: Node hierarchy (Element, Text, Comment)
+//
+// DESIGN CONSIDERATIONS
+// ---------------------
+// 1. Where to store child management?
+//    • Option A: In Component interface (simpler, less type-safe)
+//    • Option B: Only in Composite class (more type-safe, less uniform)
+//
+// 2. Ordering of children:
+//    • List<> for ordered children
+//    • HashSet<> for unordered
+//    • Dictionary<> for keyed children
+//
+// 3. Parent references:
+//    • Can add Parent property for upward navigation
+//    • Makes tree manipulation more complex
+//
+// COMPOSITE VS SIMILAR PATTERNS
+// -----------------------------
+// Composite vs Decorator:
+//   • Composite: Represents part-whole (tree), many children
+//   • Decorator: Adds responsibilities, one wrapped object
+//
+// Composite vs Chain of Responsibility:
+//   • Composite: All children processed
+//   • Chain: Stop at first handler that processes
+//
 // ============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Structural;

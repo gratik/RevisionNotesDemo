@@ -1,26 +1,28 @@
 // ==============================================================================
 // CONFIGURATION PATTERNS - Managing Application Settings
 // ==============================================================================
-// PURPOSE:
-//   Master ASP.NET Core configuration system.
-//   appsettings.json, environment variables, user secrets, reloading.
+// WHAT IS THIS?
+// -------------
+// ASP.NET Core configuration providers and best practices.
 //
-// WHY CONFIGURATION:
-//   - Environment-specific settings (dev/staging/prod)
-//   - Secure secrets management
-//   - Hierarchical and composable
-//   - Reload without restart
+// WHY IT MATTERS
+// --------------
+// ✅ Supports environment-specific settings
+// ✅ Enables secure secrets management
 //
-// WHAT YOU'LL LEARN:
-//   1. IConfiguration basics
-//   2. Configuration providers (JSON, Environment, User Secrets)
-//   3. Hierarchical configuration
-//   4. Connection strings
-//   5. Configuration reloading
-//   6. Best practices
+// WHEN TO USE
+// -----------
+// ✅ Any app with environment-dependent configuration
+// ✅ Settings that must be overridden per environment
 //
-// KEY PRINCIPLE:
-//   Config providers stack - later providers override earlier ones.
+// WHEN NOT TO USE
+// ---------------
+// ❌ Hardcoded settings in production code
+// ❌ Storing secrets in source control
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// appsettings + environment variables override order.
 // ==============================================================================
 
 using Microsoft.Extensions.Configuration;
@@ -62,35 +64,35 @@ public class IConfigurationBasicsExamples
     //     "EnableLogging": true
     //   }
     // }
-    
+
     // ✅ GOOD: Inject IConfiguration
     public class MyService
     {
         private readonly IConfiguration _configuration;
-        
+
         public MyService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        
+
         public void ReadSettings()
         {
             // ✅ Method 1: Indexer (returns string or null)
             var appName = _configuration["AppName"];  // "MyApp"
-            
+
             // ✅ Method 2: GetValue<T> with type conversion
             var maxItems = _configuration.GetValue<int>("MaxItems");  // 100
             var enableCache = _configuration.GetValue<bool>("Features:EnableCache");  // true
-            
+
             // ✅ Method 3: GetSection for nested config
             var databaseSection = _configuration.GetSection("Database");
             var connectionString = databaseSection["ConnectionString"];
             var timeout = databaseSection.GetValue<int>("Timeout");
-            
+
             // ✅ Method 4: Colon notation for nested values
             var connString = _configuration["Database:ConnectionString"];
         }
-        
+
         // ✅ GOOD: Default values
         public void ReadWithDefaults()
         {
@@ -99,7 +101,7 @@ public class IConfigurationBasicsExamples
             var theme = _configuration.GetValue<string>("Theme", defaultValue: "Light");
         }
     }
-    
+
     // ❌ BAD: Hardcoded settings
     public class BadService
     {
@@ -109,7 +111,7 @@ public class IConfigurationBasicsExamples
             var timeout = 30;  // ❌ Magic number
         }
     }
-    
+
     // ✅ GOOD: Environment-specific appsettings
     // appsettings.json - Base settings
     // appsettings.Development.json - Dev overrides
@@ -142,43 +144,43 @@ public class ConfigurationProvidersExamples
     public static void ConfigureDefault(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
+
         // ✅ Automatically configured in this order:
         // 1. appsettings.json
         // 2. appsettings.{Environment}.json
         // 3. User Secrets (Development only)
         // 4. Environment Variables
         // 5. Command-line arguments
-        
+
         var app = builder.Build();
-        
+
         // Later providers override earlier ones
         var config = app.Services.GetRequiredService<IConfiguration>();
     }
-    
+
     // ✅ GOOD: Custom configuration sources
     public static IConfiguration BuildCustomConfiguration()
     {
         var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            
+
             // 1. JSON files
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
                 optional: true, reloadOnChange: true)
-            
+
             // 2. User Secrets (Development only)
             .AddUserSecrets<Program>(optional: true)
-            
+
             // 3. Environment Variables
             .AddEnvironmentVariables()
-            
+
             // 4. Command-line
             .AddCommandLine(Environment.GetCommandLineArgs());
-        
+
         return builder.Build();
     }
-    
+
     // ✅ USER SECRETS SETUP:
     // 1. Right-click project → Manage User Secrets
     // 2. Adds to secrets.json (not in git):
@@ -187,13 +189,13 @@ public class ConfigurationProvidersExamples
     //      "ApiKeys:OpenAI": "sk-..."
     //    }
     // 3. Only loaded in Development environment
-    
+
     // ✅ ENVIRONMENT VARIABLES:
     // Windows: set Database__ConnectionString=Server=prod;Database=ProdDb
     // Linux: export Database__ConnectionString="Server=prod;Database=ProdDb"
     // Azure: Configure in App Service Configuration
     // Note: Double underscore (__) = colon (:) in config keys
-    
+
     /*
     // ✅ AZURE KEY VAULT:
     // Requires: dotnet add package Azure.Extensions.AspNetCore.Configuration.Secrets
@@ -241,32 +243,32 @@ public class HierarchicalConfigurationExamples
     //     }
     //   }
     // }
-    
+
     public class EmailService
     {
         private readonly IConfiguration _configuration;
-        
+
         public EmailService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        
+
         public void SendEmail()
         {
             // ✅ Method 1: Colon notation
             var host = _configuration["Email:SmtpHost"];
             var port = _configuration.GetValue<int>("Email:SmtpPort");
             var username = _configuration["Email:Credentials:Username"];
-            
+
             // ✅ Method 2: GetSection (better for multiple reads)
             var emailSection = _configuration.GetSection("Email");
             var fromAddress = emailSection["FromAddress"];
-            
+
             var credentialsSection = emailSection.GetSection("Credentials");
             var password = credentialsSection["Password"];
         }
     }
-    
+
     // ✅ GOOD: Bind to strongly-typed class
     public class EmailSettings
     {
@@ -275,22 +277,22 @@ public class HierarchicalConfigurationExamples
         public string FromAddress { get; set; } = string.Empty;
         public EmailCredentials Credentials { get; set; } = new();
     }
-    
+
     public class EmailCredentials
     {
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
     }
-    
+
     public class EmailServiceTyped
     {
         private readonly EmailSettings _settings;
-        
+
         public EmailServiceTyped(IConfiguration configuration)
         {
             // ✅ Bind section to class
             _settings = configuration.GetSection("Email").Get<EmailSettings>() ?? new();
-            
+
             // Now use strongly-typed properties
             var host = _settings.SmtpHost;
             var port = _settings.SmtpPort;
@@ -318,21 +320,21 @@ public class ConnectionStringsExamples
     //     "RedisCache": "localhost:6379"
     //   }
     // }
-    
+
     public class DatabaseService
     {
         private readonly string _connectionString;
-        
+
         public DatabaseService(IConfiguration configuration)
         {
             // ✅ GetConnectionString helper method
             _connectionString = configuration.GetConnectionString("DefaultConnection") ?? "";
-            
+
             // Equivalent to:
             // _connectionString = configuration["ConnectionStrings:DefaultConnection"];
         }
     }
-    
+
     /*
     // ✅ GOOD: Register with DI
     // Requires DbContext definition: public class MyDbContext : DbContext { }
@@ -344,7 +346,7 @@ public class ConnectionStringsExamples
             options.UseSqlServer(connectionString));
     }
     */
-    
+
     // ✅ PRODUCTION: Override in environment variables
     // Azure App Service: Add app setting "ConnectionStrings__DefaultConnection"
     // Docker: -e ConnectionStrings__DefaultConnection="..."
@@ -370,16 +372,16 @@ public class ConfigurationReloadingExamples
                 reloadOnChange: true)  // ✅ Watch file for changes
             .Build();
     }
-    
+
     // ✅ GOOD: React to changes with IChangeToken
     public class FeatureService
     {
         private readonly IConfiguration _configuration;
-        
+
         public FeatureService(IConfiguration configuration)
         {
             _configuration = configuration;
-            
+
             // ✅ Register callback for changes
             ChangeToken.OnChange(
                 () => _configuration.GetReloadToken(),
@@ -391,7 +393,7 @@ public class ConfigurationReloadingExamples
                 });
         }
     }
-    
+
     // ⚠️ GOTCHA: IConfiguration always reads latest value
     // But IOptions<T> caches value - use IOptionsMonitor<T> for reloading
     // (See OptionsPatternDeepDive.cs for details)

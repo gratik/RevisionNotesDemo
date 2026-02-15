@@ -1,26 +1,28 @@
 // ==============================================================================
 // OPTIMIZATION TECHNIQUES - Practical Performance Patterns
 // ==============================================================================
-// PURPOSE:
-//   Master real-world optimization patterns beyond Span/Memory.
-//   ArrayPool, object pooling, ValueTask, async optimization, and more.
+// WHAT IS THIS?
+// -------------
+// Real-world performance patterns (pooling, ValueTask, async tuning).
 //
-// WHY OPTIMIZE:
-//   - High-throughput systems
-//   - Reduce GC pressure
-//   - Lower latency
-//   - Better resource utilization
+// WHY IT MATTERS
+// --------------
+// ✅ Lowers latency and GC pressure under load
+// ✅ Improves throughput on hot paths
 //
-// WHAT YOU'LL LEARN:
-//   1. ArrayPool<T> for buffer reuse
-//   2. Object pooling patterns
-//   3. ValueTask vs Task
-//   4. Async state machine optimization
-//   5. StringBuilder optimization
-//   6. Collection optimization
+// WHEN TO USE
+// -----------
+// ✅ Profiled bottlenecks and high-throughput scenarios
+// ✅ Large buffer or object allocation hotspots
 //
-// KEY PRINCIPLE:
-//   Profile first, optimize hot paths only. Premature optimization wastes time.
+// WHEN NOT TO USE
+// ---------------
+// ❌ Unprofiled code or low-traffic workloads
+// ❌ Micro-optimizations that reduce readability
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Use ArrayPool for large temporary buffers.
 // ==============================================================================
 
 using System.Buffers;
@@ -52,13 +54,13 @@ public class ArrayPoolExamples
     public byte[] ProcessData_Traditional(int size)
     {
         var buffer = new byte[size];  // ❌ Heap allocation every call
-        
+
         for (int i = 0; i < buffer.Length; i++)
             buffer[i] = (byte)(i % 256);
-        
+
         return buffer;  // Caller owns array
     }
-    
+
     // ✅ GOOD: ArrayPool - rent and return
     public byte[] ProcessData_Pooled(int size)
     {
@@ -67,10 +69,10 @@ public class ArrayPoolExamples
         {
             // ⚠️ Buffer may be larger than requested!
             var span = buffer.AsSpan(0, size);  // ✅ Use only requested size
-            
+
             for (int i = 0; i < span.Length; i++)
                 span[i] = (byte)(i % 256);
-            
+
             // Copy to exact-sized array for return
             var result = span.ToArray();
             return result;
@@ -80,7 +82,7 @@ public class ArrayPoolExamples
             ArrayPool<byte>.Shared.Return(buffer, clearArray: true);  // ✅ Return to pool
         }
     }
-    
+
     // ✅ BEST: Process in-place without allocation
     public void ProcessData_InPlace(byte[] buffer)
     {
@@ -88,13 +90,13 @@ public class ArrayPoolExamples
         for (int i = 0; i < buffer.Length; i++)
             buffer[i] = (byte)(i % 256);
     }
-    
+
     // ✅ GOOD: Custom pool for specific sizes
     private static readonly ArrayPool<char> CustomCharPool = ArrayPool<char>.Create(
         maxArrayLength: 4096,     // Max size to pool
         maxArraysPerBucket: 50    // Max arrays per size bucket
     );
-    
+
     public string FormatData(int count)
     {
         var buffer = CustomCharPool.Rent(count * 10);  // ✅ Custom pool
@@ -106,7 +108,7 @@ public class ArrayPoolExamples
                 if (i.TryFormat(buffer.AsSpan(position), out int written))
                     position += written;
             }
-            
+
             return new string(buffer, 0, position);
         }
         finally
@@ -114,7 +116,7 @@ public class ArrayPoolExamples
             CustomCharPool.Return(buffer);
         }
     }
-    
+
     // GOTCHA: clearArray parameter
     // - clearArray: true => Zero out array (security/correctness)
     // - clearArray: false => Faster, but array contains old data
@@ -140,14 +142,14 @@ public class ObjectPoolingExamples
     public class ExpensiveObjectPool
     {
         private readonly ObjectPool<ExpensiveObject> _pool;
-        
+
         public ExpensiveObjectPool()
         {
             var policy = new DefaultPooledObjectPolicy<ExpensiveObject>();
             var provider = new DefaultObjectPoolProvider();
             _pool = provider.Create(policy);
         }
-        
+
         public string UsePooledObject(string input)
         {
             var obj = _pool.Get();  // ✅ Rent from pool
@@ -161,25 +163,25 @@ public class ObjectPoolingExamples
             }
         }
     }
-    
+
     private class ExpensiveObject
     {
         // Imagine expensive initialization
         private readonly byte[] _buffer = new byte[4096];
-        
+
         public string Process(string input)
         {
             // Do work
             return input.ToUpper();
         }
     }
-    
+
     // ✅ GOOD: Custom pooling policy
     public class StringBuilderPool
     {
-        private static readonly ObjectPool<StringBuilder> Pool = 
+        private static readonly ObjectPool<StringBuilder> Pool =
             new DefaultObjectPoolProvider().Create(new StringBuilderPooledObjectPolicy());
-        
+
         public static string BuildString(string[] parts)
         {
             var sb = Pool.Get();
@@ -187,7 +189,7 @@ public class ObjectPoolingExamples
             {
                 foreach (var part in parts)
                     sb.Append(part);
-                
+
                 return sb.ToString();
             }
             finally
@@ -196,22 +198,22 @@ public class ObjectPoolingExamples
             }
         }
     }
-    
+
     // Custom policy: Reset object when returned
     public class StringBuilderPooledObjectPolicy : IPooledObjectPolicy<StringBuilder>
     {
         public StringBuilder Create() => new StringBuilder(capacity: 256);
-        
+
         public bool Return(StringBuilder obj)
         {
             if (obj.Capacity > 4096)
                 return false;  // ❌ Don't pool huge stringbuilders
-            
+
             obj.Clear();  // ✅ Reset state
             return true;   // ✅ Return to pool
         }
     }
-    
+
     // ❌ ANTI-PATTERN: Manual pooling with ConcurrentBag
     // Use ObjectPool instead - handles thread safety and lifecycle
 }
@@ -235,27 +237,27 @@ public class ObjectPoolingExamples
 public class ValueTaskExamples
 {
     private readonly Dictionary<int, string> _cache = new();
-    
+
     // ❌ BAD: Task always allocates, even for cache hits
     public async Task<string> GetData_Task(int id)
     {
         if (_cache.TryGetValue(id, out var cached))
             return cached;  // ❌ Still allocates Task<string>
-        
+
         await Task.Delay(100);  // Simulate async work
         var data = $"Data_{id}";
         _cache[id] = data;
         return data;
     }
-    
+
     // ✅ GOOD: ValueTask avoids allocation for sync path
     public ValueTask<string> GetData_ValueTask(int id)
     {
         if (_cache.TryGetValue(id, out var cached))
             return new ValueTask<string>(cached);  // ✅ No allocation!
-        
+
         return GetAsync(id);  // Async path
-        
+
         async ValueTask<string> GetAsync(int id)
         {
             await Task.Delay(100);
@@ -264,35 +266,35 @@ public class ValueTaskExamples
             return data;
         }
     }
-    
+
     // ✅ BEST: ValueTask with inline async
     public async ValueTask<string> GetData_Optimized(int id)
     {
         if (_cache.TryGetValue(id, out var cached))
             return cached;  // ✅ Sync return, compiler optimizes
-        
+
         // Slow path: actually async
         await Task.Delay(100);
         var data = $"Data_{id}";
         _cache[id] = data;
         return data;
     }
-    
+
     // WHEN TO USE:
     // ✅ High-frequency calls (1000s/sec)
     // ✅ Often completes synchronously (cache, pooling)
     // ✅ Performance-critical path
     // ❌ Normal CRUD operations
     // ❌ UI event handlers
-    
+
     // GOTCHA: ValueTask can only be awaited ONCE
     public async Task ValueTaskGotcha()
     {
         var vt = GetData_ValueTask(1);
-        
+
         await vt;  // ✅ First await - OK
-        // await vt;  // ❌ Second await - INVALID!
-        
+                   // await vt;  // ❌ Second await - INVALID!
+
         // If you need multiple awaits, convert to Task:
         Task<string> task = vt.AsTask();
         await task;  // OK
@@ -317,20 +319,20 @@ public class AsyncOptimizationExamples
         var result = x + y;  // ❌ Sync work, why async?
         return await Task.FromResult(result);  // ❌ Unnecessary
     }
-    
+
     // ✅ GOOD: Sync when possible
     public Task<int> Calculate_Sync(int x, int y)
     {
         var result = x + y;
         return Task.FromResult(result);  // ✅ Fast sync path
     }
-    
+
     // ✅ BETTER: Return int directly if always sync
     public int Calculate_Direct(int x, int y)
     {
         return x + y;  // ✅ Simplest and fastest
     }
-    
+
     // ✅ GOOD: ConfigureAwait(false) in library code
     public async Task<string> LibraryMethodAsync()
     {
@@ -339,19 +341,19 @@ public class AsyncOptimizationExamples
         await SaveDataAsync(processed).ConfigureAwait(false);  // ✅ Avoid context capture
         return "Done";
     }
-    
+
     // ❌ BAD: Async void (except event handlers)
     public async void BadAsyncVoid()  // ❌ Can't catch exceptions properly
     {
         await Task.Delay(100);
     }
-    
+
     // ✅ GOOD: Return Task
     public async Task GoodAsync()
     {
         await Task.Delay(100);
     }
-    
+
     // ✅ OPTIMIZATION: Avoid closures in async
     public async Task WithClosure(List<string> items)
     {
@@ -361,7 +363,7 @@ public class AsyncOptimizationExamples
             await Task.Run(() => Process(item));
         }
     }
-    
+
     public async Task WithoutClosure(List<string> items)
     {
         foreach (var item in items)
@@ -370,7 +372,7 @@ public class AsyncOptimizationExamples
             await Task.Run(() => ProcessParam(item));
         }
     }
-    
+
     private Task<string> FetchDataAsync() => Task.FromResult("data");
     private string ProcessData(string data) => data.ToUpper();
     private Task SaveDataAsync(string data) => Task.CompletedTask;
@@ -391,44 +393,44 @@ public class CollectionPerformanceExamples
     {
         return new List<int>(capacity: expectedCount);  // ✅ Avoid resizing
     }
-    
+
     public Dictionary<string, int> CreateDict_Sized(int expectedCount)
     {
         return new Dictionary<string, int>(capacity: expectedCount);  // ✅ Avoid rehashing
     }
-    
+
     // ✅ Use HashSet for lookups
     public bool Contains_HashSet(int value, HashSet<int> set)
     {
         return set.Contains(value);  // ✅ O(1)
     }
-    
+
     public bool Contains_List(int value, List<int> list)
     {
         return list.Contains(value);  // ❌ O(n) - slow for large lists
     }
-    
+
     // ✅ Use Dictionary over List<KeyValuePair>
     public class ProductLookup
     {
         // ❌ BAD: Linear search
         private readonly List<(int Id, string Name)> _productsBAD = new();
-        
+
         // ✅ GOOD: O(1) lookup
         private readonly Dictionary<int, string> _productsGOOD = new();
-        
+
         public string? GetProductBAD(int id)
         {
             var product = _productsBAD.FirstOrDefault(p => p.Id == id);  // ❌ O(n)
             return product.Name;
         }
-        
+
         public string? GetProductGOOD(int id)
         {
             return _productsGOOD.TryGetValue(id, out var name) ? name : null;  // ✅ O(1)
         }
     }
-    
+
     // ✅ Span optimization for arrays/lists
     public int SumArray(int[] numbers)
     {
@@ -438,7 +440,7 @@ public class CollectionPerformanceExamples
             sum += n;
         return sum;
     }
-    
+
     public int SumList(List<int> numbers)
     {
         Span<int> span = CollectionsMarshal.AsSpan(numbers);  // ✅ Zero-copy .NET 5+
@@ -464,7 +466,7 @@ public class StringOptimizationExamples
         }
         return result;
     }
-    
+
     // ✅ GOOD: StringBuilder
     public string BuildReport_Good(List<string> items)
     {
@@ -476,32 +478,32 @@ public class StringOptimizationExamples
         }
         return sb.ToString();
     }
-    
+
     // ✅ BEST: String.Join for simple concatenation
     public string BuildReport_Best(List<string> items)
     {
         return string.Join('\n', items);  // ✅ Optimized internally
     }
-    
+
     // ✅ String interning for repeated strings
     private static readonly string CachedStatus = string.Intern("Active");
-    
+
     public string GetStatus()
     {
         return CachedStatus;  // ✅ Same instance reused
     }
-    
+
     // ✅ Avoid string.Format in hot paths
     public string Format_Slow(int id, string name)
     {
         return string.Format("User {0}: {1}", id, name);  // ❌ Slow
     }
-    
+
     public string Format_Fast(int id, string name)
     {
         return $"User {id}: {name}";  // ✅ Faster interpolation
     }
-    
+
     // ✅ BEST: Span for parsing without allocations
     public int ParseInt_Span(string text)
     {

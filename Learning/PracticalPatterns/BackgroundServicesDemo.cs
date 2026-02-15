@@ -2,9 +2,28 @@
 // BACKGROUND SERVICES
 // Reference: Revision Notes - Practical Scenarios
 // ==============================================================================
-// PURPOSE: Long-running background tasks in ASP.NET Core
-// BENEFIT: Async work, scheduled jobs, queue processing, continuous monitoring
-// USE WHEN: Need periodic tasks, background processing, hosted services
+// WHAT IS THIS?
+// -------------
+// Hosted services for long-running or scheduled background tasks.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Offloads work from request threads
+// ✅ Supports periodic jobs and queue processing
+//
+// WHEN TO USE
+// -----------
+// ✅ Cache warming, cleanup jobs, and message processing
+// ✅ Continuous monitoring or polling tasks
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Short-lived tasks triggered per request
+// ❌ Work better handled by serverless scheduled jobs
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Nightly data cleanup and email batch processing.
 // ==============================================================================
 
 namespace RevisionNotesDemo.PracticalPatterns;

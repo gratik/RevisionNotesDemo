@@ -1,11 +1,35 @@
 // ==============================================================================
 // MSTEST BEST PRACTICES - Comprehensive Testing Patterns
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate MSTest testing framework best practices with real-world examples.
-//   MSTest is Microsoft's native testing framework, built into Visual Studio with
-//   best integration for Azure DevOps pipelines. It's the default choice when
-//   VS tooling and Microsoft ecosystem are priorities.
+// WHAT IS THIS?
+// -------------
+// MSTest is Microsoft's native test framework with deep Visual Studio and
+// Azure DevOps integration, offering structured attributes and TestContext.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ TOOLING INTEGRATION: Best-in-class VS and Azure DevOps reporting
+// ✅ ENTERPRISE FIT: Common choice in Microsoft-first environments
+// ✅ TEST METADATA: TestContext enables richer output and attachments
+// ✅ LOW FRICTION: Default templates and built-in test runner support
+//
+// WHEN TO USE
+// -----------
+// ✅ VS/Azure DevOps-centric teams
+// ✅ Organizations standardizing on Microsoft tooling
+// ✅ Projects needing TestContext metadata and attachments
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Minimal-ceremony test suites (xUnit may be simpler)
+// ❌ Teams preferring constraint-based assertions (NUnit)
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Enterprise line-of-business app:
+// - Runs in Azure DevOps with TRX reporting
+// - Relies on TestContext for diagnostics and attachments
+// - Uses MSTest for consistent developer onboarding
 //
 // WHY MSTEST:
 //   - Built into Visual Studio (zero setup for basic tests)

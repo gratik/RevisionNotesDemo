@@ -2,8 +2,35 @@
 // DEADLOCKS & PREVENTION
 // Reference: Revision Notes - Page 10
 // ============================================================================
-// Deadlock: Threads waiting for each other's resources
-// Prevention: ConfigureAwait(false), avoid blocking (.Result, .Wait()), async all the way
+//
+// WHAT IS A DEADLOCK?
+// -------------------
+// A situation where threads wait on each other indefinitely, so no progress
+// can be made. In async code, blocking on tasks can also cause deadlocks.
+//
+// WHY IT MATTERS
+// --------------
+// - Requests hang and time out
+// - Thread pool starvation under load
+// - Hard-to-debug production incidents
+//
+// WHEN TO USE PREVENTION PATTERNS
+// -------------------------------
+// - YES: ASP.NET Core services under load
+// - YES: UI apps with synchronization contexts
+// - YES: Library code called by UI or ASP.NET
+//
+// WHEN NOT TO USE
+// ---------------
+// - NO: Do not block on async code with .Result or .Wait()
+// - NO: Do not mix sync locks with async code without care
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Web app call chain:
+// - Controller calls service.Result (blocks)
+// - Service awaits HTTP call and tries to resume on captured context
+// - Context is blocked, causing deadlock
 // ============================================================================
 
 namespace RevisionNotesDemo.AsyncMultithreading;

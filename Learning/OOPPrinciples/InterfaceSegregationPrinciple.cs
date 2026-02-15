@@ -2,54 +2,37 @@
 // INTERFACE SEGREGATION PRINCIPLE (ISP)
 // Reference: Revision Notes - OOP (Object Oriented Principals) - Page 2
 // ============================================================================
-// DEFINITION:
-//   "No client should be forced to depend on methods it does not use."
-//   Create small, focused interfaces rather than large, general-purpose ones.
 //
-// EXPLANATION:
-//   Large interfaces force implementing classes to provide implementations for methods
-//   they don't need. This creates unnecessary coupling and makes code harder to maintain.
-//   Break down fat interfaces into smaller, more specific ones.
+// WHAT IS ISP?
+// ------------
+// No client should be forced to depend on methods it does not use. Prefer
+// small, focused interfaces over large, general-purpose ones.
 //
-// EXAMPLE:
-//   ❌ BAD: IWorker with Work(), Eat(), Sleep() - robots don't eat or sleep
-//   ✅ GOOD: Separate interfaces: IWorkable, IFeedable, IRestable
+// WHY IT MATTERS
+// --------------
+// - Reduces unnecessary coupling
+// - Makes implementations clearer and smaller
+// - Improves testability and reusability
+// - Prevents empty or exception-throwing methods
 //
-// REAL-WORLD ANALOGY:
-//   TV remote - you don't need all buttons; you use the ones relevant to you.
-//   Multi-function printer vs separate printer/scanner - use only what you need.
+// WHEN TO USE
+// -----------
+// - YES: When an interface grows too large
+// - YES: When different clients need different subsets of behavior
+// - YES: When implementations leave methods unused
 //
-// BENEFITS:
-//   • Increased flexibility
-//   • Reduced coupling
-//   • Better organization
-//   • Easier to understand and implement
-//   • Prevents "fat" interfaces
+// WHEN NOT TO USE
+// ---------------
+// - NO: When the interface represents a single cohesive capability
+// - NO: When splitting the interface adds unnecessary complexity
 //
-// WHEN TO USE:
-//   • Designing public APIs
-//   • When different clients need different subsets of functionality
-//   • When interface has many methods
-//   • When you see empty or throw NotImplementedException in implementations
-//
-// COMMON VIOLATIONS:
-//   • God interfaces (interfaces with many unrelated methods)
-//   • Empty implementations (throwing NotImplementedException)
-//   • Implementing interfaces just to satisfy framework requirements
-//   • Forcing all implementations to provide every method
-//
-// HOW TO IDENTIFY ISP VIOLATIONS:
-//   • Do implementations throw NotImplementedException?
-//   • Are there empty method bodies?
-//   • Does the interface serve multiple distinct purposes?
-//   • Can you describe the interface without using "and"?
-//
-// BEST PRACTICES:
-//   • Keep interfaces small and focused (role interfaces)
-//   • One interface per client need
-//   • Use interface composition (multiple small interfaces)
-//   • Prefer many specific interfaces over one general interface
-//   • Follow Single Responsibility Principle for interfaces too
+// REAL-WORLD EXAMPLE
+// ------------------
+// Devices in a warehouse:
+// - IScannable for barcode scanners
+// - IPrintable for label printers
+// - IWeighable for scales
+// A barcode scanner should not be forced to implement PrintLabel().
 // ============================================================================
 
 namespace RevisionNotesDemo.OOPPrinciples;

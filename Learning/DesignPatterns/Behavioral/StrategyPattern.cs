@@ -1,51 +1,192 @@
-// ============================================================================
-// STRATEGY PATTERN
+// ==============================================================================
+// STRATEGY PATTERN - Interchangeable Algorithms at Runtime
 // Reference: Revision Notes - Design Patterns (Behavioral) - Page 3
-// ============================================================================
-// DEFINITION:
-//   Define a family of algorithms, encapsulate each one, and make them interchangeable.
-//   Strategy lets the algorithm vary independently from clients that use it.
+// ==============================================================================
 //
-// PURPOSE:
-//   Enable selecting an algorithm at runtime. Defines a family of algorithms,
-//   encapsulates each one, and makes them interchangeable without changing clients.
+// WHAT IS THE STRATEGY PATTERN?
+// ------------------------------
+// Defines a family of algorithms, encapsulates each one behind a common interface,
+// and makes them interchangeable. Strategy lets the algorithm vary independently
+// from clients that use it. Eliminates conditional logic by replacing it with
+// composition and polymorphism.
 //
-// EXAMPLE:
-//   Payment methods: Credit Card, PayPal, Cryptocurrency - same interface, different logic
-//   Shipping methods: Standard, Express, Overnight - different cost calculations
-//   Sorting algorithms: QuickSort, MergeSort, BubbleSort - same interface, different implementation
+// Think of it as: "GPS navigation - same destination, different routes (fastest,
+// shortest, avoid tolls) - picked at runtime based on preference"
 //
-// WHEN TO USE:
-//   • Multiple algorithms for a specific task
-//   • Avoiding conditional logic (if/else, switch)
-//   • Algorithm selection at runtime
-//   • Similar classes differing only in behavior
+// Core Concepts:
+//   • Strategy Interface: Common contract for all algorithms
+//   • Concrete Strategies: Different algorithm implementations
+//   • Context: Object that uses a strategy (has-a relationship)
+//   • Runtime Selection: Switch algorithms dynamically
+//   • Composition over Inheritance: No subclassing needed
 //
-// BENEFITS:
-//   • Easy to switch algorithms at runtime
-//   • Isolates algorithm implementation from client code
-//   • Open-Closed Principle (add new strategies without modifying context)
-//   • Replaces inheritance with composition
-//   • Eliminates conditional statements
+// WHY IT MATTERS
+// --------------
+// ✅ ELIMINATE CONDITIONALS: Replace if/else or switch with polymorphism
+// ✅ RUNTIME FLEXIBILITY: Change algorithm on the fly
+// ✅ OPEN/CLOSED PRINCIPLE: Add new strategies without modifying context
+// ✅ SINGLE RESPONSIBILITY: Each strategy focused on one algorithm
+// ✅ TESTABILITY: Easy to unit test each strategy in isolation
+// ✅ COMPOSITION OVER INHERITANCE: Avoid rigid class hierarchies
 //
-// REAL-WORLD USES:
-//   • Payment processing (credit card, PayPal, crypto)
-//   • Shipping calculation (standard, express, overnight)
-//   • Validation rules
-//   • Compression algorithms
-//   • Route finding algorithms
+// WHEN TO USE IT
+// --------------
+// ✅ Multiple algorithms for a specific task (sorting, compression, routing)
+// ✅ Many related classes differ only in behavior
+// ✅ Need to switch algorithms at runtime
+// ✅ Want to hide complex algorithm implementation details
+// ✅ Class has massive conditional logic (if/else, switch) for different behaviors
+// ✅ Different variants of an algorithm (e.g., different pricing strategies)
 //
-// CAUTIONS:
-//   • Client must be aware of different strategies
-//   • Increases number of classes/objects
-//   • Overkill if you only have 2-3 simple conditions
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Only 2-3 simple conditions (overkill, just use if/else)
+// ❌ Algorithm never changes
+// ❌ Algorithm is trivial (one line of code)
+// ❌ Clients don't care about algorithm details
 //
-// BEST PRACTICES:
-//   • Use dependency injection to provide strategies
-//   • Keep strategies stateless when possible
-//   • Consider using Factory pattern to create strategies
-//   • Name strategies clearly (what they do, not how)
-// ============================================================================
+// REAL-WORLD EXAMPLE - E-Commerce Payment Processing
+// --------------------------------------------------
+// Amazon checkout with multiple payment methods:
+//   • Customer has order total: $127.50
+//   • Payment options available:
+//     1. **Credit Card Strategy**: Charge $127.50 + validate CVV + fraud check
+//     2. **PayPal Strategy**: Redirect to PayPal + OAuth + charge $127.50
+//     3. **Cryptocurrency Strategy**: Generate BTC invoice + wait for confirmations
+//     4. **Gift Card Strategy**: Validate balance ≥ $127.50 + deduct amount
+//     5. **Buy Now Pay Later Strategy**: Credit check + create installment plan
+//
+// WITHOUT STRATEGY (Code Smell):
+//   ❌ if (paymentMethod == "CreditCard") {
+//         // 50 lines of credit card logic
+//     } else if (paymentMethod == "PayPal") {
+//         // 40 lines of PayPal logic
+//     } else if (paymentMethod == "Crypto") {
+//         // 60 lines of crypto logic
+//     } else if ... // 5 more payment methods
+//   ❌ 300-line method with nested ifs
+//   ❌ Adding Apple Pay = modify existing code (violates Open/Closed)
+//   ❌ Can't test payment methods independently
+//   ❌ Can't switch payment method during checkout
+//
+// WITH STRATEGY:
+//   ✅ interface IPaymentStrategy { PaymentResult Process(decimal amount); }
+//   ✅ class CreditCardStrategy : IPaymentStrategy { ... }
+//   ✅ class PayPalStrategy : IPaymentStrategy { ... }
+//   ✅ class ShoppingCart { 
+//         private IPaymentStrategy _payment;
+//         void SetPaymentMethod(IPaymentStrategy strategy) => _payment = strategy;
+//         void Checkout() => _payment.Process(total);
+//     }
+//   ✅ cart.SetPaymentMethod(new CreditCardStrategy()); // Runtime selection
+//   ✅ Adding Apple Pay: Create ApplePayStrategy (no existing code changes)
+//   ✅ Each strategy tested independently
+//
+// ANOTHER EXAMPLE - Shipping Cost Calculation
+// -------------------------------------------
+// FedEx / UPS shipping calculator:
+//   • Package: 5 lbs, Los Angeles → New York
+//   • Strategies:
+//     - **Standard Ground** (7-10 days): $12.50 (weight × $2.50)
+//     - **2-Day Express**: $35.00 (weight × $7.00)
+//     - **Overnight**: $75.00 (weight × $15.00)
+//     - **International**: $125.00 (weight × $25.00, customs fee)
+//     - **Free Shipping** (orders > $50): $0.00
+//
+// User selects strategy at checkout:
+//   IShippingStrategy strategy = user.IsPrime 
+//       ? new FreeShippingStrategy() 
+//       : new StandardShippingStrategy();
+//   decimal cost = strategy.CalculateCost(package);
+//
+// ANOTHER EXAMPLE - Data Compression
+// ----------------------------------
+// File backup system:
+//   • Large file: 500 MB database dump
+//   • Compression strategies:
+//     - **None**: 500 MB, instant (0 CPU)
+//     - **GZip**: 250 MB, 10 seconds (medium CPU)
+//     - **BZip2**: 200 MB, 30 seconds (high CPU)
+//     - **LZMA**: 180 MB, 60 seconds (very high CPU)
+//
+// Choose based on scenario:
+//   • Fast backup over local network → NoCompressionStrategy
+//   • Upload to cloud (bandwidth limited) → LZMAStrategy (smallest)
+//   • Balanced → GZipStrategy
+//
+// REAL CODE EXAMPLE - Sorting Algorithms
+// --------------------------------------
+// Sorting service with different algorithms:
+//   interface ISortStrategy<T> { void Sort(List<T> list); }
+//   
+//   class QuickSortStrategy<T> : ISortStrategy<T> { ... }  // O(n log n) avg
+//   class MergeSortStrategy<T> : ISortStrategy<T> { ... }  // O(n log n) worst
+//   class BubbleSortStrategy<T> : ISortStrategy<T> { ... } // O(n²) - small lists
+//   
+//   class DataProcessor<T> {
+//       ISortStrategy<T> _sortStrategy;
+//       void SetSortStrategy(ISortStrategy<T> strategy) => _sortStrategy = strategy;
+//       void ProcessData(List<T> data) {
+//           _sortStrategy.Sort(data); // Algorithm chosen at runtime
+//       }
+//   }
+//   
+//   // Usage:
+//   var processor = new DataProcessor<int>();
+//   processor.SetSortStrategy(list.Count < 100 
+//       ? new BubbleSortStrategy<int>()  // Small list
+//       : new QuickSortStrategy<int>()); // Large list
+//
+// .NET FRAMEWORK EXAMPLES
+// -----------------------
+// Strategy pattern used in .NET:
+//   • LINQ sorting: OrderBy, OrderByDescending (IComparer<T> strategy)
+//   • Stream classes: FileStream, MemoryStream, NetworkStream (same interface)
+//   • Logging: ILogger with different providers (Console, File, Azure)
+//   • Validation: IValidator implementations (FluentValidation)
+//   • HttpClient handlers: DelegatingHandler pipeline
+//
+// STRATEGY + DEPENDENCY INJECTION
+// -------------------------------
+// Modern approach using DI:
+//   services.AddScoped<IPaymentStrategy, CreditCardStrategy>();
+//   
+//   class OrderService {
+//       private readonly IPaymentStrategy _paymentStrategy;
+//       public OrderService(IPaymentStrategy paymentStrategy) {
+//           _paymentStrategy = paymentStrategy; // Injected
+//       }
+//   }
+//
+// Or with Factory:
+//   interface IPaymentStrategyFactory {
+//       IPaymentStrategy GetStrategy(PaymentType type);
+//   }
+//
+// BEST PRACTICES
+// --------------
+// ✅ Use dependency injection to provide strategies
+// ✅ Keep strategies stateless when possible (easier to reuse)
+// ✅ Name strategies by what they do: FastShipping, not Strategy1
+// ✅ Consider Factory pattern to create strategies
+// ✅ Strategies should be interchangeable (Liskov Substitution Principle)
+// ✅ Document performance characteristics of each strategy
+//
+// STRATEGY VS SIMILAR PATTERNS
+// ----------------------------
+// Strategy vs State:
+//   • Strategy: Client chooses algorithm, context doesn't change state
+//   • State: Context changes its own state, different behavior per state
+//
+// Strategy vs Template Method:
+//   • Strategy: Composition (has-a), change entire algorithm
+//   • Template Method: Inheritance (is-a), change steps of algorithm
+//
+// Strategy vs Command:
+//   • Strategy: How to perform operation (algorithm)
+//   • Command: What operation to perform (encapsulate request)
+//
+// ==============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Behavioral;
 

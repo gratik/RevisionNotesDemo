@@ -1,31 +1,28 @@
 // ==============================================================================
 // INIT-ONLY PROPERTIES AND REQUIRED MEMBERS - C# 9-11 Features
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate init-only setters and required members for immutable object initialization.
-//   Create objects that can be set during initialization but not modified afterward.
+// WHAT IS THIS?
+// -------------
+// Init-only setters and required members for immutable models.
 //
-// WHY INIT-ONLY AND REQUIRED:
-//   - Immutability after construction
-//   - Object initializer syntax (readable)
-//   - Compile-time enforcement
-//   - Better than constructor with 20 parameters
-//   - Valid state guaranteed
+// WHY IT MATTERS
+// --------------
+// ✅ Ensures valid initialization at compile time
+// ✅ Prevents accidental mutation after construction
 //
-// WHAT YOU'LL LEARN:
-//   1. Init-only setters (C# 9)
-//   2. Required members (C# 11)
-//   3. Combining with records
-//   4. Immutability patterns
-//   5. Migration from mutable properties
-//   6. Best practices for DTOs and configuration
+// WHEN TO USE
+// -----------
+// ✅ DTOs, configuration objects, and value-like models
+// ✅ Data that should not change after creation
 //
-// C# VERSIONS:
-//   - C# 9: init keyword
-//   - C# 11: required keyword
+// WHEN NOT TO USE
+// ---------------
+// ❌ Entities that require change tracking or live mutation
+// ❌ Models updated frequently across workflows
 //
-// THE BIG IDEA:
-//   Set once during initialization, immutable thereafter.
+// REAL-WORLD EXAMPLE
+// ------------------
+// API request DTOs with required fields.
 // ==============================================================================
 
 namespace RevisionNotesDemo.ModernCSharp;
@@ -60,7 +57,7 @@ public static class InitOnlyBasics
         public string LastName { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; }
     }
-    
+
     public static void DangerOfMutability()
     {
         var person = new MutablePerson
@@ -69,19 +66,19 @@ public static class InitOnlyBasics
             LastName = "Doe",
             DateOfBirth = new DateTime(1990, 1, 1)
         };
-        
+
         // ❌ Someone can change it later!
         person.FirstName = "Jane"; // This compiles - dangerous!
         person.DateOfBirth = DateTime.Now; // Whoops, changed age!
     }
-    
+
     // ❌ BAD: Constructor-only (works but verbose)
     public class ConstructorOnlyPerson
     {
         public string FirstName { get; }
         public string LastName { get; }
         public DateTime DateOfBirth { get; }
-        
+
         public ConstructorOnlyPerson(string firstName, string lastName, DateTime dateOfBirth)
         {
             FirstName = firstName;
@@ -89,25 +86,25 @@ public static class InitOnlyBasics
             DateOfBirth = dateOfBirth;
         }
     }
-    
+
     public static void VerboseConstruction()
     {
         // ❌ Less readable with many parameters
         var person = new ConstructorOnlyPerson("John", "Doe", new DateTime(1990, 1, 1));
         // What was the second parameter again? Not clear without IntelliSense
     }
-    
+
     // ✅ GOOD: Init-only properties
     public class ImmutablePerson
     {
         public string FirstName { get; init; } = string.Empty;
         public string LastName { get; init; } = string.Empty;
         public DateTime DateOfBirth { get; init; }
-        
+
         // Computed property still works
         public int Age => DateTime.Now.Year - DateOfBirth.Year;
     }
-    
+
     public static void SafeInitialization()
     {
         var person = new ImmutablePerson
@@ -116,10 +113,10 @@ public static class InitOnlyBasics
             LastName = "Doe",
             DateOfBirth = new DateTime(1990, 1, 1)
         };
-        
+
         // ✅ Compiler error if you try to modify!
         // person.FirstName = "Jane"; // ❌ Error: Init-only property can only be assigned in object initializer
-        
+
         // ✅ Thread-safe - no one can mutate it
     }
 }
@@ -151,7 +148,7 @@ public static class RequiredMembersExample
         public decimal Price { get; init; }
         public string Category { get; init; } = string.Empty;
     }
-    
+
     public static void IncompleteObject()
     {
         // ❌ Compiles but incomplete!
@@ -159,24 +156,24 @@ public static class RequiredMembersExample
         Console.WriteLine(product.Name); // Empty string
         Console.WriteLine(product.Price); // 0
     }
-    
+
     // ✅ GOOD: Required + init - must be set, then immutable
     public class CompleteProduct
     {
         required public string Name { get; init; }
         required public decimal Price { get; init; }
         required public string Category { get; init; }
-        
+
         // Optional properties don't need 'required'
         public string? Description { get; init; }
         public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     }
-    
+
     public static void CompleteObject()
     {
         // ❌ Compiler error if you forget required properties!
         // var invalid = new CompleteProduct(); // Error: Required member 'Name' must be set
-        
+
         // ✅ Must provide all required properties
         var valid = new CompleteProduct
         {
@@ -186,13 +183,13 @@ public static class RequiredMembersExample
             Description = "High-performance laptop" // Optional
         };
     }
-    
+
     // ✅ GOOD: SetsRequiredMembers attribute for constructors
     public class ProductWithConstructor
     {
         required public string Name { get; init; }
         required public decimal Price { get; init; }
-        
+
         // ✅ Constructor sets required members
         [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
         public ProductWithConstructor(string name, decimal price)
@@ -200,16 +197,16 @@ public static class RequiredMembersExample
             Name = name;
             Price = price;
         }
-        
+
         // Parameterless constructor still requires setting in initializer
         public ProductWithConstructor() { }
     }
-    
+
     public static void ConstructorSetsRequired()
     {
         // ✅ Constructor satisfies required members
         var product1 = new ProductWithConstructor("Laptop", 999.99m);
-        
+
         // ✅ Initializer also works
         var product2 = new ProductWithConstructor
         {
@@ -238,7 +235,7 @@ public static class RecordsWithInitAndRequired
 {
     // ✅ GOOD: Record with positional syntax (all required by default)
     public record PersonPositional(string FirstName, string LastName, DateTime DateOfBirth);
-    
+
     // ✅ GOOD: Record with nominal syntax + required
     public record PersonNominal
     {
@@ -247,7 +244,7 @@ public static class RecordsWithInitAndRequired
         public DateTime DateOfBirth { get; init; } = DateTime.MinValue;
         public string? MiddleName { get; init; } // Optional
     }
-    
+
     // ✅ GOOD: Record with mix of required and optional
     public record Address
     {
@@ -257,7 +254,7 @@ public static class RecordsWithInitAndRequired
         public string? Unit { get; init; }
         public string? Province { get; init; }
     }
-    
+
     // ✅ GOOD: Nested records
     public record Customer
     {
@@ -266,7 +263,7 @@ public static class RecordsWithInitAndRequired
         required public Address Address { get; init; } // Nested required
         public DateTime? LastLogin { get; init; }
     }
-    
+
     public static void RecordUsage()
     {
         var customer = new Customer
@@ -282,7 +279,7 @@ public static class RecordsWithInitAndRequired
             },
             LastLogin = DateTime.UtcNow
         };
-        
+
         // ✅ With expression creates modified copy
         var movedCustomer = customer with
         {
@@ -320,14 +317,14 @@ public static class ConfigurationPatterns
         public int MaxPoolSize { get; init; } = 100;
         public int CommandTimeout { get; init; } = 30;
     }
-    
+
     public class CacheSettings
     {
         required public string RedisConnection { get; init; }
         public int DefaultExpiration { get; init; } = 3600;
         public bool Enabled { get; init; } = true;
     }
-    
+
     public class AppSettings
     {
         required public DatabaseSettings Database { get; init; }
@@ -335,7 +332,7 @@ public static class ConfigurationPatterns
         required public string AppName { get; init; }
         public string? Environment { get; init; }
     }
-    
+
     // ✅ GOOD: Strongly-typed configuration from JSON
     // appsettings.json:
     // {
@@ -348,7 +345,7 @@ public static class ConfigurationPatterns
     //     "RedisConnection": "localhost:6379"
     //   }
     // }
-    
+
     // Usage in ASP.NET Core:
     // services.Configure<AppSettings>(configuration);
     // Then inject IOptions<AppSettings>
@@ -383,14 +380,14 @@ public static class DtoPatterns
         public string? PhoneNumber { get; init; }
         public List<string> Roles { get; init; } = new();
     }
-    
+
     public record UpdateUserRequest
     {
         required public int Id { get; init; }
         public string? Email { get; init; }
         public string? PhoneNumber { get; init; }
     }
-    
+
     // ✅ GOOD: API Response DTOs
     public record UserResponse
     {
@@ -401,7 +398,7 @@ public static class DtoPatterns
         public DateTime CreatedAt { get; init; }
         public DateTime? LastLogin { get; init; }
     }
-    
+
     public record ApiResponse<T>
     {
         required public bool Success { get; init; }
@@ -409,7 +406,7 @@ public static class DtoPatterns
         public string? ErrorMessage { get; init; }
         public List<string> ValidationErrors { get; init; } = new();
     }
-    
+
     // Example usage in controller:
     // [HttpPost]
     // public async Task<ApiResponse<UserResponse>> CreateUser(CreateUserRequest request)
@@ -453,7 +450,7 @@ public static class MigrationStrategies
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
     }
-    
+
     // PHASE 2: Add init alongside set (backward compatible)
     public class TransitionalUser
     {
@@ -461,19 +458,19 @@ public static class MigrationStrategies
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
     }
-    
+
     // PHASE 3: Move to init-only for new properties
     public class ModernUser
     {
         // New properties: init-only
         required public string Id { get; init; }
         required public string Username { get; init; }
-        
+
         // Legacy properties: still mutable (for now)
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
     }
-    
+
     // PHASE 4: Fully init-only + required
     public class FinalUser
     {
@@ -483,7 +480,7 @@ public static class MigrationStrategies
         required public string Email { get; init; }
         public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     }
-    
+
     // TIP: Use analyzers to detect mutable properties
     // TIP: Start with new code, migrate old code gradually
     // TIP: Record types are easier to migrate to than classes
@@ -509,14 +506,14 @@ public static class AdvancedPatterns
     {
         required public int Id { get; init; }
         required public string OrderNumber { get; init; }
-        
+
         // ❌ List is mutable even if property is init!
         public List<OrderItem> BadItems { get; init; } = new();
-        
+
         // ✅ Use IReadOnlyList or ImmutableList
         public IReadOnlyList<OrderItem> GoodItems { get; init; } = Array.Empty<OrderItem>();
     }
-    
+
     public static void ImmutableCollectionUsage()
     {
         var order = new Order
@@ -529,23 +526,23 @@ public static class AdvancedPatterns
                 new() { ProductId = 101, Quantity = 1 }
             }
         };
-        
+
         // ✅ Can't reassign property
         // order.GoodItems = new List<OrderItem>(); // Error
-        
+
         // ⚠️ But can still modify contents if using List!
         // ((List<OrderItem>)order.BadItems).Add(new OrderItem()); // Works but bad!
-        
+
         // ✅ IReadOnlyList prevents mutation
         // order.GoodItems.Add(new OrderItem()); // Error: no Add method
     }
-    
+
     // ✅ PATTERN 2: Validation in constructors
     public record ValidatedProduct
     {
         required public string Name { get; init; }
         required public decimal Price { get; init; }
-        
+
         // Validation constructor
         [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
         public ValidatedProduct(string name, decimal price)
@@ -554,15 +551,15 @@ public static class AdvancedPatterns
                 throw new ArgumentException("Name is required", nameof(name));
             if (price < 0)
                 throw new ArgumentException("Price cannot be negative", nameof(price));
-            
+
             Name = name;
             Price = price;
         }
-        
+
         // Parameterless for deserializers
         public ValidatedProduct() { }
     }
-    
+
     // ✅ PATTERN 3: Builder pattern for complex objects
     public class ComplexObject
     {
@@ -571,31 +568,31 @@ public static class AdvancedPatterns
         required public string Property3 { get; init; }
         // ... 20 more properties
     }
-    
+
     public class ComplexObjectBuilder
     {
         private string _property1 = string.Empty;
         private string _property2 = string.Empty;
         private string _property3 = string.Empty;
-        
+
         public ComplexObjectBuilder WithProperty1(string value)
         {
             _property1 = value;
             return this;
         }
-        
+
         public ComplexObjectBuilder WithProperty2(string value)
         {
             _property2 = value;
             return this;
         }
-        
+
         public ComplexObjectBuilder WithProperty3(string value)
         {
             _property3 = value;
             return this;
         }
-        
+
         public ComplexObject Build() => new()
         {
             Property1 = _property1,
@@ -603,7 +600,7 @@ public static class AdvancedPatterns
             Property3 = _property3
         };
     }
-    
+
     // ✅ PATTERN 4: With expressions for updates
     public record UserProfile
     {
@@ -611,7 +608,7 @@ public static class AdvancedPatterns
         required public string DisplayName { get; init; }
         public DateTime LastUpdated { get; init; } = DateTime.UtcNow;
     }
-    
+
     public static UserProfile UpdateEmail(UserProfile profile, string newEmail)
     {
         // ✅ Create modified copy

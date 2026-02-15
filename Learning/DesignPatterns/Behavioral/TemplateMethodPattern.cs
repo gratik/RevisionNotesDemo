@@ -1,10 +1,233 @@
 // ==============================================================================
-// TEMPLATE METHOD PATTERN
+// TEMPLATE METHOD PATTERN - Define Algorithm Skeleton, Let Subclasses Override Steps
 // Reference: Revision Notes - Design Patterns
 // ==============================================================================
-// PURPOSE: Defines skeleton of algorithm, allowing subclasses to override specific steps
-// BENEFIT: Code reuse, enforces algorithm structure, hook methods for customization
-// USE WHEN: Common algorithm with varying steps, want to control extension points
+//
+// WHAT IS THE TEMPLATE METHOD PATTERN?
+// -------------------------------------
+// Defines the skeleton of an algorithm in a base class method, deferring some steps
+// to subclasses. Subclasses can override specific steps without changing the algorithm's
+// structure. Uses inheritance to share common behavior while allowing customization.
+//
+// Think of it as: "Recipe template - all recipes follow same steps (prep, cook, serve)
+// but each recipe customizes the details (what to prep, how to cook, how to serve)"
+//
+// Core Concepts:
+//   • Template Method: Defines algorithm skeleton (final/sealed)
+//   • Abstract Methods: Steps subclasses must implement
+//   • Hook Methods: Optional steps with default (empty) implementation
+//   • Concrete Methods: Fixed steps implemented in base class
+//   • Inversion of Control: "Hollywood Principle" - Don't call us, we'll call you
+//
+// WHY IT MATTERS
+// --------------
+// ✅ CODE REUSE: Common algorithm in base class, variations in subclasses
+// ✅ ENFORCES STRUCTURE: Algorithm steps can't be skipped or reordered
+// ✅ OPEN/CLOSED: Add new variations without modifying base algorithm
+// ✅ ELIMINATES DUPLICATION: Shared code in one place
+// ✅ INVERSION OF CONTROL: Framework calls your code (not vice versa)
+// ✅ HOOK METHODS: Optional extension points without forcing override
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Multiple classes have similar algorithms with minor differences
+// ✅ Want to control which steps can be overridden
+// ✅ Algorithm structure must remain consistent across variations
+// ✅ Common behavior should be factored out to avoid duplication
+// ✅ Need extension points (hooks) for optional customization
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Algorithm rarely varies (no need for inheritance)
+// ❌ Steps need to be reordered or skipped (use Strategy)
+// ❌ Prefer composition over inheritance (use Strategy pattern)
+// ❌ Only 1-2 methods differ (inheritance overkill)
+//
+// REAL-WORLD EXAMPLE - Data Import Pipeline
+// -----------------------------------------
+// ETL import system for CSV, JSON, XML:
+//   • All formats follow same pipeline:
+//     1. Open file
+//     2. Parse data (varies by format)
+//     3. Validate records (varies by format)
+//     4. Transform data (shared logic)
+//     5. Load to database (shared logic)
+//     6. Close file
+//     7. Cleanup (optional hook)
+//
+// WITHOUT TEMPLATE METHOD:
+//   ❌ class CsvImporter {
+//         void Import() {
+//             OpenFile();
+//             ParseCsv();      // CSV-specific
+//             ValidateCsv();   // CSV-specific
+//             Transform();     // Duplicated!
+//             LoadToDb();      // Duplicated!
+//             CloseFile();     // Duplicated!
+//             Cleanup();       // Duplicated!
+//         }
+//     }
+//   ❌ class JsonImporter { /* 80% same code duplicated */ }
+//   ❌ class XmlImporter { /* 80% same code duplicated */ }
+//   ❌ Change shared logic = update 3 classes
+//
+// WITH TEMPLATE METHOD:
+//   ✅ abstract class DataImporter {
+//         // Template method (sealed/final)
+//         public sealed void Import() {
+//             OpenFile();           // Concrete (shared)
+//             var data = ParseData();     // Abstract (varies)
+//             ValidateData(data);   // Abstract (varies)
+//             Transform(data);      // Concrete (shared)
+//             LoadToDb(data);       // Concrete (shared)
+//             CloseFile();          // Concrete (shared)
+//             Cleanup();            // Hook (optional)
+//         }
+//         
+//         protected abstract object ParseData();   // Must override
+//         protected abstract void ValidateData(object data); // Must override
+//         protected virtual void Cleanup() { }  // Hook (optional)
+//         
+//         private void OpenFile() { /* shared */ }
+//         private void Transform(object data) { /* shared */ }
+//         private void LoadToDb(object data) { /* shared */ }
+//         private void CloseFile() { /* shared */ }
+//     }
+//   
+//   ✅ class CsvImporter : DataImporter {
+//         protected override object ParseData() { /* CSV logic */ }
+//         protected override void ValidateData(object data) { /* CSV validation */ }
+//         // Cleanup() optional, not overridden
+//     }
+//   
+//   ✅ class JsonImporter : DataImporter {
+//         protected override object ParseData() { /* JSON logic */ }
+//         protected override void ValidateData(object data) { /* JSON validation */ }
+//         protected override void Cleanup() { /* Custom cleanup */ }
+//     }
+//   
+//   ✅ csvImporter.Import(); // Algorithm structure enforced
+//   ✅ Change shared logic in one place (base class)
+//
+// ANOTHER EXAMPLE - Game AI
+// -------------------------
+// NPC behavior in video game:
+//   • All NPCs follow: Update() → Think() → Move() → Act()
+//   • Variations: Guard, Merchant, Enemy
+//
+// Code:
+//   abstract class NpcAI {
+//       public void Update() {
+//           ScanEnvironment();  // Shared
+//           Think();            // Abstract (varies)
+//           Move();             // Abstract (varies)
+//           Act();              // Abstract (varies)
+//           UpdateAnimation();  // Shared
+//       }
+//       protected abstract void Think();
+//       protected abstract void Move();
+//       protected abstract void Act();
+//   }
+//   
+//   class GuardAI : NpcAI {
+//       protected override void Think() { /* Patrol path logic */ }
+//       protected override void Move() { /* Walk patrol route */ }
+//       protected override void Act() { /* Attack if see enemy */ }
+//   }
+//   
+//   class MerchantAI : NpcAI {
+//       protected override void Think() { /* Check for customers */ }
+//       protected override void Move() { /* Stay at shop */ }
+//       protected override void Act() { /* Sell items */ }
+//   }
+//
+// ANOTHER EXAMPLE - Unit Testing Frameworks
+// -----------------------------------------
+// xUnit/NUnit test lifecycle:
+//   • Template: Setup → RunTest → Teardown
+//   • Framework controls flow:
+//     1. [SetUp] or constructor
+//     2. [Test] method
+//     3. [TearDown] or Dispose
+//
+// Internal implementation:
+//   abstract class TestCase {
+//       public void Run() {
+//           SetUp();       // Hook (optional)
+//           try {
+//               RunTest(); // Abstract
+//           } finally {
+//               TearDown(); // Hook (optional)
+//           }
+//       }
+//       protected abstract void RunTest();
+//       protected virtual void SetUp() { }
+//       protected virtual void TearDown() { }
+//   }
+//
+// HOOK METHODS
+// ------------
+// Hook = Optional extension point with default (often empty) implementation
+//   • protected virtual void BeforeProcess() { } // Empty default
+//   • protected virtual bool ShouldValidate() => true; // Default behavior
+//   • Subclass can override if needed
+//   • If not overridden, default is used
+//
+// vs Abstract Methods:
+//   • Abstract: Must override (no default)
+//   • Hook: Can override (has default)
+//
+// .NET FRAMEWORK EXAMPLES
+// -----------------------
+// Template Method in .NET:
+//   • ASP.NET Page lifecycle: Init → Load → PreRender → Render
+//   • Stream classes: Read() template calls ReadByte()
+//   • DbConnection: Open() template with provider-specific OpenConnection()
+//   • Test frameworks: xUnit, NUnit test execution
+//
+// HOLLYWOOD PRINCIPLE
+// -------------------
+// "Don't call us, we'll call you"
+//   • Base class calls subclass methods (inversion of control)
+//   • Application code doesn't control flow, framework does
+//   • Similar to: Dependency Injection, Event-driven systems
+//
+// TEMPLATE METHOD VS SIMILAR PATTERNS
+// -----------------------------------
+// Template Method vs Strategy:
+//   • Template Method: Inheritance, fixed structure, can't swap at runtime
+//   • Strategy: Composition, flexible structure, swap at runtime
+//   • TM: "This is how you must do it" (enforcement)
+//   • Strategy: "Here are options" (flexibility)
+//
+// Template Method vs Factory Method:
+//   • Template Method: Defines algorithm steps
+//   • Factory Method: Special case (one step is object creation)
+//
+// BEST PRACTICES
+// --------------
+// ✅ Make template method final/sealed (prevent override)
+// ✅ Use abstract for required steps
+// ✅ Use virtual (hooks) for optional steps
+// ✅ Keep template method at appropriate abstraction level
+// ✅ Document the algorithm flow clearly
+// ✅ Minimize number of abstract methods (3-5 is good)
+// ✅ Consider whether Strategy pattern is better (composition > inheritance)
+//
+// WHEN TO PREFER STRATEGY OVER TEMPLATE METHOD
+// --------------------------------------------
+// Choose Strategy if:
+//   • Need to swap algorithm at runtime
+//   • Want to use composition instead of inheritance
+//   • Algorithm structure varies significantly
+//   • Have many variations (inheritance explosion)
+//
+// Choose Template Method if:
+//   • Variations share significant common code
+//   • Algorithm structure must be enforced
+//   • Extension points are well-defined
+//   • Inheritance makes sense for domain
+//
 // ==============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Behavioral;

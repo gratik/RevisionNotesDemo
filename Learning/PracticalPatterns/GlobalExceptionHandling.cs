@@ -2,8 +2,28 @@
 // GLOBAL EXCEPTION HANDLING
 // Reference: Revision Notes - Practical Scenarios - Page 13
 // ============================================================================
-// PURPOSE: "Centralized exception handling using middleware for consistent error responses."
-// BENEFIT: Clean error handling, logging, user-friendly messages, security
+// WHAT IS THIS?
+// -------------
+// Centralized exception handling using middleware and custom exceptions.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Consistent error responses for clients
+// ✅ Safer logging and reduced information leaks
+//
+// WHEN TO USE
+// -----------
+// ✅ Web APIs that need uniform error contracts
+// ✅ Services that must map errors to HTTP status codes
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Small console apps with no HTTP response layer
+// ❌ Libraries that should not own global error handling
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// API middleware returns ProblemDetails for all errors.
 // ============================================================================
 
 using Microsoft.AspNetCore.Diagnostics;

@@ -2,58 +2,35 @@
 // TDA (Tell, Don't Ask)
 // Reference: Revision Notes - Page 2
 // ============================================================================
-// DEFINITION:
-//   "Tell objects what to do, don't ask for their state and make decisions for them."
-//   Objects should encapsulate behavior and data together.
 //
-// EXPLANATION:
-//   Instead of getting data from an object and operating on it externally, tell the
-//   object to perform the operation. This promotes better encapsulation and reduces
-//   coupling. The object knows how to handle its own data.
+// WHAT IS TDA?
+// ------------
+// Tell objects what to do instead of asking for their state and making decisions
+// externally. Behavior should live with the data it operates on.
 //
-// EXAMPLE:
-//   ❌ BAD (Ask): if (account.Balance >= amount) { account.Balance -= amount; }
-//   ✅ GOOD (Tell): account.Withdraw(amount); // Let the account handle its own logic
+// WHY IT MATTERS
+// --------------
+// - Improves encapsulation
+// - Reduces coupling between objects
+// - Keeps business logic in one place
+// - Simplifies calling code
 //
-// REAL-WORLD ANALOGY:
-//   You tell a waiter "Bring me coffee" - you don't ask "Do you have coffee?", then
-//   "Is the machine working?", then "Can you make it?" You just tell them what you want.
+// WHEN TO USE
+// -----------
+// - YES: When an object owns data and rules for that data
+// - YES: When client code calls multiple getters and makes decisions
+// - YES: When domain logic is scattered across services
 //
-// BENEFITS:
-//   • Better encapsulation
-//   • Simplified client code
-//   • Business logic stays with the data
-//   • Easier to maintain (logic in one place)
-//   • Reduced coupling
+// WHEN NOT TO USE
+// ---------------
+// - NO: For simple DTOs or read-only projections
+// - NO: When state must be exposed for reporting or serialization
 //
-// WHEN TO USE:
-//   • When an object has the data and should have the behavior
-//   • When you find yourself querying multiple properties
-//   • When business logic is scattered across clients
-//   • When designing object-oriented domain models
-//
-// COMMON VIOLATIONS:
-//   • Exposing getters and making decisions externally
-//   • Anemic domain models (data without behavior)
-//   • Client code doing work the object should do
-//   • Feature envy (method using more data from another class)
-//
-// HOW TO IDENTIFY TDA VIOLATIONS:
-//   • Do you call multiple getters in a row?
-//   • Do you make decisions based on object state externally?
-//   • Is business logic in service/controller instead of domain model?
-//   • Are objects just data containers?
-//
-// BEST PRACTICES:
-//   • Put behavior where the data is
-//   • Rich domain models (behavior + data)
-//   • Minimize getters/setters
-//   • Command methods over query + update
-//   • Let objects manage their own invariants
-//
-// BALANCE:
-//   Still need getters for DTOs, view models, and when querying state is genuinely needed.
-//   The principle is about behavior, not absolute hiding of all data.
+// REAL-WORLD EXAMPLE
+// ------------------
+// Banking:
+// - Bad: if (account.Balance >= amount) { account.Balance -= amount; }
+// - Good: account.Withdraw(amount) and let the account enforce rules
 // ============================================================================
 
 namespace RevisionNotesDemo.OOPPrinciples;

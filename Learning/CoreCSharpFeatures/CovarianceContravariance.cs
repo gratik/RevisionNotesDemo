@@ -2,8 +2,28 @@
 // COVARIANCE & CONTRAVARIANCE IN GENERICS
 // Reference: Revision Notes - Page 7
 // ============================================================================
-// Covariance (out): Return more derived type (IEnumerable<Derived> -> IEnumerable<Base>)
-// Contravariance (in): Accept parameters of less derived types
+// WHAT IS THIS?
+// -------------
+// Variance rules for generic type parameters (`out` and `in`).
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Enables safe assignment across type hierarchies
+// ✅ Makes APIs more flexible and reusable
+//
+// WHEN TO USE
+// -----------
+// ✅ Producer/consumer interfaces like `IEnumerable<T>` or `Action<T>`
+// ✅ Delegate variance for callbacks
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Invariant types that both read and write the same T
+// ❌ Misusing variance leading to unsafe assumptions
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Assign `IEnumerable<string>` to `IEnumerable<object>`.
 // ============================================================================
 
 namespace RevisionNotesDemo.CoreCSharpFeatures;

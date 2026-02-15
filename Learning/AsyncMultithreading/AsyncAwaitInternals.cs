@@ -2,75 +2,35 @@
 // ASYNC/AWAIT INTERNALS
 // Reference: Revision Notes - Page 10
 // ============================================================================
-// DEFINITION:
-//   async/await enables writing asynchronous code that looks synchronous.
-//   The compiler generates a state machine that manages execution flow.
 //
-// HOW IT WORKS:
-//   1. STATE MACHINE: Compiler transforms async method into a state machine
-//   2. AWAIT POINT: Execution is suspended, thread is released back to pool
-//   3. CONTINUATION: When awaited task completes, method resumes from suspension point
-//   4. NO BLOCKING: Thread isn't blocked during await - it's free to do other work
+// WHAT IS ASYNC/AWAIT?
+// --------------------
+// Syntax that lets you write asynchronous code in a readable way. The compiler
+// transforms async methods into state machines that resume after awaits.
 //
-// COMPILER TRANSFORMATION:
-//   The compiler rewrites your async method into a generated struct that implements
-//   IAsyncStateMachine with a MoveNext() method. Each await point becomes a state.
+// WHY IT MATTERS
+// --------------
+// - Non-blocking I/O improves scalability
+// - Clear control flow with try/catch and cancellation
+// - Avoids thread starvation under load
 //
-// EXAMPLE:
-//   public async Task<string> FetchDataAsync() {
-//       var data = await httpClient.GetStringAsync(url);  // Suspension point
-//       return data.ToUpper();                            // Resumes here
-//   }
+// WHEN TO USE
+// -----------
+// - YES: I/O-bound work (HTTP, database, file, network)
+// - YES: Server applications that need high concurrency
+// - YES: UI apps that must stay responsive
 //
-// BEHIND THE SCENES:
-//   1. Method starts executing synchronously
-//   2. Hits 'await' - if not complete, method returns to caller
-//   3. Task returned represents the incomplete operation
-//   4. When awaited operation completes, continuation is scheduled
-//   5. Method resumes from await point (possibly on different thread)
+// WHEN NOT TO USE
+// ---------------
+// - NO: CPU-bound work (use Task.Run or parallelism instead)
+// - NO: Fast, synchronous operations where async adds overhead
 //
-// KEY CONCEPTS:
-//   • SUSPENSION POINT: 'await' keyword - method pauses, thread released
-//   • CONTINUATION: Code after await - scheduler decides which thread runs it
-//   • SYNCHRONIZATION CONTEXT: Captures context (e.g., UI thread) for resumption
-//   • CONFIGUREAWAIT(FALSE): Don't capture context (better performance for libraries)
-//
-// async KEYWORD:
-//   • Marks method for async transformation by compiler
-//   • Allows use of 'await' keyword
-//   • Method must return Task, Task<T>, or void (only for event handlers)
-//
-// await KEYWORD:
-//   • Asynchronously waits for operation to complete
-//   • Doesn't block thread (thread returned to pool)
-//   • Unwraps Task<T> to T
-//   • Propagates exceptions
-//
-// BENEFITS:
-//   • No thread blocking = better scalability
-//   • Readable code (looks synchronous)
-//   • Exception handling with try/catch
-//   • Cancellation support via CancellationToken
-//   • Better resource utilization
-//
-// COMMON MISTAKES:
-//   ❌ .Result or .Wait() = blocks thread, can cause deadlock
-//   ❌ async void (except event handlers) = can't catch exceptions
-//   ❌ Not awaiting = fire-and-forget, exceptions lost
-//   ✅ Always async Task, use await, handle exceptions properly
-//
-// BEST PRACTICES:
-//   • async all the way (don't mix sync and async)
-//   • Use ConfigureAwait(false) in library code
-//   • Never use async void (except event handlers)
-//   • Always await async methods
-//   • Use CancellationToken for long-running operations
-//   • Avoid async over sync (if operation is fast, keep it sync)
-//
-// REAL-WORLD ANALOGY:
-//   Like ordering at a restaurant - you place order (start async operation),
-//   waiter doesn't stand and wait (thread released), does other work,
-//   returns when food is ready (continuation).
+// REAL-WORLD EXAMPLE
+// ------------------
+// Web API request:
+// - Await database and HTTP calls
+// - Thread returns to the pool while I/O completes
+// - Service scales to more concurrent requests
 // ============================================================================
 
 namespace RevisionNotesDemo.AsyncMultithreading;

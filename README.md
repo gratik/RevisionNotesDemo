@@ -39,10 +39,12 @@ This project is extensively documented. Choose your learning path:
 - **[Creational Patterns](Learning/docs/Design-Patterns.md#creational)** - Singleton, Factory, Builder, Prototype
 - **[Structural Patterns](Learning/docs/Design-Patterns.md#structural)** - Adapter, Decorator, Facade, Proxy, CQRS
 - **[Behavioral Patterns](Learning/docs/Design-Patterns.md#behavioral)** - Observer, Strategy, Command, State
+- **[Domain-Driven Design](Learning/docs/Domain-Driven-Design.md)** - Entities, Value Objects, Aggregates, Rich Domain Models
 
 ### 🌐 **Web Development**
 
 - **[Web API & MVC](Learning/docs/Web-API-MVC.md)** - Minimal APIs, Controllers, MVC, Middleware
+- **[gRPC](Learning/docs/gRPC.md)** - Protocol Buffers, Service-to-Service Communication, Streaming
 - **[Front-End .NET UI](Learning/docs/Front-End-DotNet-UI.md)** - MVC, Razor Pages, Blazor, MAUI, WPF, WinForms, Web Forms
 - **[API Documentation](Learning/docs/API-Documentation.md)** - Swagger/OpenAPI, XML Docs, Versioning
 - **[Real-Time Communication](Learning/docs/RealTime.md)** - SignalR, WebSockets, Hubs
@@ -51,7 +53,7 @@ This project is extensively documented. Choose your learning path:
 
 ### 💾 **Data & Performance**
 
-- **[Entity Framework](Learning/docs/Entity-Framework.md)** - Best Practices, Relationships, Performance
+- **[Entity Framework](Learning/docs/Entity-Framework.md)** - Best Practices, Relationships, Performance, Multi-Tenancy, Shadow Properties
 - **[Data Access](Learning/docs/Data-Access.md)** - EF Core, Dapper, ADO.NET, Transactions
 - **[Memory Management](Learning/docs/Memory-Management.md)** - Stack vs Heap, GC, IDisposable
 - **[Performance](Learning/docs/Performance.md)** - Span<T>, Benchmarking, Zero-Allocation
@@ -86,48 +88,121 @@ This project is extensively documented. Choose your learning path:
 
 ```
 RevisionNotesDemo/
-├── Learning/                       All examples organized by topic
-│   ├── 📐 OOPPrinciples/          SOLID principles (7 files)
-│   ├── 🎨 DesignPatterns/         26 pattern implementations
-│   │   ├── Creational/           Factory, Builder, Singleton...
-│   │   ├── Structural/           Adapter, Decorator, CQRS...
-│   │   └── Behavioral/           Observer, Strategy, Command...
-│   ├── 💾 MemoryManagement/       Stack, Heap, GC, Disposal (4 files)
-│   ├── ⚡ AsyncMultithreading/    Task, async/await, deadlocks (4 files)
-│   ├── 🔧 CoreCSharpFeatures/     Generics, delegates, extensions (6 files)
-│   ├── 🔍 LINQAndQueries/         Query patterns (2 files)
-│   ├── 🚀 AdvancedCSharp/         Reflection, attributes (1 file)
-│   ├── 📘 DotNetConcepts/         .NET evolution + DI notes (2 files)
-│   ├── 🌐 WebAPI/                 APIs, MVC, middleware (4+ folders)
-│   │   ├── MinimalAPI/           Functional-style APIs
-│   │   ├── ControllerAPI/        Traditional controllers
-│   │   ├── MVC/                  Server-rendered views
-│   │   ├── Middleware/           Pipeline, CORS, rate limiting
-│   │   └── Versioning/           API versioning patterns
-│   ├── 🖥️ FrontEnd/               MVC, Razor Pages, Blazor, MAUI, WPF, WinForms (7 files)
-│   ├── 🔐 Security/               Auth, encryption (4 files)
-│   ├── 🏃 Performance/            Optimization techniques (3 files)
-│   ├── 🔄 Resilience/             Polly patterns (3 files)
-│   ├── 📝 Logging/                Structured logging (3 files)
-│   ├── 💉 DataAccess/             Dapper, ADO.NET (3 files)
-│   │   └── 🗄️ EntityFramework/   EF Core best practices (5 files)
-│   ├── ⚙️ Configuration/          Config patterns (3 files)
-│   ├── 🏥 HealthChecks/           Liveness/readiness (1 file)
-│   ├── 📡 RealTime/               SignalR hubs (1 file)
-│   ├── 💻 ModernCSharp/           Records, patterns (4 files)
-│   ├── 🧪 Testing/                xUnit, NUnit, MSTest (10+ files)
-│   ├── 🛠️ PracticalPatterns/      Real-world patterns (8 files)
-│   ├── 📦 Models/                 Shared domain models (1 file)
-│   ├── 📎 Appendices/             Overviews and quick reference (3 files)
-│   └── 📖 docs/                   Detailed documentation (26 files)
+├── Learning/                           All examples organized by topic (185 files)
 │
-├── Program.cs                      Application entry point
-├── README.md                       This file
-└── PROJECT_SUMMARY.md              Completion summary
+│   ═══ CORE SECTIONS (Sections 1-11) ═══
+│   ├── 📐 OOPPrinciples/              SOLID principles (7 files)
+│   ├── 🎨 DesignPatterns/             26 pattern implementations
+│   │   ├── Creational/               Factory, Builder, Singleton (5 files)
+│   │   ├── Structural/               Adapter, Decorator, CQRS (10 files)
+│   │   └── Behavioral/               Observer, Strategy, Command (11 files)
+│   ├── 💾 MemoryManagement/           Stack, Heap, GC, Disposal (4 files)
+│   ├── ⚡ AsyncMultithreading/        Task, async/await, deadlocks (4 files)
+│   ├── 🔧 CoreCSharpFeatures/         Generics, delegates, extensions (6 files)
+│   ├── 🔍 LINQAndQueries/             Query patterns (2 files)
+│   ├── 🚀 AdvancedCSharp/             Reflection, attributes (1 file)
+│   ├── 📘 DotNetConcepts/             .NET evolution + DI notes (2 files)
+│   ├── 🌐 WebAPI/                     APIs, MVC, middleware (10 files + 5 subfolders)
+│   │   ├── MinimalAPI/               Functional-style APIs
+│   │   ├── ControllerAPI/            Traditional controllers
+│   │   ├── MVC/                      Server-rendered views
+│   │   ├── Middleware/               Pipeline, CORS, rate limiting
+│   │   └── Versioning/               API versioning patterns
+│   ├── 🖥️ FrontEnd/                   MVC, Razor Pages, Blazor, MAUI, WPF, WinForms (7 files)
+│   ├── 🔐 Security/                   Auth, encryption, OWASP (16 files)
+│   ├── 🏃 Performance/                Optimization techniques (3 files)
+│   ├── 🔄 Resilience/                 Polly patterns (3 files)
+│   ├── 📝 Logging/                    Structured logging (3 files)
+│   ├── 💾 DataAccess/                 Multiple database patterns (9 files)
+│   │   ├── AdoNetPatterns.cs
+│   │   ├── DapperExamples.cs
+│   │   ├── TransactionPatterns.cs
+│   │   ├── DatabaseShardingAndScaling.cs    [POPULATED]
+│   │   ├── GraphDatabasePatterns.cs        [POPULATED]
+│   │   ├── MongoDBWithDotNet.cs            [POPULATED]
+│   │   ├── ReadReplicasAndCQRS.cs          [POPULATED]
+│   │   ├── RedisPatterns.cs                [POPULATED]
+│   │   ├── TimeSeriesDatabases.cs
+│   │   └── 🗄️ EntityFramework/             EF Core best practices (7 files)
+│   ├── ⚙️ Configuration/              Config patterns (3 files)
+│   ├── 🏥 HealthChecks/               Liveness/readiness (1 file)
+│   ├── 📡 RealTime/                   SignalR hubs (1 file)
+│   ├── 💻 ModernCSharp/               Records, patterns (4 files)
+│   ├── 🧪 Testing/                    xUnit, NUnit, MSTest (12 files)
+│   │   ├── Unit Testing Examples
+│   │   ├── Integration Testing
+│   │   ├── Mocking Patterns
+│   │   ├── Contract Testing
+│   │   ├── Performance Testing
+│   │   ├── Chaos Engineering
+│   │   └── Mutation Testing
+│   ├── 🛠️ PracticalPatterns/          Real-world patterns (8 files)
+│   ├── 📦 Models/                     Shared domain models (1 file)
+│   ├── 📎 Appendices/                 Overviews and quick reference (3 files)
+│
+│   ═══ EXPANSION SECTIONS (Sections 12-20) ═══ [NEW!]
+│   ├── ☁️ Cloud/                       Azure & Cloud Patterns (5 files)
+│   │   ├── AzureAppServicePatterns.cs
+│   │   ├── AzureFunctionsServerless.cs
+│   │   ├── AzureStoragePatterns.cs
+│   │   ├── AzureCosmosDBPatterns.cs
+│   │   ├── AzureKeyVaultSecrets.cs
+│   │   └── README.md
+│   ├── 💾 Database/                   Data & NoSQL Patterns (6 files) [NEW!]
+│   │   ├── MongoDBWithDotNet.cs
+│   │   ├── RedisPatterns.cs
+│   │   ├── TimeSeriesDatabases.cs
+│   │   ├── GraphDatabasePatterns.cs
+│   │   ├── DatabaseShardingAndScaling.cs
+│   │   ├── ReadReplicasAndCQRS.cs
+│   │   └── README.md
+│   ├── 🏗️ Microservices/              Distributed Systems (9 files) [EXPANDED!]
+│   │   ├── MonolithVsMicroservices.cs      [NEW]
+│   │   ├── MicroservicesIntroduction.cs   [NEW]
+│   │   ├── ServiceDiscoveryPatterns.cs
+│   │   ├── APIGatewayPatterns.cs
+│   │   ├── EventDrivenArchitecture.cs
+│   │   ├── DistributedCachingAndCoherence.cs
+│   │   ├── ServiceMeshBasics.cs
+│   │   ├── DistributedTransactionsAndSaga.cs
+│   │   ├── ServiceCommunicationPatterns.cs [ENHANCED]
+│   │   └── README.md
+│   ├── 🏛️ Architecture/                Architecture Patterns (5+ files)
+│   │   ├── ArchitectureDecisionRecords.cs [UPDATED]
+│   │   ├── CleanArchitectureAdvanced.cs
+│   │   ├── HexagonalArchitectureExamples.cs
+│   │   ├── ScalableProjectStructure.cs
+│   │   ├── VerticalSliceArchitecture.cs
+│   │   └── README.md
+│   ├── ⚙️ DevOps/                     Infrastructure & CI/CD (7 files)
+│   │   ├── GitHubActionsWorkflows.cs [UPDATED]
+│   │   ├── InfrastructureAsCodeTerraform.cs [UPDATED]
+│   │   ├── AzureDevOpsPipelines.cs
+│   │   ├── KubernetesDeploymentPatterns.cs
+│   │   ├── HelmChartPackaging.cs
+│   │   ├── DockerComposeDevelopment.cs
+│   │   ├── GitWorkflowsAndBestPractices.cs
+│   │   └── README.md
+│   ├── 📊 Observability/              Monitoring & Tracing (6 files) [NEW!]
+│   │   ├── StructuredLoggingAdvanced.cs [UPDATED]
+│   │   ├── PrometheusAndGrafana.cs [UPDATED]
+│   │   ├── OpenTelemetrySetup.cs
+│   │   ├── DistributedTracingJaegerZipkin.cs
+│   │   ├── ApplicationInsightsIntegration.cs
+│   │   ├── HealthChecksAndHeartbeats.cs
+│   │   └── README.md
+│
+│   ═══ DOCUMENTATION ═══
+│   └── 📖 docs/                       Detailed guides (26 files)
+│
+├── Program.cs                         Application entry point
+├── TODO.txt                           Project roadmap and completion status
+├── README.md                          This file
+└── PROJECT_SUMMARY.md                 Detailed completion summary
 
 ```
 
-**Total:** 114+ example files organized into 24 topic areas, ~19,000 lines of code
+**Total:** 185 example files organized into 31 topic areas, ~19,000+ lines of code
 
 ---
 
@@ -212,6 +287,15 @@ RevisionNotesDemo/
 5. [Message Architecture](Learning/docs/Message-Architecture.md) - Event-driven systems
 6. [Deployment & DevOps](Learning/docs/Deployment-DevOps.md) - Docker, Kubernetes, CI/CD
 
+### **Expert** (Advanced topics & expansion sections) [NEW!]
+
+1. [Cloud Services](Learning/Cloud/README.md) - Azure patterns and integration
+2. [Microservices Architecture](Learning/Microservices/README.md) - Distributed systems and service communication
+3. [Advanced Databases](Learning/Database/README.md) - NoSQL, sharding, caching, time-series data
+4. [System Design & Architecture](Learning/Architecture/README.md) - Design decisions and patterns
+5. [Observability & Monitoring](Learning/Observability/README.md) - Logging, metrics, tracing, health checks
+6. [Infrastructure as Code](Learning/DevOps/README.md) - Terraform, Kubernetes, CI/CD pipelines
+
 ### **Interview Preparation** (Land your dream job)
 
 1. [Interview Preparation Guide](Learning/docs/Interview-Preparation.md) - Complete prep guide
@@ -267,15 +351,19 @@ await retryPolicy.ExecuteAsync(() => httpClient.GetAsync(url));
 
 ## 📊 Statistics
 
-| Category            | Count   | Description                        |
-| ------------------- | ------- | ---------------------------------- |
-| **Source Files**    | 114+    | Implementation examples            |
-| **Documentation**   | 26      | Comprehensive guides               |
-| **Design Patterns** | 26      | Creational, Structural, Behavioral |
-| **Lines of Code**   | 19,000+ | Fully commented                    |
-| **Test Examples**   | 36+     | xUnit, NUnit, MSTest               |
-| **API Styles**      | 3       | Minimal, Controller, MVC           |
-| **Topics Covered**  | 61+     | All major .NET concepts            |
+| Category                | Count   | Description                                                                                                           |
+| ----------------------- | ------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Total Source Files**  | 185     | Core + Expansion implementations                                                                                      |
+| **Core Files**          | 116     | Sections 1-11 (OOP through Testing)                                                                                   |
+| **Expansion Files**     | 69      | Sections 12-20 (Cloud, DB, Microservices, etc.)                                                                       |
+| **Documentation**       | 6 files | Main + Section-specific READMEs                                                                                       |
+| **Design Patterns**     | 26+     | Creational, Structural, Behavioral                                                                                    |
+| **Lines of Code**       | 19,000+ | Fully commented                                                                                                       |
+| **Test Examples**       | 36+     | xUnit, NUnit, MSTest                                                                                                  |
+| **API Styles**          | 3       | Minimal, Controller, MVC                                                                                              |
+| **Topic Folders**       | 31      | Organized by major category                                                                                           |
+| **Real-World Examples** | 50+     | Production patterns and scenarios                                                                                     |
+| **Expansion Sections**  | 9       | Cloud, Database, Microservices, Architecture, DevOps, Observability, Security (enhanced), WebAPI (enhanced), Identity |
 
 ---
 
@@ -333,10 +421,16 @@ Based on **C# and OO Revision Notes** by Barry Compuesto (February 13, 2026)
 - [Project Summary](PROJECT_SUMMARY.md) - Detailed completion status
 - [Testing Guide](Learning/Testing/README.md) - Testing framework comparison
 - [Web API Guide](Learning/WebAPI/README.md) - API implementation patterns
+- [Cloud Patterns](Learning/Cloud/README.md) - Azure & Cloud Services (NEW!)
+- [Database Patterns](Learning/Database/README.md) - NoSQL & Data Patterns (NEW!)
+- [Microservices Guide](Learning/Microservices/README.md) - Distributed Systems (NEW!)
+- [Observability Guide](Learning/Observability/README.md) - Monitoring & Tracing (NEW!)
+- [Architecture Guide](Learning/Architecture/README.md) - System Design Patterns
+- [DevOps Guide](Learning/DevOps/README.md) - Infrastructure & CI/CD
 - [Documentation Index](Learning/docs/) - All detailed guides
 
 ---
 
 **Status:** ✅ Production Ready | 🎓 Educational Complete | 📚 Fully Documented
 
-_Last Updated: February 14, 2026_
+_Last Updated: February 15, 2026_

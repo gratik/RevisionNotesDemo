@@ -2,8 +2,28 @@
 // DETECTING MEMORY LEAKS
 // Reference: Revision Notes - Page 9
 // ============================================================================
-// Use profiling tools (dotMemory, PerfView)
-// Look for: event handlers not unsubscribed, static references, unmanaged resources not disposed
+// WHAT IS THIS?
+// -------------
+// Techniques to spot leaks from events, statics, and undisposed resources.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Prevents unbounded memory growth
+// ✅ Improves long-term stability of services
+//
+// WHEN TO USE
+// -----------
+// ✅ Long-running services and event-heavy UI apps
+// ✅ Systems using unmanaged resources
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Short-lived scripts where leaks are irrelevant
+// ❌ Code paths that never persist beyond a request
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Unsubscribe event handlers in `Dispose()`.
 // ============================================================================
 
 namespace RevisionNotesDemo.MemoryManagement;

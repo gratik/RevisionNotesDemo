@@ -1,32 +1,28 @@
 // ==============================================================================
 // STRUCTURED LOGGING WITH SERILOG - Production-Grade Logging
 // ==============================================================================
-// PURPOSE:
-//   Master Serilog for production structured logging with rich sinks and enrichers.
-//   Learn configuration, sinks (Console, File, Seq, Application Insights), and best practices.
+// WHAT IS THIS?
+// -------------
+// Structured logging with Serilog, sinks, and enrichers.
 //
-// WHY SERILOG:
-//   - Best-in-class structured logging
-//   - Extensive sink ecosystem (50+ sinks)
-//   - Powerful enrichers and filters
-//   - Excellent performance
-//   - JSON output for log aggregation
-//   - Integrates with ILogger seamlessly
+// WHY IT MATTERS
+// --------------
+// ✅ Enables searchable logs and structured queries
+// ✅ Supports centralized log aggregation
 //
-// WHAT YOU'LL LEARN:
-//   1. Serilog setup and configuration
-//   2. Sinks (Console, File, Seq, Application Insights)
-//   3. Structured property binding
-//   4. Enrichers (machine name, thread, user)
-//   5. Filtering and sampling
-//   6. Diagnostic contexts
+// WHEN TO USE
+// -----------
+// ✅ Production services needing consistent observability
+// ✅ Systems with multiple sinks (console, file, Seq)
 //
-// PACKAGES:
-//   - Serilog.AspNetCore (includes base + ASP.NET integration)
-//   - Serilog.Sinks.Console
-//   - Serilog.Sinks.File
-//   - Serilog.Sinks.Seq (optional)
-//   - Serilog.Enrichers.* (Thread, Environment, Process)
+// WHEN NOT TO USE
+// ---------------
+// ❌ Tiny scripts where console output is enough
+// ❌ Logging sensitive data without sanitization
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Log orders with `{OrderId}` and `{Amount}` properties.
 // ==============================================================================
 
 using Microsoft.AspNetCore.Builder;
@@ -63,7 +59,7 @@ public static class SerilogConfiguration
     public static void ConfigureBasicSerilog()
     {
         // Example for Program.cs:
-        
+
         // var builder = WebApplication.CreateBuilder(args);
         //
         // // ✅ Configure Serilog
@@ -86,12 +82,12 @@ public static class SerilogConfiguration
         //
         // app.Run();
     }
-    
+
     // ✅ GOOD: Production-ready configuration
     public static void ConfigureProductionSerilog()
     {
         // Program.cs for production:
-        
+
         // var builder = WebApplication.CreateBuilder(args);
         //
         // builder.Host.UseSerilog((context, services, configuration) =>
@@ -121,7 +117,7 @@ public static class SerilogConfiguration
         //         .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning);
         // });
     }
-    
+
     // ✅ GOOD: appsettings.json configuration
     // {
     //   "Serilog": {
@@ -181,12 +177,12 @@ public static class StructuredPropertyExamples
     public class OrderService
     {
         private readonly ILogger<OrderService> _logger;
-        
+
         public OrderService(ILogger<OrderService> logger)
         {
             _logger = logger;
         }
-        
+
         // ❌ BAD: String interpolation - not structured
         public void BadLogging(int userId, string orderId, decimal amount)
         {
@@ -194,7 +190,7 @@ public static class StructuredPropertyExamples
             // Output: "User 123 placed order ORD-456 for $99.99"
             // Can only search text, not structured fields
         }
-        
+
         // ✅ GOOD: Message template with named properties
         public void GoodLogging(int userId, string orderId, decimal amount)
         {
@@ -203,29 +199,29 @@ public static class StructuredPropertyExamples
             // Serilog output: { "UserId": 123, "OrderId": "ORD-456", "Amount": 99.99 }
             // Can query: WHERE UserId = 123 AND Amount > 50
         }
-        
+
         // ✅ GOOD: Destructuring objects with @
         public void DestructuringExample(Order order)
         {
             // @ prefix tells Serilog to serialize all properties
             _logger.LogInformation("Processing {@Order}", order);
             // Output: { "Order": { "Id": "ORD-456", "UserId": 123, "Items": [...], "Total": 99.99 } }
-            
+
             // Without @: just ToString()
             _logger.LogInformation("Processing {Order}", order);
             // Output: { "Order": "RevisionNotesDemo.Logging.Order" }
         }
-        
+
         // ✅ GOOD: $ prefix for stringification (when you don't want properties)
         public void StringificationExample()
         {
             var item = new { Name = "Widget", Price = 9.99 };
-            
+
             _logger.LogInformation("Item: {$Item}", item);
             // Output: { "Item": "{ Name = Widget, Price = 9.99 }" }
             // ToString() called, not destructured
         }
-        
+
         // ✅ GOOD: Projection with anonymous objects
         public void ProjectionExample(User user)
         {
@@ -272,7 +268,7 @@ public static class EnricherExamples
         //     .Enrich.WithProperty("Application", "MyApp")  // ✅ Custom property
         //     .WriteTo.Console()
         //     .CreateLogger();
-        
+
         // All logs now include:
         // {
         //   "MachineName": "WEB-SERVER-01",
@@ -282,21 +278,21 @@ public static class EnricherExamples
         //   ...
         // }
     }
-    
+
     // ✅ GOOD: LogContext for request-scoped properties
     public class RequestMiddleware
     {
         private readonly Microsoft.AspNetCore.Http.RequestDelegate _next;
-        
+
         public RequestMiddleware(Microsoft.AspNetCore.Http.RequestDelegate next)
         {
             _next = next;
         }
-        
+
         public async Task InvokeAsync(Microsoft.AspNetCore.Http.HttpContext context)
         {
             var requestId = Guid.NewGuid().ToString();
-            
+
             // ✅ Push properties to LogContext - applies to all logs in this request
             using (LogContext.PushProperty("RequestId", requestId))
             using (LogContext.PushProperty("RequestPath", context.Request.Path))
@@ -307,17 +303,17 @@ public static class EnricherExamples
             // Properties automatically removed after request
         }
     }
-    
+
     // ✅ GOOD: Custom enricher for user context
     public class UserInfoEnricher : Serilog.Core.ILogEventEnricher
     {
         private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _contextAccessor;
-        
+
         public UserInfoEnricher(Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
         }
-        
+
         public void Enrich(LogEvent logEvent, Serilog.Core.ILogEventPropertyFactory propertyFactory)
         {
             var httpContext = _contextAccessor.HttpContext;
@@ -380,7 +376,7 @@ public static class SinkExamples
         //     
         //     .CreateLogger();
     }
-    
+
     // ✅ GOOD: Conditional sinks (different per environment)
     public static void ConditionalSinks(IHostEnvironment env)
     {
@@ -403,7 +399,7 @@ public static class SinkExamples
         //
         // Log.Logger = config.CreateLogger();
     }
-    
+
     // ✅ GOOD: Async sinks for better performance
     public static void AsyncSinks()
     {
@@ -411,7 +407,7 @@ public static class SinkExamples
         //     .WriteTo.Async(a => a.File("logs/app-.log"))  // ✅ File writes on background thread
         //     .WriteTo.Async(a => a.Seq("http://localhost:5341"))  // ✅ Network calls async
         //     .CreateLogger();
-        
+
         // PERFORMANCE: Up to 10x faster with async sinks
         // Logs written on background thread, doesn't block application
     }
@@ -451,7 +447,7 @@ public static class FilteringExamples
         //     
         //     .CreateLogger();
     }
-    
+
     // ✅ GOOD: Filter by source
     public static void SourceFiltering()
     {
@@ -466,7 +462,7 @@ public static class FilteringExamples
         //     
         //     .CreateLogger();
     }
-    
+
     // ✅ GOOD: Sampling - keep 10% of high-volume events
     public static void SamplingExample()
     {
@@ -482,7 +478,7 @@ public static class FilteringExamples
         //     })
         //     .CreateLogger();
     }
-    
+
     // ✅ GOOD: Sub-loggers with different levels
     public static void SubLoggers()
     {
@@ -531,11 +527,11 @@ public static class RequestLoggingExamples
     {
         // ✅ Single line per request
         app.UseSerilogRequestLogging();
-        
+
         // Output: HTTP {Method} {Path} responded {StatusCode} in {Elapsed} ms
         // HTTP GET /api/users responded 200 in 125 ms
     }
-    
+
     // ✅ GOOD: Customized request logging
     public static void CustomizedRequestLogging(WebApplication app)
     {
@@ -605,54 +601,54 @@ public static class BestPractices
         //     Log.CloseAndFlush();  // ✅ Very important! Ensures all logs are written
         // }
     }
-    
+
     // ❌ DON'T: Use string interpolation in message templates
     public static void BadTemplating(Microsoft.Extensions.Logging.ILogger logger, int userId)
     {
         // ❌ BAD
         logger.LogInformation($"User {userId} logged in");  // Not structured!
-        
+
         // ✅ GOOD
         logger.LogInformation("User {UserId} logged in", userId);
     }
-    
+
     // ❌ DON'T: Log sensitive information
     public static void SensitiveData(Microsoft.Extensions.Logging.ILogger logger, string password, string creditCard)
     {
         // ❌ NEVER
         logger.LogInformation("User password: {Password}", password);
-        
+
         // ✅ GOOD: Mask or exclude
         logger.LogInformation("User updated credentials");
-        
+
         // ✅ OR: Use destructuring with projection
         var user = new { Id = 123, Username = "john", PasswordHash = "masked" };
         logger.LogInformation("User: {@User}", new { user.Id, user.Username });  // Exclude PasswordHash
     }
-    
+
     // ✅ DO: Use @ for object destructuring
     public static void Destructuring(Microsoft.Extensions.Logging.ILogger logger, Order order)
     {
         // ❌ Without @: just ToString()
         logger.LogInformation("Order: {Order}", order);  // "RevisionNotesDemo.Logging.Order"
-        
+
         // ✅ With @: full serialization
         logger.LogInformation("Order: {@Order}", order);  // { "Id": 1, "Total": 99.99, ... }
     }
-    
+
     // ✅ DO: Configure minimum levels carefully
     // Production: Information or Warning
     // Development: Debug
     // Troubleshooting: Trace
-    
+
     // ✅ DO: Rotate logs to prevent disk-full
     // - retainedFileCountLimit: Keep last N files
     // - fileSizeLimitBytes: Max file size
     // - rollOnFileSizeLimit: Create new file when size exceeded
-    
+
     // ✅ DO: Use JSON formatter for machine reading
     // ✅ DO: Use text formatter for human reading
-    
+
     // ✅ DO: Monitor your log volume (GB/day)
     // ✅ DO: Set up alerts on errors/critical logs
 }

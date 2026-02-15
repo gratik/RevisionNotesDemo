@@ -2,9 +2,28 @@
 // POLYMORPHISM IN C#
 // Reference: Revision Notes - Page 6
 // ============================================================================
-// Compile-time: Method overloading
-// Runtime: Method overriding using virtual and override
-// Allows different implementations through common interface/base class
+// WHAT IS THIS?
+// -------------
+// Overloading and overriding to support multiple implementations.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Enables substitutability through abstractions
+// ✅ Reduces duplication in shared logic
+//
+// WHEN TO USE
+// -----------
+// ✅ Base classes or interfaces with multiple implementations
+// ✅ Plug-in or strategy-style architectures
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Single concrete implementation with no variation
+// ❌ Inheritance used only for code reuse
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// `Animal.Speak()` overridden by `Dog` and `Cat`.
 // ============================================================================
 
 namespace RevisionNotesDemo.CoreCSharpFeatures;

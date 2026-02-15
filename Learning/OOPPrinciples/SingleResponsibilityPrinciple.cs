@@ -2,53 +2,42 @@
 // SINGLE RESPONSIBILITY PRINCIPLE (SRP)
 // Reference: Revision Notes - OOP (Object Oriented Principals) - Page 2
 // ============================================================================
-// DEFINITION: 
-//   "A class should have only one reason to change."
-//   Each class should focus on doing ONE thing and doing it well.
 //
-// EXPLANATION:
-//   A class should have a single, well-defined responsibility. If a class has multiple
-//   responsibilities, changes to one responsibility may affect the others, making the
-//   code fragile and hard to maintain. SRP promotes high cohesion within classes.
+// WHAT IS SRP?
+// ------------
+// A class should have only one reason to change. A class should do one job
+// and do it well. If a class mixes responsibilities, changes in one area
+// can break another, making code fragile and hard to maintain.
 //
-// EXAMPLE:
-//   ❌ BAD: A "Customer" class that handles customer data, database operations, and email sending
-//   ✅ GOOD: Separate classes: Customer (data), CustomerRepository (database), EmailService (emails)
+// WHY IT MATTERS
+// --------------
+// - Changes are isolated to one place
+// - Classes are easier to test and understand
+// - Fewer merge conflicts and regressions
+// - Better reuse with fewer side effects
+// - Clearer ownership of behavior
 //
-// REAL-WORLD ANALOGY:
-//   A restaurant: The chef cooks, the waiter serves, the cashier handles payments.
-//   Each has ONE clear job. Nobody does everything.
+// WHEN TO USE
+// -----------
+// - YES: Always, especially when designing new classes
+// - YES: When a class has multiple reasons to change
+// - YES: When a class spans multiple layers (UI + data + logic)
+// - YES: When you describe a class with "and" in the same sentence
 //
-// BENEFITS:
-//   • Easier to understand and maintain
-//   • Changes are isolated to single classes
-//   • Better testability (focused unit tests)
-//   • Improved reusability
-//   • Reduced coupling
+// WHEN NOT TO USE
+// ---------------
+// - NO: Do not split a cohesive responsibility into tiny classes that add
+//       indirection without clarity
+// - NO: Do not separate responsibilities that must change together
 //
-// WHEN TO USE:
-//   • Always! This is a fundamental principle
-//   • When designing new classes
-//   • When refactoring God Objects (classes doing too much)
-//   • When you find yourself saying "and" describing class responsibility
-//
-// COMMON VIOLATIONS:
-//   • God Objects (classes that do everything)
-//   • Classes with multiple unrelated methods
-//   • Mixing business logic with infrastructure concerns
-//   • Classes that touch multiple layers (UI + database + business logic)
-//
-// HOW TO IDENTIFY SRP VIOLATIONS:
-//   • Can you describe the class responsibility without using "and"?
-//   • Does the class have more than one reason to change?
-//   • Are there multiple groups of methods that don't interact?
-//   • Would changes in one area affect unrelated functionality?
-//
-// BEST PRACTICES:
-//   • Keep classes small and focused
-//   • Use descriptive names that reflect single responsibility
-//   • Separate concerns across layers (data, business logic, infrastructure)
-//   • Follow cohesion - related methods should be together
+// REAL-WORLD EXAMPLE
+// ------------------
+// Online store:
+// - Order class holds order data
+// - OrderRepository saves and loads orders
+// - OrderEmailService sends confirmation emails
+// When the email template changes, only OrderEmailService changes. When the
+// database changes, only OrderRepository changes.
 // ============================================================================
 
 namespace RevisionNotesDemo.OOPPrinciples;

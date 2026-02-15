@@ -1,10 +1,251 @@
 // ==============================================================================
-// VISITOR PATTERN
+// VISITOR PATTERN - Add Operations Without Modifying Classes
 // Reference: Revision Notes - Design Patterns
 // ==============================================================================
-// PURPOSE: Separates algorithm from object structure, adds operations without modifying classes
-// BENEFIT: Add new operations easily, keeps related operations together, violates Open/Closed carefully
-// USE WHEN: Many distinct operations on object structure, classes rarely change but operations do
+//
+// WHAT IS THE VISITOR PATTERN?
+// ----------------------------
+// Separates algorithms from the object structure they operate on. Lets you add
+// new operations to existing classes without modifying them. Uses double dispatch
+// to route method calls based on both visitor and element types.
+//
+// Think of it as: "IRS tax inspector visits different entities (person, business, trust)
+// - each entity 'accepts' the visitor and provides access to its data. The inspector
+// knows how to calculate taxes for each entity type without entities knowing tax rules."
+//
+// Core Concepts:
+//   • Visitor: Interface defining operations for each element type
+//   • Concrete Visitor: Implements specific operation (tax calculation, export, etc.)
+//   • Element: Interface with Accept(IVisitor) method
+//   • Concrete Elements: Classes that accept visitors
+//   • Double Dispatch: Runtime determines both visitor and element types
+//
+// WHY IT MATTERS
+// --------------
+// ✅ ADD OPERATIONS EASILY: New visitor = new operation (no element changes)
+// ✅ SINGLE RESPONSIBILITY: Operations separated from data structures
+// ✅ RELATED OPERATIONS TOGETHER: Visitor groups logic by operation
+// ✅ ACCESS PRIVATE DATA: Elements can expose internals to visitors
+// ✅ MULTIPLE UNRELATED OPERATIONS: Avoid polluting element classes
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Need many distinct operations on object structure
+// ✅ Object structure classes rarely change
+// ✅ Operations change frequently
+// ✅ Algorithm needs data from different classes in structure
+// ✅ Want to avoid "polluting" classes with unrelated operations
+// ✅ Need to accumulate state while traversing structure
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Element classes change frequently (visitor must update for each)
+// ❌ Object structure is simple (visitor adds complexity)
+// ❌ Few operations needed (just add methods to elements)
+// ❌ Elements have simple interfaces (visitor can't access internals)
+//
+// REAL-WORLD EXAMPLE - Tax Calculation System
+// -------------------------------------------
+// IRS/CRA tax calculation for different entity types:
+//   • Entities: Individual, Corporation, Partnership, Trust
+//   • Each has different tax rules and data
+//   • Operations needed:
+//     1. Calculate federal tax
+//     2. Calculate state tax
+//     3. Generate tax report
+//     4. Calculate penalties
+//     5. Export to tax software
+//
+// WITHOUT VISITOR:
+//   ❌ class Individual {
+//         decimal CalculateFederalTax() { /* complex logic */ }
+//         decimal CalculateStateTax() { /* more logic */ }
+//         string GenerateReport() { /* reporting logic */ }
+//         decimal CalculatePenalties() { /* penalty logic */ }
+//         string ExportToTaxSoftware() { /* export logic */ }
+//       } // 5 operations mixed with entity data
+//   ❌ class Corporation { /* same 5 operations duplicated */ }
+//   ❌ Adding "Calculate AMT" = modify 4 classes
+//   ❌ Tax logic scattered across entity classes
+//   ❌ Hard to see all tax calculation logic in one place
+//
+// WITH VISITOR:
+//   ✅ interface ITaxEntity {
+//         void Accept(ITaxVisitor visitor);
+//     }
+//   
+//   ✅ class Individual : ITaxEntity {
+//         public decimal Income { get; set; }
+//         public decimal Deductions { get; set; }
+//         public void Accept(ITaxVisitor visitor) => visitor.Visit(this);
+//     }
+//   
+//   ✅ class Corporation : ITaxEntity {
+//         public decimal Revenue { get; set; }
+//         public decimal Expenses { get; set; }
+//         public void Accept(ITaxVisitor visitor) => visitor.Visit(this);
+//     }
+//   
+//   ✅ interface ITaxVisitor {
+//         void Visit(Individual individual);
+//         void Visit(Corporation corporation);
+//         void Visit(Partnership partnership);
+//         void Visit(Trust trust);
+//     }
+//   
+//   ✅ class FederalTaxCalculator : ITaxVisitor {
+//         private decimal _totalTax;
+//         public void Visit(Individual ind) {
+//             _totalTax = (ind.Income - ind.Deductions) * 0.25m; // Individual rate
+//         }
+//         public void Visit(Corporation corp) {
+//             _totalTax = (corp.Revenue - corp.Expenses) * 0.21m; // Corporate rate
+//         }
+//     }
+//   
+//   ✅ class TaxReportGenerator : ITaxVisitor {
+//         public void Visit(Individual ind) { /* Generate 1040 form */ }
+//         public void Visit(Corporation corp) { /* Generate 1120 form */ }
+//     }
+//   
+//   ✅ Usage:
+//     var entities = new List<ITaxEntity> { new Individual(), new Corporation() };
+//     var taxCalc = new FederalTaxCalculator();
+//     entities.ForEach(e => e.Accept(taxCalc)); // Calculate all taxes
+//     
+//     var report = new TaxReportGenerator();
+//     entities.ForEach(e => e.Accept(report)); // Generate all reports
+//   
+//   ✅ Adding "AMT Calculator":
+//     class AMTCalculator : ITaxVisitor { /* implement for each type */ }
+//     No changes to Individual, Corporation, etc.!
+//
+// ANOTHER EXAMPLE - Compiler AST Operations
+// -----------------------------------------
+// Abstract Syntax Tree for programming language:
+//   • Nodes: NumberNode, AddNode, MultiplyNode, VariableNode
+//   • Operations:
+//     - Evaluate: Calculate result
+//     - PrettyPrint: Format as string
+//     - Optimize: Simplify expression
+//     - TypeCheck: Verify types
+//     - CodeGen: Generate machine code
+//
+// Without Visitor:
+//   ❌ class AddNode {
+//         decimal Evaluate() { }
+//         string PrettyPrint() { }
+//         AddNode Optimize() { }
+//         Type TypeCheck() { }
+//         Instruction[] CodeGen() { }
+//       } // 5 operations, hard to maintain
+//
+// With Visitor:
+//   ✅ class EvaluateVisitor : IAstVisitor { /* only evaluation logic */ }
+//   ✅ class PrettyPrintVisitor : IAstVisitor { /* only printing logic */ }
+//   ✅ class OptimizeVisitor : IAstVisitor { /* only optimization logic */ }
+//   ✅ Each visitor focused on one concern
+//
+// ANOTHER EXAMPLE - E-commerce Shopping Cart
+// ------------------------------------------
+// Calculate different things for cart items:
+//   • Items: Book, Electronics, Clothing
+//   • Operations:
+//     - Calculate total price
+//     - Calculate shipping cost
+//     - Calculate taxes
+//     - Generate invoice
+//     - Check inventory
+//
+// Code:
+//   interface ICartItemVisitor {
+//       void Visit(Book book);
+//       void Visit(Electronics electronics);
+//       void Visit(Clothing clothing);
+//   }
+//   
+//   class ShippingCostCalculator : ICartItemVisitor {
+//       private decimal _totalShipping;
+//       public void Visit(Book book) {
+//           _totalShipping += 2.99m; // Flat rate
+//       }
+//       public void Visit(Electronics electronics) {
+//           _totalShipping += electronics.Weight * 0.50m + 5.00m; // Weight-based + insurance
+//       }
+//       public void Visit(Clothing clothing) {
+//           _totalShipping += 4.99m; // Medium rate
+//       }
+//   }
+//
+// DOUBLE DISPATCH EXPLAINED
+// -------------------------
+// Double dispatch allows method call resolution based on TWO types at runtime:
+//   1. Element type (Individual, Corporation)
+//   2. Visitor type (TaxCalculator, ReportGenerator)
+//
+// Flow:
+//   ITaxEntity entity = new Individual();
+//   ITaxVisitor visitor = new FederalTaxCalculator();
+//   entity.Accept(visitor); 
+//   → Calls Individual.Accept(ITaxVisitor)
+//   → Calls visitor.Visit(Individual this)
+//   → Calls FederalTaxCalculator.Visit(Individual)
+//
+// Result: Correct overload called based on both types!
+//
+// PROS & CONS
+// -----------
+// ✅ PROS:
+//   • Easy to add new operations (new visitor)
+//   • Related operations grouped in visitor
+//   • Can accumulate state during traversal
+//   • Visitor can access element internals
+//
+// ❌ CONS:
+//   • Hard to add new element types (must update all visitors)
+//   • Breaks encapsulation (visitors need element access)
+//   • Circular dependency (elements know visitors)
+//   • Complexity (double dispatch is tricky)
+//
+// VISITOR VARIATIONS
+// ------------------
+// 1. **Classic Visitor** (shown above)
+// 2. **Acyclic Visitor** (no element/visitor coupling)
+// 3. **Reflective Visitor** (uses reflection, no Visit overloads)
+//
+// .NET FRAMEWORK EXAMPLES
+// -----------------------
+// Visitor-like patterns in .NET:
+//   • Expression trees: ExpressionVisitor for LINQ
+//   • Roslyn compiler: SyntaxWalker, SyntaxRewriter
+//   • JSON.NET: JsonVisitor for custom serialization
+//
+// VISITOR VS SIMILAR PATTERNS
+// ---------------------------
+// Visitor vs Strategy:
+//   • Visitor: Operates on object structure, double dispatch
+//   • Strategy: Algorithm selection, single dispatch
+//
+// Visitor vs Decorator:
+//   • Visitor: Adds operations externally
+//   • Decorator: Adds behavior by wrapping
+//
+// BEST PRACTICES
+// --------------
+// ✅ Use when object structure stable, operations volatile
+// ✅ Keep visitor interface cohesive (related operations)
+// ✅ Consider return values from Visit methods
+// ✅ Use generic visitors: IVisitor<TResult>
+// ✅ Document that adding elements requires updating all visitors
+// ✅ Consider alternatives if element classes change frequently
+//
+// MODERN ALTERNATIVES
+// -------------------
+// Instead of Visitor, consider:
+//   • Pattern matching (C# 9+): switch expressions
+//   • Extension methods: Add operations without modifying classes
+//   • Dynamic typing: Use 'dynamic' keyword (no compile-time safety)
+//
 // ==============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Behavioral;

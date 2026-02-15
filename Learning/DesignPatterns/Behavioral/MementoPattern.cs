@@ -1,11 +1,303 @@
 // ==============================================================================
-// MEMENTO PATTERN
+// MEMENTO PATTERN - Snapshot and Restore Object State
 // Reference: Revision Notes - Design Patterns
 // ==============================================================================
-// PURPOSE: Capture and restore object state without violating encapsulation
-// BENEFIT: Undo/redo functionality, snapshots, rollback capability
-// USE WHEN: Need to save/restore state, implement undo, checkpoint/restore functionality
-// ==============================================================================
+//
+// WHAT IS THE MEMENTO PATTERN?
+// ----------------------------
+// Captures and externalizes an object's internal state so it can be restored later,
+// without violating encapsulation. Provides undo/redo functionality by storing
+// snapshots of object state at different points in time.
+//
+// Think of it as: "Video game save points - save your progress (memento) at any time,
+// die in game? Reload from last save point to restore exact state."
+//
+// Core Concepts:
+//   • Originator: Object whose state needs to be saved/restored
+//   • Memento: Immutable snapshot of originator's state
+//   • Caretaker: Stores mementos, doesn't know memento contents
+//   • Encapsulation: Memento opaque to caretaker (only originator accesses internals)
+//   • Time Travel: Restore to any previous state
+//
+// WHY IT MATTERS
+// --------------
+// ✅ UNDO/REDO: Implement unlimited undo by storing state history
+// ✅ ENCAPSULATION: External objects can't see internal state
+// ✅ SNAPSHOTS: Checkpoint system for rollback
+// ✅ SIMPLICITY: Cleaner than exposing all internal state via getters/setters
+// ✅ DECOUPLING: Caretaker doesn't depend on originator implementation
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Need undo/redo functionality
+// ✅ Want to save/restore object state
+// ✅ Direct access to state would violate encapsulation
+// ✅ Implementing checkpoint/rollback system
+// ✅ Snapshotting for backup or testing
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ State is small and cheap to expose (use property getters)
+// ❌ State is huge (mementos consume too much memory)
+// ❌ Deep object graphs (expensive to clone)
+// ❌ Frequent state changes (too many mementos)
+//
+// REAL-WORLD EXAMPLE - Text Editor Undo/Redo
+// ------------------------------------------
+// Microsoft Word / VS Code undo system:
+//   • User types: "Hello World"
+//   • Each change creates a memento:
+//     1. Memento 1: "H" (cursor: 1)
+//     2. Memento 2: "He" (cursor: 2)
+//     3. Memento 3: "Hel" (cursor: 3)
+//     ...
+//     11. Memento 11: "Hello World" (cursor: 11)
+//   • User presses Ctrl+Z (undo) → Restore Memento 10: "Hello Worl"
+//   • User presses Ctrl+Y (redo) → Restore Memento 11: "Hello World"
+//
+// WITHOUT MEMENTO:
+//   ❌ class TextEditor {
+//         public string Content { get; set; }
+//         public int Cursor { get; set; }
+//         // How to save state? Expose everything?
+//         // Where to store history? Who manages it?
+//     }
+//   ❌ No encapsulation
+//   ❌ Undo logic mixed with editor logic
+//
+// WITH MEMENTO:
+//   ✅ class TextEditor {  // Originator
+//         private string _content;
+//         private int _cursor;
+//         
+//         public Memento SaveState() {
+//             return new Memento(_content, _cursor); // Create snapshot
+//         }
+//         
+//         public void RestoreState(Memento memento) {
+//             _content = memento.Content;
+//             _cursor = memento.Cursor;
+//         }
+//     }
+//   
+//   ✅ class Memento {  // Immutable snapshot
+//         public string Content { get; }
+//         public int Cursor { get; }
+//         public Memento(string content, int cursor) {
+//             Content = content;
+//             Cursor = cursor;
+//         }
+//     }
+//   
+//   ✅ class History {  // Caretaker
+//         private Stack<Memento> _undoStack = new();
+//         private Stack<Memento> _redoStack = new();
+//         
+//         public void Save(Memento memento) {
+//             _undoStack.Push(memento);
+//             _redoStack.Clear(); // Clear redo on new action
+//         }
+//         
+//         public Memento Undo() => _undoStack.Pop();
+//         public Memento Redo() => _redoStack.Pop();
+//     }
+//   
+//   ✅ Usage:
+//     var editor = new TextEditor();
+//     var history = new History();
+//     
+//     editor.Type("Hello");
+//     history.Save(editor.SaveState()); // Save checkpoint
+//     
+//     editor.Type(" World");
+//     history.Save(editor.SaveState());
+//     
+//     editor.RestoreState(history.Undo()); // Undo → "Hello"
+//
+// ANOTHER EXAMPLE - Database Transaction Rollback
+// -----------------------------------------------
+// SQL transaction with savepoints:
+//   BEGIN TRANSACTION
+//     UPDATE Accounts SET Balance = Balance - 100 WHERE Id = 1;
+//     SAVE TRANSACTION Savepoint1;  -- Memento!
+//     
+//     UPDATE Accounts SET Balance = Balance + 100 WHERE Id = 2;
+//     -- Oops, error!
+//     ROLLBACK TRANSACTION Savepoint1;  -- Restore memento
+//   COMMIT TRANSACTION
+//
+// Code equivalent:
+//   var db = new Database();
+//   var memento = db.CreateSavepoint();  // Save state
+//   db.UpdateAccount(1, -100);
+//   db.UpdateAccount(2, +100);  // Error!
+//   db.RollbackToSavepoint(memento);    // Restore
+//
+// ANOTHER EXAMPLE - Game State Save/Load
+// --------------------------------------
+// RPG save system (Skyrim, Witcher):
+//   • State includes:
+//     - Player position (x, y, z)
+//     - Health, mana, stamina
+//     - Inventory (100+ items)
+//     - Quest progress
+//     - NPC states
+//     - World changes
+//   • Save game = create memento of entire game state
+//   • Load game = restore from memento
+//
+// Code:
+//   class Game {
+//       public GameMemento SaveGame() {
+//           return new GameMemento(
+//               player.Position,
+//               player.Health,
+//               inventory.Clone(),
+//               quests.Clone(),
+//               worldState.Clone()
+//           );
+//       }
+//       
+//       public void LoadGame(GameMemento memento) {
+//           player.Position = memento.Position;
+//           player.Health = memento.Health;
+//           inventory = memento.Inventory;
+//           // ... restore everything
+//       }
+//   }
+//
+// ANOTHER EXAMPLE - Form Wizard with Back Button
+// ----------------------------------------------
+// Multi-step form (checkout wizard):
+//   • Step 1: Shipping address
+//   • Step 2: Payment method
+//   • Step 3: Review order
+//   • User clicks "Back" → Restore previous step's form state
+//
+// Code:
+//   class CheckoutWizard {
+//       private Stack<FormMemento> _history = new();
+//       
+//       public void GoToNextStep() {
+//           _history.Push(SaveFormState());  // Save before moving
+//           MoveToNextStep();
+//       }
+//       
+//       public void GoBack() {
+//           RestoreFormState(_history.Pop());  // Restore previous
+//       }
+//   }
+//
+// MEMENTO IMPLEMENTATION PATTERNS
+// -------------------------------
+// Pattern 1: Nested Memento Class (Encapsulation)
+//   class Editor {
+//       private string _content;
+//       
+//       public class Memento {  // Nested = can access private
+//           private readonly string _content;
+//           internal Memento(string content) => _content = content;
+//           internal string GetContent() => _content;
+//       }
+//       
+//       public Memento Save() => new Memento(_content);
+//       public void Restore(Memento m) => _content = m.GetContent();
+//   }
+//
+// Pattern 2: Memento Interface (Opaque to Caretaker)
+//   interface IMemento { } // Empty interface
+//   class ConcreteMemento : IMemento {
+//       internal string State { get; }  // Only originator can access
+//   }
+//
+// MEMORY CONSIDERATIONS
+// ---------------------
+// Problem: Mementos can consume lots of memory
+//   • Large objects
+//   • Frequent saves
+//   • Long history
+//
+// Solutions:
+// 1. **Incremental Mementos** (save only changes)
+//    Instead of: Full state each time
+//    Use: Delta/diff from previous state
+//
+// 2. **Limit History Size**
+//    Keep only last N mementos (e.g., 50 undo levels)
+//
+// 3. **Compression**
+//    Compress memento data before storing
+//
+// 4. **Lazy Loading**
+//    Store mementos on disk, load when needed
+//
+// 5. **Command Pattern Hybrid**
+//    Store commands instead of full state (replay to reconstruct)
+//
+// MEMENTO + COMMAND PATTERN
+// -------------------------
+// Combined for powerful undo/redo:
+//   • Command: Stores action + parameters (lightweight)
+//   • Memento: Stores full state (heavyweight)
+//   • Use commands when possible, mementos when necessary
+//
+// Example:
+//   class TextCommand : ICommand {
+//       private Memento _beforeState;
+//       public void Execute() {
+//           _beforeState = editor.SaveState();  // Memento
+//           editor.InsertText("abc");           // Command
+//       }
+//       public void Undo() {
+//           editor.RestoreState(_beforeState);  // Use memento
+//       }
+//   }
+//
+// .NET FRAMEWORK EXAMPLES
+// -----------------------
+// Memento-like patterns in .NET:
+//   • ICloneable: Create copy of object state
+//   • Serialization: Serialize state to bytes/JSON
+//   • DataSet.GetChanges(): Snapshot of changes
+//   • Transaction: Database savepoints
+//   • ViewState (ASP.NET WebForms): Page state snapshots
+//
+// SERIALIZATION AS MEMENTO
+// ------------------------
+// Modern approach using JSON:
+//   class Editor {
+//       public string SaveState() {
+//           return JsonSerializer.Serialize(this); // Memento as JSON
+//       }
+//       
+//       public void RestoreState(string json) {
+//           var state = JsonSerializer.Deserialize<Editor>(json);
+//           // Copy state from deserialized object
+//       }
+//   }
+//
+// BEST PRACTICES
+// --------------
+// ✅ Make mementos immutable (prevent tampering)
+// ✅ Keep memento opaque to caretaker
+// ✅ Use nested classes for tight encapsulation
+// ✅ Consider memory usage (limit history, use incremental saves)
+// ✅ Timestamp mementos for debugging
+// ✅ Implement IEquatable for memento comparison
+// ✅ Consider Command pattern for lightweight undo
+//
+// MEMENTO VS SIMILAR PATTERNS
+// ---------------------------
+// Memento vs Command:
+//   • Memento: Stores state snapshots
+//   • Command: Stores operations/actions
+//   • Often used together for undo
+//
+// Memento vs Prototype:
+//   • Memento: Opaque snapshot for later restoration
+//   • Prototype: Full clone for immediate use
+//
+// ==========================================================================================================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Behavioral;
 

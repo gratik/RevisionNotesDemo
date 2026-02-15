@@ -2,9 +2,28 @@
 // MAPPING PATTERNS
 // Reference: Revision Notes - Practical Scenarios
 // ==============================================================================
-// PURPOSE: Transform objects between different representations (DTO ↔ Entity, ViewModel ↔ Model)
-// BENEFIT: Separation of concerns, API contracts, data shaping, security
-// USE WHEN: Need to transform between layers, expose DTOs, map domain to persistence
+// WHAT IS THIS?
+// -------------
+// Transforming objects between layers (DTOs, entities, view models).
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Protects sensitive data and shapes API contracts
+// ✅ Keeps domain and persistence models independent
+//
+// WHEN TO USE
+// -----------
+// ✅ API boundaries and request/response models
+// ✅ Mapping domain models to persistence shapes
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Small prototypes where layers are identical
+// ❌ Mapping that adds no value and only duplicates code
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Map entity to DTO that omits a password hash.
 // ==============================================================================
 
 namespace RevisionNotesDemo.PracticalPatterns;

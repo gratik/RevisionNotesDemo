@@ -2,8 +2,28 @@
 // STRUCT VS CLASS
 // Reference: Revision Notes - Page 9
 // ============================================================================
-// Struct: Value type, stack, no inheritance, better for small immutable data
-// Class: Reference type, heap, supports inheritance
+// WHAT IS THIS?
+// -------------
+// Value types (struct) vs reference types (class) semantics.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Affects copying, memory allocation, and performance
+// ✅ Changes equality and identity behavior
+//
+// WHEN TO USE
+// -----------
+// ✅ Structs for small immutable data
+// ✅ Classes for entities and mutable state
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Large mutable structs with heavy copying
+// ❌ Identity-based objects as value types
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// `Money` as a readonly struct.
 // ============================================================================
 
 namespace RevisionNotesDemo.MemoryManagement;

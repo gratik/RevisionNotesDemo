@@ -2,40 +2,36 @@
 // ENTITY FRAMEWORK CORE - MIGRATIONS IN DEPTH
 // Reference: Revision Notes - Entity Framework Core (Section 8.6.3)
 // ==============================================================================
-// PURPOSE: Master EF Core migrations - the code-first approach to evolving your
-//          database schema over time. This is how professional teams manage
-//          database changes across environments (dev, staging, production).
 //
-// WHAT YOU'LL LEARN:
-//   • Creating migrations (dotnet ef migrations add)
-//   • Applying migrations (dotnet ef database update)
-//   • Rolling back migrations (going back to previous version)
-//   • Generating SQL scripts for production deployment
-//   • Seeding data with HasData
-//   • Production deployment strategies
+// WHAT ARE MIGRATIONS?
+// --------------------
+// A code-first way to evolve database schema over time. Migrations capture
+// model changes in source control and apply them consistently across environments.
 //
-// WHY MIGRATIONS ARE IMPORTANT:
-//   - Track database schema changes in source control (Git)
-//   - Apply changes consistently across all environments
-//   - Rollback capability (undo migrations if needed)
-//   - Audit trail of all schema changes
-//   - Team collaboration (everyone gets same schema changes)
+// WHY IT MATTERS
+// --------------
+// - Shared, versioned schema changes
+// - Repeatable deployments across dev, staging, production
+// - Rollback capability for safe releases
+// - Auditable change history
 //
-// CODE-FIRST WORKFLOW:
-//   1. Change your entity classes (add property, new entity, etc.)
-//   2. Create migration: dotnet ef migrations add AddNewProperty
-//   3. Review generated migration code (Up/Down methods)
-//   4. Apply migration: dotnet ef database update
-//   5. Commit migration files to Git
+// WHEN TO USE
+// -----------
+// - YES: Code-first projects using EF Core
+// - YES: Teams that need consistent schema updates
+// - YES: Automated deployment pipelines
 //
-// PRODUCTION BEST PRACTICES:
-//   ✅ Generate SQL scripts (review manually before running)
-//   ✅ Test migrations on staging environment first
-//   ✅ Have rollback plan (Down migrations or database backup)
-//   ❌ Don't run context.Database.Migrate() in production (risky)
-//   ❌ Don't modify existing migrations (create new ones)
+// WHEN NOT TO USE
+// ---------------
+// - NO: If the database is managed externally and changes are DBA-only
+// - NO: If you must use DB-first workflows
 //
-// KEY CONCEPTS: Creating migrations, applying, rollback, seeding data, production deployment
+// REAL-WORLD EXAMPLE
+// ------------------
+// Add a new Email column to Users:
+// - Update User entity
+// - Create migration
+// - Apply migration in staging, then production
 // ==============================================================================
 
 using Microsoft.EntityFrameworkCore;

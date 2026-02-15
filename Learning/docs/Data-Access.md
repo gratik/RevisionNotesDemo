@@ -435,10 +435,19 @@ var connString = "Server=.;Database=MyDb";  // Pooling=true by default
 
 - [DataAccess/DapperExamples.cs](../DataAccess/DapperExamples.cs) - Basic queries, multi-mapping, QueryMultiple, parameters
 
+### Advanced Data Patterns (NoSQL, Caching, Scaling)
+
+- [DataAccess/DatabaseShardingAndScaling.cs](../DataAccess/DatabaseShardingAndScaling.cs) - Horizontal scaling strategies
+- [DataAccess/GraphDatabasePatterns.cs](../DataAccess/GraphDatabasePatterns.cs) - Graph database concepts and patterns
+- [DataAccess/MongoDBWithDotNet.cs](../DataAccess/MongoDBWithDotNet.cs) - Document-oriented databases
+- [DataAccess/ReadReplicasAndCQRS.cs](../DataAccess/ReadReplicasAndCQRS.cs) - Read replicas and CQRS pattern
+- [DataAccess/RedisPatterns.cs](../DataAccess/RedisPatterns.cs) - In-memory caching and data structures
+- [DataAccess/TimeSeriesDatabases.cs](../DataAccess/TimeSeriesDatabases.cs) - Time-series data optimization
+
 ### Entity Framework Core
 
 - [Entity-Framework.md](Entity-Framework.md) - Full EF Core documentation
-- [DataAccess/EntityFramework/](../DataAccess/EntityFramework/) - EF Core examples (5 files)
+- [DataAccess/EntityFramework/](../DataAccess/EntityFramework/) - EF Core examples (7 files)
 
 ---
 
@@ -452,4 +461,4 @@ var connString = "Server=.;Database=MyDb";  // Pooling=true by default
 
 ---
 
-Generated: 2026-02-14
+Generated: 2026-02-15

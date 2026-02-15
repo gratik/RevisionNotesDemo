@@ -2,9 +2,35 @@
 // TASK VS THREAD VS VALUETASK
 // Reference: Revision Notes - Multithreading & Async - Page 10
 // ============================================================================
-// Thread: OS-level thread, heavy resource usage
-// Task: Abstraction over threads, supports async/await, part of TPL
-// ValueTask: Lightweight alternative for performance-critical scenarios
+//
+// WHAT ARE THEY?
+// --------------
+// Thread: OS-level execution unit, heavy and expensive to create.
+// Task: TPL abstraction over threads, integrates with async/await.
+// ValueTask: Lightweight struct for cases where results are often synchronous.
+//
+// WHY IT MATTERS
+// --------------
+// - Threads are costly; tasks are preferred for async workflows
+// - ValueTask can reduce allocations in hot paths
+// - Choosing the right tool improves scalability
+//
+// WHEN TO USE
+// -----------
+// - YES: Task for most async operations
+// - YES: Thread for long-running, dedicated work
+// - YES: ValueTask when results are frequently cached/synchronous
+//
+// WHEN NOT TO USE
+// ---------------
+// - NO: Avoid Thread for I/O-bound work
+// - NO: Avoid ValueTask unless performance data justifies it
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Caching service:
+// - Cache hit returns ValueTask synchronously
+// - Cache miss awaits Task from data store
 // ============================================================================
 
 namespace RevisionNotesDemo.AsyncMultithreading;

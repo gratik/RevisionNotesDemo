@@ -2,8 +2,35 @@
 // TEST DATA BUILDERS - Builder Pattern for Test Data
 // Reference: Revision Notes - Unit Testing Best Practices
 // ==============================================================================
-// PURPOSE: Demonstrate test data builders for cleaner, more maintainable tests
-// KEY CONCEPTS: Builder pattern, fluent API, Object Mother pattern, sensible defaults
+// WHAT IS IT?
+// -----------
+// Builder patterns for generating test data with sensible defaults and fluent
+// overrides, reducing duplication and improving test readability.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ READABILITY: Tests focus on the intent, not object setup noise
+// ✅ MAINTAINABILITY: Centralized defaults reduce brittle tests
+// ✅ REUSE: Shared builders avoid copy/paste across suites
+// ✅ FLEXIBILITY: Override only the properties that matter per test
+//
+// WHEN TO USE
+// -----------
+// ✅ Complex object graphs with many required properties
+// ✅ Tests repeating similar setup with small variations
+// ✅ Domain models that evolve frequently (reduce churn)
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ Simple objects with 1-2 properties (inline setup is fine)
+// ❌ Over-abstracted builders that hide important details
+// ❌ Builders used as a crutch for unclear test intent
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// E-commerce tests:
+// - Create customers with orders, discounts, and statuses
+// - Builders standardize defaults and avoid 30-line setups per test
 // ==============================================================================
 
 using System;
@@ -40,7 +67,7 @@ public class TestDataBuildersExamples
     public static void ProblemExample()
     {
         Console.WriteLine("\n=== PROBLEM: Tedious Object Creation ===");
-        
+
         // Test 1
         var customer1 = new TestCustomer
         {
@@ -55,7 +82,7 @@ public class TestDataBuildersExamples
                 new TestOrder { Id = 1, OrderDate = DateTime.Now, Total = 99.99m, Status = "Completed" }
             }
         };
-        
+
         // Test 2 - almost identical!
         var customer2 = new TestCustomer
         {
@@ -70,10 +97,10 @@ public class TestDataBuildersExamples
                 new TestOrder { Id = 2, OrderDate = DateTime.Now, Total = 149.99m, Status = "Completed" }
             }
         };
-        
+
         Console.WriteLine("❌ Problems: Repetition, brittle, hard to maintain");
     }
-    
+
     /// <summary>
     /// SOLUTION: Customer Builder
     /// </summary>
@@ -86,44 +113,44 @@ public class TestDataBuildersExamples
         private bool _isActive = true;
         private DateTime _createdAt = DateTime.Now;
         private List<TestOrder> _orders = new();
-        
+
         // Fluent methods
         public CustomerBuilder WithId(int id)
         {
             _id = id;
             return this;
         }
-        
+
         public CustomerBuilder WithName(string name)
         {
             _name = name;
             return this;
         }
-        
+
         public CustomerBuilder WithEmail(string email)
         {
             _email = email;
             return this;
         }
-        
+
         public CustomerBuilder IsInactive()
         {
             _isActive = false;
             return this;
         }
-        
+
         public CustomerBuilder WithOrder(TestOrder order)
         {
             _orders.Add(order);
             return this;
         }
-        
+
         public CustomerBuilder WithOrders(params TestOrder[] orders)
         {
             _orders.AddRange(orders);
             return this;
         }
-        
+
         public TestCustomer Build()
         {
             return new TestCustomer
@@ -137,30 +164,30 @@ public class TestDataBuildersExamples
                 Orders = _orders
             };
         }
-        
+
         // Implicit conversion for convenience
         public static implicit operator TestCustomer(CustomerBuilder builder) => builder.Build();
     }
-    
+
     /// <summary>
     /// EXAMPLE 1: Using Customer Builder
     /// </summary>
     public static void CustomerBuilderExample()
     {
         Console.WriteLine("\n=== SOLUTION: Customer Builder ===");
-        
+
         // Test 1 - Default customer
         var customer1 = new CustomerBuilder()
             .WithId(1)
             .Build();
-        
+
         // Test 2 - Inactive customer
         var customer2 = new CustomerBuilder()
             .WithId(2)
             .WithName("Jane Smith")
             .IsInactive()
             .Build();
-        
+
         // Test 3 - Customer with orders
         var customer3 = new CustomerBuilder()
             .WithId(3)
@@ -169,21 +196,21 @@ public class TestDataBuildersExamples
                 new TestOrder { Id = 2, OrderDate = DateTime.Now, Total = 149.99m, Status = "Pending" }
             )
             .Build();
-        
+
         Console.WriteLine("✅ Advantages:");
         Console.WriteLine("   • Sensible defaults");
         Console.WriteLine("   • Fluent API (readable)");
         Console.WriteLine("   • Only specify what matters for each test");
         Console.WriteLine("   • Easy to maintain");
     }
-    
+
     /// <summary>
     /// EXAMPLE 2: Object Mother Pattern (Named Scenarios)
     /// </summary>
     public class CustomerMother
     {
         public static TestCustomer CreateDefault() => new CustomerBuilder().Build();
-        
+
         public static TestCustomer CreatePremium() => new CustomerBuilder()
             .WithEmail("premium@example.com")
             .WithOrders(
@@ -191,50 +218,50 @@ public class TestDataBuildersExamples
                 new TestOrder { Total = 2000m, Status = "Completed" }
             )
             .Build();
-        
+
         public static TestCustomer CreateInactive() => new CustomerBuilder()
             .IsInactive()
             .Build();
-        
+
         public static TestCustomer CreateWithManyOrders() => new CustomerBuilder()
-            .WithOrders(Enumerable.Range(1, 10).Select(i => 
+            .WithOrders(Enumerable.Range(1, 10).Select(i =>
                 new TestOrder { Id = i, OrderDate = DateTime.Now, Total = i * 10m, Status = "Completed" }
             ).ToArray())
             .Build();
     }
-    
+
     public static void ObjectMotherExample()
     {
         Console.WriteLine("\n=== EXAMPLE 2: Object Mother Pattern ===");
-        
+
         // Clear intent - what kind of customer are we testing?
         var defaultCustomer = CustomerMother.CreateDefault();
         var premiumCustomer = CustomerMother.CreatePremium();
         var inactiveCustomer = CustomerMother.CreateInactive();
-        
+
         Console.WriteLine($"Default customer: {defaultCustomer.Name}");
         Console.WriteLine($"Premium customer orders: {premiumCustomer.Orders.Count}");
         Console.WriteLine($"Inactive customer active: {inactiveCustomer.IsActive}");
-        
+
         Console.WriteLine("\n✅ Object Mother: Named test scenarios for clarity");
     }
-    
+
     /// <summary>
     /// EXAMPLE 3: Auto-Incrementing IDs
     /// </summary>
     public class CustomerBuilderWithAutoIncrement
     {
         private static int _nextId = 1;
-        
+
         private int _id = _nextId++;
         private string _name = "Customer";
-        
+
         public CustomerBuilderWithAutoIncrement WithName(string name)
         {
             _name = name;
             return this;
         }
-        
+
         public TestCustomer Build() => new TestCustomer
         {
             Id = _id,
@@ -244,22 +271,22 @@ public class TestDataBuildersExamples
             CreatedAt = DateTime.Now
         };
     }
-    
+
     public static void AutoIncrementExample()
     {
         Console.WriteLine("\n=== EXAMPLE 3: Auto-Incrementing IDs ===");
-        
+
         var customer1 = new CustomerBuilderWithAutoIncrement().Build();
         var customer2 = new CustomerBuilderWithAutoIncrement().Build();
         var customer3 = new CustomerBuilderWithAutoIncrement().Build();
-        
+
         Console.WriteLine($"Customer 1 ID: {customer1.Id}, Email: {customer1.Email}");
         Console.WriteLine($"Customer 2 ID: {customer2.Id}, Email: {customer2.Email}");
         Console.WriteLine($"Customer 3 ID: {customer3.Id}, Email: {customer3.Email}");
-        
+
         Console.WriteLine("\n✅ Auto-increment: Unique IDs without specifying them");
     }
-    
+
     /// <summary>
     /// EXAMPLE 4: Collection Builder
     /// </summary>
@@ -267,19 +294,19 @@ public class TestDataBuildersExamples
     {
         private int _count = 1;
         private Action<CustomerBuilder>? _configure;
-        
+
         public CustomerCollectionBuilder WithCount(int count)
         {
             _count = count;
             return this;
         }
-        
+
         public CustomerCollectionBuilder Configure(Action<CustomerBuilder> configure)
         {
             _configure = configure;
             return this;
         }
-        
+
         public List<TestCustomer> Build()
         {
             return Enumerable.Range(1, _count).Select(i =>
@@ -290,44 +317,44 @@ public class TestDataBuildersExamples
             }).ToList();
         }
     }
-    
+
     public static void CollectionBuilderExample()
     {
         Console.WriteLine("\n=== EXAMPLE 4: Collection Builder ===");
-        
+
         // Create 5 inactive customers
         var inactiveCustomers = new CustomerCollectionBuilder()
             .WithCount(5)
             .Configure(b => b.IsInactive())
             .Build();
-        
+
         Console.WriteLine($"Created {inactiveCustomers.Count} inactive customers");
         Console.WriteLine($"All inactive: {inactiveCustomers.All(c => !c.IsActive)}");
-        
+
         Console.WriteLine("\n✅ Collection Builder: Create multiple test objects easily");
     }
-    
+
     /// <summary>
     /// EXAMPLE 5: Alternatives (Bogus, AutoFixture)
     /// </summary>
     public static void AlternativesExample()
     {
         Console.WriteLine("\n=== EXAMPLE 5: Alternatives ===");
-        
+
         Console.WriteLine("\n📦 BOGUS (Fake Data Library):");
         Console.WriteLine("   dotnet add package Bogus");
         Console.WriteLine("   var faker = new Faker<TestCustomer>()");
         Console.WriteLine("       .RuleFor(c => c.Name, f => f.Name.FullName())");
         Console.WriteLine("       .RuleFor(c => c.Email, f => f.Internet.Email());");
         Console.WriteLine("   var customer = faker.Generate();");
-        
+
         Console.WriteLine("\n📦 AUTOFIXTURE (Auto-Generation):");
         Console.WriteLine("   dotnet add package AutoFixture");
         Console.WriteLine("   var fixture = new Fixture();");
         Console.WriteLine("   var customer = fixture.Create<TestCustomer>();");
         Console.WriteLine("   Automatically fills all properties!");
     }
-    
+
     /// <summary>
     /// Best Practices
     /// </summary>
@@ -343,7 +370,7 @@ public class TestDataBuildersExamples
         Console.WriteLine("✅ Keep builders in test project");
         Console.WriteLine("✅ Update builders when model changes");
     }
-    
+
     public static void RunAllExamples()
     {
         Console.WriteLine("\n=== TEST DATA BUILDERS EXAMPLES ===\n");

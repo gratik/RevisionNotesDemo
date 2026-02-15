@@ -1,39 +1,28 @@
 // ==============================================================================
 // SECURE CODING PRACTICES - Application Security
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate secure coding practices to prevent common vulnerabilities
-//   like SQL injection, XSS, CSRF, and other OWASP Top 10 issues.
+// WHAT IS THIS?
+// -------------
+// Defensive coding patterns to prevent common OWASP vulnerabilities.
 //
-// WHY SECURE CODING:
-//   - Prevent data breaches
-//   - Protect users
-//   - Comply with regulations
-//   - Avoid reputation damage
-//   - Prevent financial loss
+// WHY IT MATTERS
+// --------------
+// ✅ Reduces breach risk and data exposure
+// ✅ Improves compliance and customer trust
 //
-// WHAT YOU'LL LEARN:
-//   1. SQL injection prevention
-//   2. Cross-Site Scripting (XSS) prevention
-//   3. Cross-Site Request Forgery (CSRF) prevention
-//   4. Input validation and sanitization
-//   5. Secure file uploads
-//   6. Secrets management
-//   7. HTTPS enforcement
-//   8. Security headers
+// WHEN TO USE
+// -----------
+// ✅ Any app that handles input, auth, or sensitive data
+// ✅ APIs and web apps exposed to untrusted users
 //
-// OWASP TOP 10 (2021):
-//   1. Broken Access Control
-//   2. Cryptographic Failures
-//   3. Injection
-//   4. Insecure Design
-//   5. Security Misconfiguration
-//   6. Vulnerable Components
-//   7. Authentication Failures
-//   8. Data Integrity Failures
-//   9. Logging Failures
-//   10. Server-Side Request Forgery
+// WHEN NOT TO USE
+// ---------------
+// ❌ Never; secure coding is baseline for production apps
+// ❌ Skipping validation or escaping on public inputs
 //
+// REAL-WORLD EXAMPLE
+// ------------------
+// Use parameterized SQL and CSRF tokens for forms.
 // ==============================================================================
 
 using Microsoft.AspNetCore.Mvc;
@@ -73,23 +62,23 @@ namespace RevisionNotesDemo.Security;
 public class SqlInjectionPrevention
 {
     private readonly DbContext _context;
-    
+
     public SqlInjectionPrevention(DbContext context)
     {
         _context = context;
     }
-    
+
     // ❌ DANGER: SQL injection vulnerable!
     public List<User> BadGetUsers(string searchTerm)
     {
         // NEVER DO THIS!
         var sql = $"SELECT * FROM Users WHERE Name LIKE '%{searchTerm}%'";
         return _context.Database.SqlQueryRaw<User>(sql).ToList();
-        
+
         // Attack: searchTerm = "'; DROP TABLE Users;--"
         // Result: Users table deleted!
     }
-    
+
     // ✅ GOOD: Parameterized query
     public List<User> GoodGetUsers(string searchTerm)
     {
@@ -99,7 +88,7 @@ public class SqlInjectionPrevention
             .SqlQueryRaw<User>(sql, searchTerm)
             .ToList();
     }
-    
+
     // ✅ BEST: Use ORM (Entity Framework)
     public List<User> BestGetUsers(string searchTerm)
     {
@@ -108,7 +97,7 @@ public class SqlInjectionPrevention
             .Where(u => u.Name.Contains(searchTerm))
             .ToList();
     }
-    
+
     // ✅ GOOD: Stored procedures (parameterized)
     public List<User> UseStoredProc(string searchTerm)
     {
@@ -150,31 +139,31 @@ public static class XssPrevention
     {
         // NEVER output user input directly!
         return $"<div>{userComment}</div>";
-        
+
         // Attack: userComment = "<script>alert('XSS')</script>"
         // Result: Script executes!
     }
-    
+
     // ✅ GOOD: HTML encode output
     public static string GoodDisplayComment(string userComment)
     {
         // Razor views do this automatically with @Model.Comment
         return $"<div>{HttpUtility.HtmlEncode(userComment)}</div>";
-        
+
         // Attack: userComment = "<script>alert('XSS')</script>"
         // Result: &lt;script&gt;alert('XSS')&lt;/script&gt; (displayed as text, not executed)
     }
-    
+
     // ✅ GOOD: Content Security Policy header
     public static void ConfigureCSP(WebApplicationBuilder builder)
     {
         builder.Services.AddAntiforgery();
-        
+
         // In middleware:
         // context.Response.Headers["Content-Security-Policy"] =
         //     "default-src 'self'; script-src 'self'; style-src 'self'";
     }
-    
+
     // ✅ GOOD: HttpOnly cookies (JavaScript can't access)
     public static void SetSecureCookie(HttpContext context)
     {
@@ -185,14 +174,14 @@ public static class XssPrevention
             SameSite = SameSiteMode.Strict // ✅ CSRF protection
         });
     }
-    
+
     // ❌ BAD: Trusting user HTML
     public static string BadRenderUserHtml(string userHtml)
     {
         // Dangerous if userHtml contains script tags!
         return userHtml;
     }
-    
+
     // ✅ GOOD: Sanitize HTML (if HTML input needed)
     public static string SanitizeHtml(string userHtml)
     {
@@ -243,7 +232,7 @@ public static class CsrfPrevention
             options.Cookie.SameSite = SameSiteMode.Strict;
         });
     }
-    
+
     // ✅ GOOD: Validate anti-forgery token in controller
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -253,7 +242,7 @@ public static class CsrfPrevention
         // Unauthorized CSRF requests blocked!
         return new OkResult();
     }
-    
+
     // ✅ GOOD: SameSite cookie attribute
     public static void UseSameSiteCookies(HttpContext context)
     {
@@ -262,18 +251,18 @@ public static class CsrfPrevention
             SameSite = SameSiteMode.Strict // Browser won't send with cross-site requests
         });
     }
-    
+
     // ✅ GOOD: Check Origin header for APIs
     public static async Task<IResult> CheckOrigin(HttpContext context)
     {
         var origin = context.Request.Headers["Origin"].ToString();
         var allowedOrigins = new[] { "https://myapp.com", "https://www.myapp.com" };
-        
+
         if (!allowedOrigins.Contains(origin))
         {
             return Results.Forbid();
         }
-        
+
         // Process request
         return Results.Ok();
     }
@@ -309,71 +298,71 @@ public class InputValidationExamples
         [EmailAddress(ErrorMessage = "Invalid email format")]
         [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
-        
+
         [Required]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be 8-100 characters")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]",
             ErrorMessage = "Password must contain uppercase, lowercase, number, and special character")]
         public string Password { get; set; } = string.Empty;
-        
+
         [Range(18, 120, ErrorMessage = "Age must be between 18 and 120")]
         public int Age { get; set; }
-        
+
         [Phone(ErrorMessage = "Invalid phone number")]
         public string? PhoneNumber { get; set; }
-        
+
         [Url(ErrorMessage = "Invalid URL")]
         public string? Website { get; set; }
     }
-    
+
     // ✅ GOOD: Manual validation with whitelist
     public static bool IsValidUsername(string username)
     {
         // Whitelist: only allows alphanumeric and underscore
         return Regex.IsMatch(username, @"^[a-zA-Z0-9_]{3,20}$");
     }
-    
+
     // ❌ BAD: Blacklist approach (always incomplete)
     public static bool BadIsValidUsername(string username)
     {
         // NEVER do this - impossibleto list all bad characters!
-        return !username.Contains("<") && !username.Contains(">") && ! username.Contains("'");
+        return !username.Contains("<") && !username.Contains(">") && !username.Contains("'");
         // What about other special chars? SQL keywords? Unicode tricks?
     }
-    
+
     // ✅ GOOD: Sanitize file names
     public static string SanitizeFileName(string fileName)
     {
         // Remove path traversal attacks
         fileName = Path.GetFileName(fileName); // Removes ../ attacks
-        
+
         // Remove invalid characters
         return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
     }
-    
+
     // ❌ DANGER: Path traversal vulnerable
     public static string BadGetFile(string fileName)
     {
         // NEVER trust user file paths!
         return File.ReadAllText($"uploads/{fileName}");
-        
+
         // Attack: fileName = "../../etc/passwd"
         // Result: Reads sensitive system files!
     }
-    
+
     // ✅ GOOD: Validate and sanitize file path
     public static string GoodGetFile(string fileName)
     {
         fileName = SanitizeFileName(fileName);
         var fullPath = Path.GetFullPath(Path.Combine("uploads", fileName));
         var uploadsPath = Path.GetFullPath("uploads");
-        
+
         // Ensure file is within uploads directory
         if (!fullPath.StartsWith(uploadsPath))
         {
             throw new SecurityException("Invalid file path");
         }
-        
+
         return File.ReadAllText(fullPath);
     }
 }
@@ -406,17 +395,17 @@ public static class SecretsManagement
         // NEVER DO THIS!
         // Now in Git history forever!
     }
-    
+
     // ✅ GOOD: Load from configuration
     public static void GoodConfiguration(IConfiguration config)
     {
         var connectionString = config.GetConnectionString("DefaultConnection");
         var apiKey = config["ApiKeys:ThirdPartyService"];
-        
+
         // Development: User Secrets (dotnet user-secrets set "ApiKeys:MyKey" "value")
         // Production: Environment variables or Azure Key Vault
     }
-    
+
     // ✅ GOOD: Azure Key Vault configuration
     public static void ConfigureKeyVault(WebApplicationBuilder builder)
     {
@@ -424,7 +413,7 @@ public static class SecretsManagement
         //     new Uri($"https://{keyVaultName}.vault.azure.net/"),
         //     new DefaultAzureCredential());
     }
-    
+
     // ✅ GOOD: Check for leaked secrets in .gitignore
     // Add to .gitignore:
     // appsettings.Development.json (if contains secrets)
@@ -456,26 +445,26 @@ public static class SecurityHeadersMiddleware
         {
             // ✅ Prevent MIME sniffing
             context.Response.Headers["X-Content-Type-Options"] = "nosniff";
-            
+
             // ✅ Prevent clickjacking
             context.Response.Headers["X-Frame-Options"] = "DENY";
-            
+
             // ✅ Enable XSS filter (legacy browsers)
             context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
-            
+
             // ✅ Enforce HTTPS
             context.Response.Headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
-            
+
             // ✅ Content Security Policy
             context.Response.Headers["Content-Security-Policy"] =
                 "default-src 'self'; script-src 'self'; style-src 'self'  'unsafe-inline';";
-            
+
             // ✅ Referrer policy
             context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
-            
+
             // ✅ Permissions policy
             context.Response.Headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
-            
+
             await next();
         });
     }

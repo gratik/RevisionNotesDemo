@@ -2,9 +2,28 @@
 // OPTIONS PATTERN
 // Reference: Revision Notes - Practical Scenarios
 // ==============================================================================
-// PURPOSE: Strongly-typed configuration with validation and change tracking
-// BENEFIT: Type-safe config, validation, IOptionsSnapshot for scoped changes, IOptionsMonitor for hot reload
-// USE WHEN: Need configuration in ASP.NET Core, want validated strongly-typed settings
+// WHAT IS THIS?
+// -------------
+// Strongly typed configuration with validation and change tracking.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Safer configuration with compile-time checks
+// ✅ Supports validation and hot reload scenarios
+//
+// WHEN TO USE
+// -----------
+// ✅ ASP.NET Core settings and feature flags
+// ✅ External service configuration in DI
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ One-off config values in tiny apps
+// ❌ Settings that never change and do not need binding
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Bind EmailOptions from appsettings.json.
 // ==============================================================================
 
 namespace RevisionNotesDemo.PracticalPatterns;

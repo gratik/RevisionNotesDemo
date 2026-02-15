@@ -1,9 +1,125 @@
 // ============================================================================
-// DECORATOR PATTERN
+// DECORATOR PATTERN - Add Functionality Dynamically Without Inheritance
 // Reference: Revision Notes - Design Patterns (Structural) - Page 3
 // ============================================================================
-// PURPOSE: "Adds new functionality to an object dynamically without altering its structure."
-// EXAMPLE: Adding encryption to a data stream.
+//
+// WHAT IS THE DECORATOR PATTERN?
+// -------------------------------
+// Attaches additional responsibilities to an object dynamically by wrapping it.
+// Decorators provide a flexible alternative to subclassing for extending functionality.
+// Multiple decorators can be stacked to combine behaviors without class explosion.
+//
+// Think of it as: "Dressing up - start with base outfit, add jacket, then scarf,
+// then hat - each layer adds functionality"
+//
+// Core Concepts:
+//   • Component: Interface for objects that can have responsibilities added
+//   • Concrete Component: Base object to which functionality is added
+//   • Decorator: Abstract class implementing Component and containing Component
+//   • Concrete Decorators: Add specific responsibilities to the component
+//   • Wrapping: Each decorator wraps another component (chain of responsibility)
+//
+// WHY IT MATTERS
+// --------------
+// ✅ FLEXIBILITY: Add/remove responsibilities at runtime, not compile-time
+// ✅ SINGLE RESPONSIBILITY: Each decorator has one specific enhancement
+// ✅ OPEN/CLOSED: Extend behavior without modifying existing code
+// ✅ COMPOSABILITY: Mix and match decorators in any combination
+// ✅ AVOID CLASS EXPLOSION: No need for every combination as subclass
+// ✅ TRANSPARENT: Decorators conform to same interface as base object
+//
+// WHEN TO USE IT
+// --------------
+// ✅ Add responsibilities to individual objects dynamically
+// ✅ Responsibilities can be withdrawn later
+// ✅ Extension by subclassing is impractical (class explosion)
+// ✅ Need to add features in various combinations
+// ✅ Want to keep classes focused (Single Responsibility Principle)
+// ✅ Runtime configuration of object behavior needed
+//
+// WHEN NOT TO USE IT
+// ------------------
+// ❌ Simple inheritance suffices
+// ❌ Order of decorators matters and is hard to maintain
+// ❌ Too many small decorator classes (maintenance burden)
+// ❌ Need to change core behavior (use inheritance instead)
+// ❌ Debugging becomes difficult (stack of wrappers)
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Imagine Starbucks coffee ordering system:
+//   • Base: Coffee ($2)
+//   • Add Milk (+$0.50)
+//   • Add Sugar (+$0.25)
+//   • Add Whipped Cream (+$0.75)
+//   • Add Caramel (+$0.50)
+//   • Customers want ANY combination
+//
+// Without Decorator (Inheritance):
+//   → Need classes: Coffee, CoffeeWithMilk, CoffeeWithSugar, CoffeeWithMilkAndSugar,
+//     CoffeeWithMilkAndWhippedCream, CoffeeWithMilkSugarAndWhippedCream...
+//   → 5 additions = 2^5 = 32 possible classes!
+//   → Adding new topping (Vanilla) = double all classes
+//   → Impossible to maintain
+//
+// With Decorator:
+//   → Coffee coffee = new Coffee();                    // $2.00
+//   → coffee = new MilkDecorator(coffee);             // $2.50
+//   → coffee = new SugarDecorator(coffee);            // $2.75
+//   → coffee = new WhippedCreamDecorator(coffee);     // $3.50
+//   → coffee = new CaramelDecorator(coffee);          // $4.00
+//   → Any combination possible with same 6 classes
+//   → Adding Vanilla = just 1 new VanillaDecorator class
+//   → Total: Cost() method adds up all decorator costs
+//
+// ANOTHER REAL-WORLD EXAMPLE - Logging/Streaming
+// ----------------------------------------------
+// Data processing pipeline needs various transformations:
+//   • Base: FileStream (reads/writes raw bytes)
+//   • Add EncryptionDecorator (encrypts data)
+//   • Add CompressionDecorator (compresses data)
+//   • Add LoggingDecorator (logs all operations)
+//
+// Stream pipeline:
+//   IDataStream stream = new FileStream();
+//   stream = new EncryptionDecorator(stream);    // Encrypt
+//   stream = new CompressionDecorator(stream);   // Then compress
+//   stream = new LoggingDecorator(stream);       // Then log
+//   stream.WriteData("Sensitive data");           // Logged → Compressed → Encrypted → Written
+//
+// Data flows through decorator chain:
+//   WriteData → Log → Compress → Encrypt → File
+//   ReadData → File → Decrypt → Decompress → Log
+//
+// .NET FRAMEWORK EXAMPLES
+// -----------------------
+// .NET uses Decorator pattern extensively:
+//   • Stream classes: BufferedStream wraps FileStream
+//   • CryptoStream wraps any stream to add encryption
+//   • GZipStream wraps streams to add compression
+//
+//   Example:
+//   using (var fileStream = new FileStream("data.txt", FileMode.Create))
+//   using (var gzipStream = new GZipStream(fileStream, CompressionMode.Compress))
+//   using (var cryptoStream = new CryptoStream(gzipStream, encryptor, CryptoStreamMode.Write))
+//   {
+//       // Write to cryptoStream → encrypted → compressed → written to file
+//   }
+//
+// DECORATOR VS SIMILAR PATTERNS
+// -----------------------------
+// Decorator vs Adapter:
+//   • Decorator: Enhances with same interface
+//   • Adapter: Converts one interface to another
+//
+// Decorator vs Proxy:
+//   • Decorator: Adds functionality
+//   • Proxy: Controls access (same functionality)
+//
+// Decorator vs Composite:
+//   • Decorator: Single wrapped object
+//   • Composite: Tree of objects
+//
 // ============================================================================
 
 namespace RevisionNotesDemo.DesignPatterns.Structural;

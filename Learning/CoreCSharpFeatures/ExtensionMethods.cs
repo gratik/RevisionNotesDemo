@@ -2,9 +2,28 @@
 // EXTENSION METHODS
 // Reference: Revision Notes - Page 7
 // ============================================================================
-// Static methods in static class with 'this' parameter
-// Extend existing types without modifying them
-// Compiled as static calls but allow instance-like syntax
+// WHAT IS THIS?
+// -------------
+// Static methods that extend existing types via the `this` parameter.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Adds helpers without modifying or inheriting types
+// ✅ Improves call-site readability
+//
+// WHEN TO USE
+// -----------
+// ✅ Utilities for shared primitives or third-party types
+// ✅ Fluent helpers for collections and strings
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ When behavior is surprising or expensive
+// ❌ When it conflicts with instance methods or causes ambiguity
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// `string.ToTitleCase()` helper.
 // ============================================================================
 
 namespace RevisionNotesDemo.CoreCSharpFeatures;

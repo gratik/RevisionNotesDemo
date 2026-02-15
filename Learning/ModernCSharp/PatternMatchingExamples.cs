@@ -1,34 +1,28 @@
 // ==============================================================================
 // PATTERN MATCHING - Modern C# 7-11 Features
 // ==============================================================================
-// PURPOSE:
-//   Demonstrate comprehensive pattern matching features from C# 7 through C# 11
-//   for cleaner, more expressive conditional logic and data extraction.
+// WHAT IS THIS?
+// -------------
+// Pattern matching for expressive, type-safe conditional logic.
 //
-// WHY PATTERN MATCHING:
-//   - More readable than nested if/else or switch
-//   - Type-safe data extraction
-//   - Null-safe operations
-//   - Less boilerplate code
-//   - Express complex conditions declaratively
+// WHY IT MATTERS
+// --------------
+// ✅ Reduces boilerplate in complex branching
+// ✅ Improves readability and safety
 //
-// WHAT YOU'LL LEARN:
-//   1. Type patterns (is, as)
-//   2. Constant patterns
-//   3. Relational patterns (>, <, >=, <=)
-//   4. Logical patterns (and, or, not)
-//   5. Property patterns
-//   6. Positional patterns (deconstructors)
-//   7. List patterns (C# 11)
-//   8. Switch expressions
+// WHEN TO USE
+// -----------
+// ✅ Parsing, validation, and multi-shape rules
+// ✅ Switch expressions replacing long if/else chains
 //
-// C# EVOLUTION:
-//   - C# 7: Type patterns, switch with patterns
-//   - C# 8: Property patterns, switch expressions
-//   - C# 9: Relational and logical patterns, type patterns
-//   - C# 10: Extended property patterns
-//   - C# 11: List patterns
+// WHEN NOT TO USE
+// ---------------
+// ❌ Simple conditions where if/else is clearer
+// ❌ Overly clever patterns that reduce readability
 //
+// REAL-WORLD EXAMPLE
+// ------------------
+// Switch expressions for order pricing rules.
 // ==============================================================================
 
 namespace RevisionNotesDemo.ModernCSharp;
@@ -68,7 +62,7 @@ public static class TypePatternExamples
         }
         return "Unknown shape";
     }
-    
+
     // ✅ GOOD: Pattern matching with type patterns
     public static string GoodDescribeShape(object shape)
     {
@@ -87,7 +81,7 @@ public static class TypePatternExamples
         }
         return "Unknown shape";
     }
-    
+
     // ✅ BEST: Switch expression with type patterns
     public static string BestDescribeShape(object shape) => shape switch
     {
@@ -97,7 +91,7 @@ public static class TypePatternExamples
         null => "Null shape",
         _ => "Unknown shape"
     };
-    
+
     // ✅ GOOD: Negative type pattern (C# 9+)
     public static bool IsNotCircle(object shape) =>
         shape is not Circle; // More readable than !(shape is Circle)
@@ -146,7 +140,7 @@ public static class PropertyPatternExamples
         }
         return "No discount";
     }
-    
+
     // ✅ GOOD: Property patterns
     public static string GoodGetDiscount(Order order) => order switch
     {
@@ -157,19 +151,19 @@ public static class PropertyPatternExamples
         null => "No discount",
         _ => "No discount"
     };
-    
+
     // ✅ GOOD: Nested property patterns
     public static string GetShippingMethod(Order order) => order switch
     {
-        { Customer: { Address: { Country: "US", State: "CA" } }, TotalAmount: > 100 } 
+        { Customer: { Address: { Country: "US", State: "CA" } }, TotalAmount: > 100 }
             => "Free express shipping",
-        { Customer: { Address.Country: "US" }, TotalAmount: > 50 } 
+        { Customer: { Address.Country: "US" }, TotalAmount: > 50 }
             => "Free standard shipping",
-        { Customer: { IsPrime: true } } 
+        { Customer: { IsPrime: true } }
             => "Prime 2-day shipping",
         _ => "Standard shipping - $9.99"
     };
-    
+
     // ✅ GOOD: Combining type and property patterns
     public static decimal CalculateTax(object item) => item switch
     {
@@ -213,7 +207,7 @@ public static class RelationalLogicalPatternExamples
         else
             return "Invalid age";
     }
-    
+
     // ✅ GOOD: Relational patterns
     public static string GoodGetAgeGroup(int age) => age switch
     {
@@ -223,7 +217,7 @@ public static class RelationalLogicalPatternExamples
         < 65 => "Adult",
         _ => "Senior"
     };
-    
+
     // ✅ GOOD: Logical patterns (and, or, not)
     public static string GetTemperatureDescription(double celsius) => celsius switch
     {
@@ -235,31 +229,32 @@ public static class RelationalLogicalPatternExamples
         >= 35 => "Hot",
         double.NaN => "Invalid temperature"
     };
-    
+
     // ✅ GOOD: Complex logical patterns
     public static bool IsValidScore(int score) => score switch
     {
         >= 0 and <= 100 => true,
         _ => false
     };
-    
+
     public static string GetGrade(int score) => score switch
-    {  >= 90 and <= 100 => "A",
+    {
+        >= 90 and <= 100 => "A",
         >= 80 and < 90 => "B",
         >= 70 and < 80 => "C",
         >= 60 and < 70 => "D",
         >= 0 and < 60 => "F",
         _ => "Invalid score"
     };
-    
+
     // ✅ GOOD: Not patterns
-    public static bool IsWeekday(DayOfWeek day) => day is 
-        not DayOfWeek.Saturday and 
+    public static bool IsWeekday(DayOfWeek day) => day is
+        not DayOfWeek.Saturday and
         not DayOfWeek.Sunday;
-    
+
     // ✅ GOOD: Or patterns
-    public static bool IsWeekend(DayOfWeek day) => day is 
-        DayOfWeek.Saturday or 
+    public static bool IsWeekend(DayOfWeek day) => day is
+        DayOfWeek.Saturday or
         DayOfWeek.Sunday;
 }
 
@@ -286,14 +281,14 @@ public static class PositionalPatternExamples
     public static string GetQuadrant((int x, int y) point) => point switch
     {
         (0, 0) => "Origin",
-        (> 0, > 0) => "Quadrant I",
-        (< 0, > 0) => "Quadrant II",
-        (< 0, < 0) => "Quadrant III",
-        (> 0, < 0) => "Quadrant IV",
+        ( > 0, > 0) => "Quadrant I",
+        ( < 0, > 0) => "Quadrant II",
+        ( < 0, < 0) => "Quadrant III",
+        ( > 0, < 0) => "Quadrant IV",
         (0, _) => "On X-axis",
         (_, 0) => "On Y-axis"
     };
-    
+
     // ✅ GOOD: Positional patterns with records
     public static string Describe(Point point) => point switch
     {
@@ -303,7 +298,7 @@ public static class PositionalPatternExamples
         (var x, var y) when x == y => $"On diagonal at ({x}, {y})",
         (var x, var y) => $"Point at ({x}, {y})"
     };
-    
+
     // ✅ GOOD: Nested positional patterns
     public static string DescribeLine(Line line) => line switch
     {
@@ -342,7 +337,7 @@ public static class ListPatternExamples
         [var first, var second] => $"Two elements: {first}, {second}",
         [var first, .., var last] => $"Multiple elements, first: {first}, last: {last}",
     };
-    
+
     // ✅ GOOD: List patterns - specific values
     public static string AnalyzeSequence(int[] seq) => seq switch
     {
@@ -353,7 +348,7 @@ public static class ListPatternExamples
         [_, >= 100, _] => "Second element is >= 100",
         _ => "Other sequence"
     };
-    
+
     // ✅ GOOD: List patterns - complex
     public static bool IsValidCommand(string[] args) => args switch
     {
@@ -363,15 +358,15 @@ public static class ListPatternExamples
         ["delete", _] => true,   // Delete with exactly one argument
         _ => false
     };
-    
+
     // ✅ GOOD: Nested list and property patterns
     public static string ProcessCommand(Command cmd) => cmd switch
     {
-        { Type: "query", Args: ["select", .., "from", var table] } 
+        { Type: "query", Args: ["select", .., "from", var table] }
             => $"Querying from {table}",
-        { Type: "insert", Args: [var table, ..] } 
+        { Type: "insert", Args: [var table, ..] }
             => $"Inserting into {table}",
-        { Type: "update", Args: [var table, "set", ..] } 
+        { Type: "update", Args: [var table, "set", ..] }
             => $"Updating {table}",
         _ => "Unknown command"
     };
@@ -421,19 +416,19 @@ public static class SwitchExpressionExamples
         }
         return result;
     }
-    
+
     // ✅ GOOD: Switch expression
     public static string GoodGetDayType(DayOfWeek day) => day switch
     {
-        DayOfWeek.Monday or 
-        DayOfWeek.Tuesday or 
-        DayOfWeek.Wednesday or 
-        DayOfWeek.Thursday or 
+        DayOfWeek.Monday or
+        DayOfWeek.Tuesday or
+        DayOfWeek.Wednesday or
+        DayOfWeek.Thursday or
         DayOfWeek.Friday => "Weekday",
         DayOfWeek.Saturday or DayOfWeek.Sunday => "Weekend",
         _ => throw new ArgumentException("Invalid day")
     };
-    
+
     // ✅ GOOD: Complex switch expression with multiple patterns
     public static decimal CalculateShipping(Package package) => package switch
     {
@@ -445,7 +440,7 @@ public static class SwitchExpressionExamples
         { Weight: > 5 } => 50.00m,
         _ => 0m
     };
-    
+
     // ✅ GOOD: Recursive pattern matching
     public static int CountNodes(TreeNode? node) => node switch
     {
@@ -482,15 +477,15 @@ public static class WhenClauseExamples
         (_, var amt) when amt > 100 => $"Standard price: ${amt * 0.95m}",
         _ => $"Regular price: ${amount}"
     };
-    
+
     // ✅ GOOD: Complex when clauses
     public static string ApprovalRequired(Transaction trans) => trans switch
     {
-        { Amount: > 10000 } when trans.Sender.TrustLevel < 5 
+        { Amount: > 10000 } when trans.Sender.TrustLevel < 5
             => "High-value, low-trust: Manual review required",
-        { Amount: > 50000 } 
+        { Amount: > 50000 }
             => "High-value: Manager approval required",
-        { Receiver.Address.Country: not "US" } when trans.Amount > 5000 
+        { Receiver.Address.Country: not "US" } when trans.Amount > 5000
             => "International high-value: Compliance review",
         _ => "Approved"
     };

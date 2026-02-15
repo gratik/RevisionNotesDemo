@@ -1,8 +1,28 @@
 // ==============================================================================
 // FRONT-END UI - ASP.NET WEB FORMS (.NET FRAMEWORK)
 // ==============================================================================
-// PURPOSE: Show Web Forms patterns with good/bad illustrative examples.
-// NOTE: Examples are illustrative only and not meant to be run as-is.
+// WHAT IS THIS?
+// -------------
+// Web Forms UI patterns and pitfalls in legacy ASP.NET.
+//
+// WHY IT MATTERS
+// --------------
+// ✅ Avoids heavy view state and tangled code-behind
+// ✅ Improves maintainability of legacy apps
+//
+// WHEN TO USE
+// -----------
+// ✅ Maintaining existing Web Forms apps
+// ✅ Incremental improvements without full rewrite
+//
+// WHEN NOT TO USE
+// ---------------
+// ❌ New development; prefer MVC/Razor Pages/Blazor
+// ❌ Apps requiring modern client-side interactivity
+//
+// REAL-WORLD EXAMPLE
+// ------------------
+// Disable view state on large grids.
 // ==============================================================================
 
 namespace RevisionNotesDemo.FrontEnd;

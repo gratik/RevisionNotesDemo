@@ -1,8 +1,8 @@
 # Message-Based Architecture
 
-**Last Updated**: 2026-02-14
+**Last Updated**: 2026-02-15
 
-Comprehensive guide to building message-driven and event-driven systems with message queues, 
+Comprehensive guide to building message-driven and event-driven systems with message queues,
 pub/sub patterns, background processing, and distributed communication patterns.
 
 ---
@@ -10,6 +10,7 @@ pub/sub patterns, background processing, and distributed communication patterns.
 ## Why Message-Based Architecture?
 
 **Traditional Request-Response Problems**:
+
 - Tight coupling between services
 - Synchronous = slow (wait for response)
 - Failures cascade (service1 down → service2 fails)
@@ -17,6 +18,7 @@ pub/sub patterns, background processing, and distributed communication patterns.
 - No retry mechanism
 
 **Message-Based Solutions**:
+
 - ✅ Loose coupling (services don't know about each other)
 - ✅ Asynchronous processing (don't wait for response)
 - ✅ Fault tolerance (retry failed messages)
@@ -29,13 +31,13 @@ pub/sub patterns, background processing, and distributed communication patterns.
 
 ### Message Queue vs Event Bus
 
-| Feature | Message Queue | Event Bus (Pub/Sub) |
-|---------|---------------|---------------------|
-| **Pattern** | Point-to-point | Publish-subscribe |
-| **Consumers** | One consumer per message | Multiple subscribers |
-| **Delivery** | Exactly once | At least once (all subscribers) |
-| **Example** | RabbitMQ queues | Azure Service Bus Topics |
-| **Use Case** | Task distribution | Event notification |
+| Feature       | Message Queue            | Event Bus (Pub/Sub)             |
+| ------------- | ------------------------ | ------------------------------- |
+| **Pattern**   | Point-to-point           | Publish-subscribe               |
+| **Consumers** | One consumer per message | Multiple subscribers            |
+| **Delivery**  | Exactly once             | At least once (all subscribers) |
+| **Example**   | RabbitMQ queues          | Azure Service Bus Topics        |
+| **Use Case**  | Task distribution        | Event notification              |
 
 ### Terms Explained
 
@@ -54,21 +56,25 @@ pub/sub patterns, background processing, and distributed communication patterns.
 ### ✅ **Use When**
 
 1. **Long-running operations**
+
    ```
    User uploads file → Queue → Background worker processes
    ```
 
 2. **High traffic spikes**
+
    ```
    Black Friday orders → Queue → Process at sustainable rate
    ```
 
 3. **Decoupling services**
+
    ```
    OrderService → Queue → EmailService, InventoryService, ShippingService
    ```
 
 4. **Retry logic needed**
+
    ```
    Payment fails → Retry 3 times → Move to DLQ if still failing
    ```
@@ -81,16 +87,19 @@ pub/sub patterns, background processing, and distributed communication patterns.
 ### ❌ **Don't Use When**
 
 1. **Need immediate response**
+
    ```
    User login → Need instant success/failure response
    ```
 
 2. **Simple CRUD operations**
+
    ```
    GET /api/users → Just query database directly
    ```
 
 3. **Real-time requirements**
+
    ```
    Chat messages → Use SignalR/WebSockets instead
    ```
@@ -113,6 +122,7 @@ Producer → Exchange → Queue → Consumer
 ```
 
 **Exchange Types**:
+
 - **Direct**: Route by exact routing key match
 - **Fanout**: Broadcast to all queues
 - **Topic**: Route by pattern match (e.g., `order.*`)
@@ -142,13 +152,13 @@ public class OrderProducer
 {
     private readonly IConnection _connection;
     private readonly IModel _channel;
-    
+
     public OrderProducer()
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
-        
+
         // ✅ Declare queue (idempotent - safe to call multiple times)
         _channel.QueueDeclare(
             queue: "orders",
@@ -157,22 +167,22 @@ public class OrderProducer
             autoDelete: false,  // Don't delete when no consumers
             arguments: null);
     }
-    
+
     public async Task SendOrderAsync(Order order)
     {
         var message = JsonSerializer.Serialize(order);
         var body = Encoding.UTF8.GetBytes(message);
-        
+
         // ✅ Persistent message (survives restart)
         var properties = _channel.CreateBasicProperties();
         properties.Persistent = true;
-        
+
         _channel.BasicPublish(
             exchange: "",
             routingKey: "orders",
             basicProperties: properties,
             body: body);
-        
+
         Console.WriteLine($"[Producer] Sent: {message}");
     }
 }
@@ -182,64 +192,64 @@ public class OrderConsumer
 {
     private readonly IConnection _connection;
     private readonly IModel _channel;
-    
+
     public OrderConsumer()
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
-        
+
         _channel.QueueDeclare(
             queue: "orders",
             durable: true,
             exclusive: false,
             autoDelete: false,
             arguments: null);
-        
+
         // ✅ Fair dispatch (take 1 message at a time)
         _channel.BasicQos(
             prefetchSize: 0,
             prefetchCount: 1,
             global: false);
     }
-    
+
     public void StartConsuming()
     {
         var consumer = new EventingBasicConsumer(_channel);
-        
+
         consumer.Received += (model, ea) =>
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            
+
             try
             {
                 var order = JsonSerializer.Deserialize<Order>(message);
                 Console.WriteLine($"[Consumer] Processing: {order?.Id}");
-                
+
                 // ✅ Process order
                 ProcessOrder(order);
-                
+
                 // ✅ Acknowledge message (removes from queue)
                 _channel.BasicAck(ea.DeliveryTag, multiple: false);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[Consumer] Error: {ex.Message}");
-                
+
                 // ❌ Reject and requeue (or send to DLQ)
                 _channel.BasicNack(ea.DeliveryTag, multiple: false, requeue: false);
             }
         };
-        
+
         _channel.BasicConsume(
             queue: "orders",
             autoAck: false,  // ✅ Manual acknowledgment
             consumer: consumer);
-        
+
         Console.WriteLine("[Consumer] Waiting for messages...");
     }
-    
+
     private void ProcessOrder(Order? order)
     {
         // Business logic here
@@ -259,29 +269,29 @@ public record Order(int Id, string ProductName, decimal Amount);
 public class EventPublisher
 {
     private readonly IModel _channel;
-    
+
     public EventPublisher()
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
         var connection = factory.CreateConnection();
         _channel = connection.CreateModel();
-        
+
         // ✅ Declare fanout exchange
         _channel.ExchangeDeclare("order.events", ExchangeType.Fanout);
     }
-    
+
     public void PublishOrderCreated(Order order)
     {
         var message = JsonSerializer.Serialize(order);
         var body = Encoding.UTF8.GetBytes(message);
-        
+
         // ✅ Publish to exchange (not directly to queue)
         _channel.BasicPublish(
             exchange: "order.events",
             routingKey: "",  // Ignored for fanout
             basicProperties: null,
             body: body);
-        
+
         Console.WriteLine($"[Publisher] Published: {message}");
     }
 }
@@ -294,13 +304,13 @@ public class EmailService
         var factory = new ConnectionFactory { HostName = "localhost" };
         var connection = factory.CreateConnection();
         var channel = connection.CreateModel();
-        
+
         channel.ExchangeDeclare("order.events", ExchangeType.Fanout);
-        
+
         // ✅ Each service creates its own queue
         var queueName = channel.QueueDeclare().QueueName;
         channel.QueueBind(queueName, "order.events", routingKey: "");
-        
+
         var consumer = new EventingBasicConsumer(channel);
         consumer.Received += (model, ea) =>
         {
@@ -308,7 +318,7 @@ public class EmailService
             Console.WriteLine($"[EmailService] Sending email for: {message}");
             channel.BasicAck(ea.DeliveryTag, false);
         };
-        
+
         channel.BasicConsume(queueName, autoAck: false, consumer);
     }
 }
@@ -320,12 +330,12 @@ public class InventoryService
         var factory = new ConnectionFactory { HostName = "localhost" };
         var connection = factory.CreateConnection();
         var channel = connection.CreateModel();
-        
+
         channel.ExchangeDeclare("order.events", ExchangeType.Fanout);
-        
+
         var queueName = channel.QueueDeclare().QueueName;
         channel.QueueBind(queueName, "order.events", routingKey: "");
-        
+
         var consumer = new EventingBasicConsumer(channel);
         consumer.Received += (model, ea) =>
         {
@@ -333,7 +343,7 @@ public class InventoryService
             Console.WriteLine($"[InventoryService] Updating stock for: {message}");
             channel.BasicAck(ea.DeliveryTag, false);
         };
-        
+
         channel.BasicConsume(queueName, autoAck: false, consumer);
     }
 }
@@ -361,13 +371,13 @@ public class ServiceBusSender
 {
     private readonly ServiceBusClient _client;
     private readonly ServiceBusSender _sender;
-    
+
     public ServiceBusSender()
     {
         _client = new ServiceBusClient(connectionString);
         _sender = _client.CreateSender(queueName);
     }
-    
+
     public async Task SendMessageAsync(Order order)
     {
         var message = new ServiceBusMessage(JsonSerializer.Serialize(order))
@@ -376,24 +386,24 @@ public class ServiceBusSender
             MessageId = Guid.NewGuid().ToString(),
             Subject = "Order.Created"
         };
-        
+
         // ✅ Custom properties
         message.ApplicationProperties.Add("Priority", "High");
         message.ApplicationProperties.Add("CustomerId", order.CustomerId);
-        
+
         await _sender.SendMessageAsync(message);
         Console.WriteLine($"[Sender] Sent: {order.Id}");
     }
-    
+
     public async Task SendBatchAsync(List<Order> orders)
     {
         // ✅ Batch for efficiency
         using var batch = await _sender.CreateMessageBatchAsync();
-        
+
         foreach (var order in orders)
         {
             var message = new ServiceBusMessage(JsonSerializer.Serialize(order));
-            
+
             if (!batch.TryAddMessage(message))
             {
                 // Batch full - send and create new batch
@@ -402,7 +412,7 @@ public class ServiceBusSender
                 batch.TryAddMessage(message);
             }
         }
-        
+
         if (batch.Count > 0)
             await _sender.SendMessagesAsync(batch);
     }
@@ -413,64 +423,64 @@ public class ServiceBusReceiver : BackgroundService
 {
     private readonly ServiceBusClient _client;
     private readonly ServiceBusProcessor _processor;
-    
+
     public ServiceBusReceiver()
     {
         _client = new ServiceBusClient(connectionString);
-        
+
         var options = new ServiceBusProcessorOptions
         {
             MaxConcurrentCalls = 5,              // Process 5 messages concurrently
             AutoCompleteMessages = false,        // Manual completion
             MaxAutoLockRenewalDuration = TimeSpan.FromMinutes(5)
         };
-        
+
         _processor = _client.CreateProcessor(queueName, options);
-        
+
         _processor.ProcessMessageAsync += ProcessMessageAsync;
         _processor.ProcessErrorAsync += ProcessErrorAsync;
     }
-    
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await _processor.StartProcessingAsync(stoppingToken);
-        
+
         // Keep running until cancellation
         await Task.Delay(Timeout.Infinite, stoppingToken);
-        
+
         await _processor.StopProcessingAsync();
     }
-    
+
     private async Task ProcessMessageAsync(ProcessMessageEventArgs args)
     {
         var body = args.Message.Body.ToString();
         var order = JsonSerializer.Deserialize<Order>(body);
-        
+
         Console.WriteLine($"[Receiver] Processing: {order?.Id}");
-        
+
         try
         {
             // ✅ Business logic
             await ProcessOrderAsync(order);
-            
+
             // ✅ Complete message (removes from queue)
             await args.CompleteMessageAsync(args.Message);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"[Receiver] Error: {ex.Message}");
-            
+
             // ❌ Abandon message (will be retried)
             await args.AbandonMessageAsync(args.Message);
         }
     }
-    
+
     private Task ProcessErrorAsync(ProcessErrorEventArgs args)
     {
         Console.WriteLine($"[Receiver] Error: {args.Exception.Message}");
         return Task.CompletedTask;
     }
-    
+
     private async Task ProcessOrderAsync(Order? order)
     {
         // Simulate processing
@@ -488,13 +498,13 @@ const string topicName = "order-events";
 public class TopicPublisher
 {
     private readonly ServiceBusSender _sender;
-    
+
     public TopicPublisher()
     {
         var client = new ServiceBusClient(connectionString);
         _sender = client.CreateSender(topicName);
     }
-    
+
     public async Task PublishOrderCreatedAsync(Order order)
     {
         var message = new ServiceBusMessage(JsonSerializer.Serialize(order))
@@ -502,11 +512,11 @@ public class TopicPublisher
             Subject = "Order.Created",
             ContentType = "application/json"
         };
-        
+
         // ✅ Properties for filtering
         message.ApplicationProperties.Add("OrderStatus", "Created");
         message.ApplicationProperties.Add("TotalAmount", order.TotalAmount);
-        
+
         await _sender.SendMessageAsync(message);
     }
 }
@@ -516,7 +526,7 @@ public class TopicPublisher
 public class EmailSubscriber : BackgroundService
 {
     private readonly ServiceBusProcessor _processor;
-    
+
     public EmailSubscriber()
     {
         var client = new ServiceBusClient(connectionString);
@@ -528,7 +538,7 @@ public class EmailSubscriber : BackgroundService
             await args.CompleteMessageAsync(args.Message);
         };
     }
-    
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await _processor.StartProcessingAsync(stoppingToken);
@@ -543,7 +553,7 @@ public class EmailSubscriber : BackgroundService
 public class VipOrderSubscriber : BackgroundService
 {
     private readonly ServiceBusProcessor _processor;
-    
+
     public VipOrderSubscriber()
     {
         var client = new ServiceBusClient(connectionString);
@@ -555,7 +565,7 @@ public class VipOrderSubscriber : BackgroundService
             await args.CompleteMessageAsync(args.Message);
         };
     }
-    
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await _processor.StartProcessingAsync(stoppingToken);
@@ -575,7 +585,7 @@ public class OrderProcessingWorker : BackgroundService
 {
     private readonly ILogger<OrderProcessingWorker> _logger;
     private readonly IServiceProvider _serviceProvider;
-    
+
     public OrderProcessingWorker(
         ILogger<OrderProcessingWorker> logger,
         IServiceProvider serviceProvider)
@@ -583,11 +593,11 @@ public class OrderProcessingWorker : BackgroundService
         _logger = logger;
         _serviceProvider = serviceProvider;
     }
-    
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Order Processing Worker started");
-        
+
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -595,21 +605,21 @@ public class OrderProcessingWorker : BackgroundService
                 // ✅ Create scope for scoped services
                 using var scope = _serviceProvider.CreateScope();
                 var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
-                
+
                 await orderService.ProcessPendingOrdersAsync();
-                
+
                 // ✅ Wait before next iteration
                 await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Order Processing Worker");
-                
+
                 // ✅ Wait before retry
                 await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
-        
+
         _logger.LogInformation("Order Processing Worker stopped");
     }
 }
@@ -630,7 +640,7 @@ public interface IBackgroundTaskQueue
 public class BackgroundTaskQueue : IBackgroundTaskQueue
 {
     private readonly Channel<Func<CancellationToken, ValueTask>> _queue;
-    
+
     public BackgroundTaskQueue(int capacity)
     {
         var options = new BoundedChannelOptions(capacity)
@@ -639,12 +649,12 @@ public class BackgroundTaskQueue : IBackgroundTaskQueue
         };
         _queue = Channel.CreateBounded<Func<CancellationToken, ValueTask>>(options);
     }
-    
+
     public async ValueTask QueueBackgroundWorkItemAsync(Func<CancellationToken, ValueTask> workItem)
     {
         await _queue.Writer.WriteAsync(workItem);
     }
-    
+
     public async ValueTask<Func<CancellationToken, ValueTask>> DequeueAsync(CancellationToken cancellationToken)
     {
         return await _queue.Reader.ReadAsync(cancellationToken);
@@ -655,19 +665,19 @@ public class QueuedHostedService : BackgroundService
 {
     private readonly IBackgroundTaskQueue _taskQueue;
     private readonly ILogger<QueuedHostedService> _logger;
-    
+
     public QueuedHostedService(IBackgroundTaskQueue taskQueue, ILogger<QueuedHostedService> logger)
     {
         _taskQueue = taskQueue;
         _logger = logger;
     }
-    
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
             var workItem = await _taskQueue.DequeueAsync(stoppingToken);
-            
+
             try
             {
                 await workItem(stoppingToken);
@@ -686,12 +696,12 @@ public class QueuedHostedService : BackgroundService
 public class OrdersController : ControllerBase
 {
     private readonly IBackgroundTaskQueue _taskQueue;
-    
+
     public OrdersController(IBackgroundTaskQueue taskQueue)
     {
         _taskQueue = taskQueue;
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
     {
@@ -701,7 +711,7 @@ public class OrdersController : ControllerBase
             await Task.Delay(5000, token);  // Simulate long operation
             Console.WriteLine($"Order processed: {request.OrderId}");
         });
-        
+
         return Accepted();  // Return immediately
     }
 }
@@ -730,17 +740,17 @@ public interface IEventBus
 public class InMemoryEventBus : IEventBus
 {
     private readonly IServiceProvider _serviceProvider;
-    
+
     public InMemoryEventBus(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
-    
+
     public async Task PublishAsync<TEvent>(TEvent eventData) where TEvent : class
     {
         using var scope = _serviceProvider.CreateScope();
         var handlers = scope.ServiceProvider.GetServices<IEventHandler<TEvent>>();
-        
+
         foreach (var handler in handlers)
         {
             await handler.HandleAsync(eventData);
@@ -758,12 +768,12 @@ public interface IEventHandler<TEvent> where TEvent : class
 public class SendEmailOnOrderCreated : IEventHandler<OrderCreatedEvent>
 {
     private readonly IEmailService _emailService;
-    
+
     public SendEmailOnOrderCreated(IEmailService emailService)
     {
         _emailService = emailService;
     }
-    
+
     public async Task HandleAsync(OrderCreatedEvent eventData)
     {
         await _emailService.SendOrderConfirmationAsync(eventData.CustomerId, eventData.OrderId);
@@ -773,12 +783,12 @@ public class SendEmailOnOrderCreated : IEventHandler<OrderCreatedEvent>
 public class UpdateInventoryOnOrderCreated : IEventHandler<OrderCreatedEvent>
 {
     private readonly IInventoryService _inventoryService;
-    
+
     public UpdateInventoryOnOrderCreated(IInventoryService inventoryService)
     {
         _inventoryService = inventoryService;
     }
-    
+
     public async Task HandleAsync(OrderCreatedEvent eventData)
     {
         await _inventoryService.ReserveStockAsync(eventData.OrderId);
@@ -789,17 +799,17 @@ public class UpdateInventoryOnOrderCreated : IEventHandler<OrderCreatedEvent>
 public class OrderService
 {
     private readonly IEventBus _eventBus;
-    
+
     public OrderService(IEventBus eventBus)
     {
         _eventBus = eventBus;
     }
-    
+
     public async Task CreateOrderAsync(CreateOrderRequest request)
     {
         // Create order...
         var order = new Order { Id = 123, CustomerId = "user1", TotalAmount = 99.99m };
-        
+
         // ✅ Publish event
         await _eventBus.PublishAsync(new OrderCreatedEvent(order.Id, order.CustomerId, order.TotalAmount));
     }
@@ -918,7 +928,7 @@ public async Task ProcessPayment(PaymentMessage message)
     {
         return;  //✅ Already processed
     }
-    
+
     await _paymentService.ChargeCustomerAsync(message.CustomerId, message.Amount);
     await _paymentRepository.SaveAsync(message.PaymentId);
 }
