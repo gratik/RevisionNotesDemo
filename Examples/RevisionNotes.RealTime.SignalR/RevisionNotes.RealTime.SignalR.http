@@ -1,0 +1,6 @@
+@RevisionNotes.RealTime.SignalR_HostAddress = http://localhost:5245
+
+GET {{RevisionNotes.RealTime.SignalR_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,130 @@
+# Technical Terms Index
+
+Search tip: use `Ctrl+F` on this page.  
+Scope: key technical terms used across the `RevisionNotesDemo` learning project and examples portfolio.
+
+| Term | What it means | Where it is used |
+|---|---|---|
+| Abstract Class | Base type with shared implementation and optional abstract members. | `RevisionNotesDemo/Learning/CoreCSharpFeatures/AbstractClassVsInterface.cs:2` |
+| Accessibility (A11y) | Designing UI for keyboard/screen-reader users and inclusive access. | `RevisionNotesDemo/Examples/RevisionNotes.BlazorBestPractices/docs/Architecture-Decisions.md:4` |
+| ACID Transaction | Database transaction guarantee model (Atomicity, Consistency, Isolation, Durability). | `RevisionNotesDemo/Examples/RevisionNotes.Workflows.SagaOrchestration/docs/Architecture-Decisions.md:7` |
+| ActivitySource | .NET tracing source used for distributed traces. | `RevisionNotesDemo/Examples/RevisionNotes.Observability.Showcase/docs/Architecture-Decisions.md:22` |
+| ADR (Architecture Decision Record) | Structured record of a technical design decision and tradeoff. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/docs/Architecture-Decisions.md:21`<br>`RevisionNotesDemo/Examples/RevisionNotes.ApiGateway.BFF/docs/Architecture-Decisions.md:21` |
+| AOT (Ahead-of-Time) Compilation | Compiling to native code at publish time for faster startup/lower footprint. | `RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/RevisionNotes.NativeAot.Api.csproj:7`<br>`RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/docs/Architecture-Decisions.md:12` |
+| API Gateway | Entry-point API that routes/aggregates requests to backend services. | `RevisionNotesDemo/Examples/RevisionNotes.ApiGateway.BFF/docs/Architecture-Decisions.md:4` |
+| API Key Auth | Header-based API access control using shared secret key. | `RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/Infrastructure/ApiKeyAuthMiddleware.cs:11` |
+| Append-Only Event Store | Persisting immutable events in sequence rather than updating rows in place. | `RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/docs/Architecture-Decisions.md:21` |
+| Asynchronous Processing | Running work outside request/response path (queues, workers, jobs). | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/docs/Architecture-Decisions.md:11`<br>`RevisionNotesDemo/Examples/RevisionNotes.BackgroundJobs/docs/Architecture-Decisions.md:7` |
+| AuthN/AuthZ | Authentication and authorization controls applied before business logic. | `RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:27` |
+| B2B | Business-to-business product context with tenant/customer accounts. | `RevisionNotesDemo/Examples/RevisionNotes.MultiTenant.SaaS/docs/Architecture-Decisions.md:19` |
+| Backend-for-Frontend (BFF) | Client-specific backend that shapes responses for UI needs. | `RevisionNotesDemo/Examples/RevisionNotes.ApiGateway.BFF/docs/Architecture-Decisions.md:4` |
+| BackgroundService | Hosted service base type for long-running worker tasks. | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/Worker.cs:8`<br>`RevisionNotesDemo/Examples/RevisionNotes.BackgroundJobs/Jobs/BackgroundJobs.cs:10` |
+| Backpressure | Controlling producer/consumer throughput to avoid overload. | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/docs/Architecture-Decisions.md:23` |
+| Bearer Token | Access token carried in the `Authorization` header. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/docs/Architecture-Decisions.md:31`<br>`RevisionNotesDemo/Examples/RevisionNotes.Identity.AuthServer/docs/Architecture-Decisions.md:26` |
+| BFF | Acronym for Backend-for-Frontend gateway pattern. | `RevisionNotesDemo/Examples/RevisionNotes.ApiGateway.BFF/docs/Architecture-Decisions.md:8` |
+| Blazor Server | Server-rendered Blazor hosting model with persistent connection. | `RevisionNotesDemo/Examples/RevisionNotes.BlazorBestPractices/docs/Architecture-Decisions.md:21` |
+| Bounded Context | Domain boundary with explicit model ownership (DDD). | `RevisionNotesDemo/Examples/RevisionNotes.Ddd.ModularMonolith/docs/Architecture-Decisions.md:4` |
+| Cache Invalidation | Removing stale cache entries after data writes. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:46`<br>`RevisionNotesDemo/Examples/RevisionNotes.StandardApi/Program.cs:42` |
+| Caching | Storing computed/read results for faster repeated access. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/docs/Architecture-Decisions.md:4`<br>`RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:4` |
+| Cartesian Expansion | Query-shape issue where joined data multiplies result rows excessively. | `RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/docs/Architecture-Decisions.md:28` |
+| Channel\<T\> | In-memory producer/consumer queue primitive in .NET. | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/docs/Architecture-Decisions.md:21`<br>`RevisionNotesDemo/Examples/RevisionNotes.BackgroundJobs/Infrastructure/QueueInfrastructure.cs:2` |
+| Chaos Engineering | Injecting failures to validate resilience and recovery behavior. | `RevisionNotesDemo/Examples/RevisionNotes.Resilience.ChaosDemo/docs/Architecture-Decisions.md:4` |
+| Circuit Breaker | Temporarily short-circuiting failing calls after repeated errors. | `RevisionNotesDemo/Examples/RevisionNotes.Resilience.ChaosDemo/Infrastructure/ChaosServices.cs:21` |
+| Claims | Identity attributes embedded in tokens for authorization logic. | `RevisionNotesDemo/Examples/RevisionNotes.CleanArchitecture/Security/JwtTokenFactory.cs:17` |
+| Clean Architecture | Layering domain/application/infrastructure with strict boundaries. | `RevisionNotesDemo/Examples/RevisionNotes.CleanArchitecture/docs/Architecture-Decisions.md:4` |
+| Command (CQRS) | Write-side intent that changes system state. | `RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/Program.cs:7` |
+| Compensating Action | Undo step in distributed workflow after partial failure. | `RevisionNotesDemo/Examples/RevisionNotes.Workflows.SagaOrchestration/docs/Architecture-Decisions.md:4` |
+| CompileAsyncQuery | EF Core API for precompiled query delegates. | `RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/docs/Architecture-Decisions.md:22` |
+| Compiled Query | EF query optimization technique that reduces repeated query compilation cost. | `RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/docs/Architecture-Decisions.md:21` |
+| Compression | Reducing HTTP payload size for network efficiency. | `RevisionNotesDemo/Examples/RevisionNotes.Microservice.CatalogService/docs/Architecture-Decisions.md:42` |
+| Concurrency Token | Version field used to detect update conflicts. | `RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/Data/AppDbContext.cs:16` |
+| Contract Test | Verifying API response contract stability for consumers. | `RevisionNotesDemo/Examples/RevisionNotes.Testing.Pyramid/docs/Architecture-Decisions.md:12` |
+| Controller-Based API | ASP.NET Core MVC controller/action style endpoints. | `RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:4` |
+| Cookie Authentication | Server-side auth with secure cookies. | `RevisionNotesDemo/Examples/RevisionNotes.BlazorBestPractices/docs/Architecture-Decisions.md:27` |
+| CQRS | Separating read model/query path from write/command path. | `RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/docs/Architecture-Decisions.md:4` |
+| CRUD | Basic create/read/update/delete style data access model. | `RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/docs/Architecture-Decisions.md:15` |
+| CSP (Content Security Policy) | Browser security header controlling allowed content sources. | `RevisionNotesDemo/Examples/RevisionNotes.BlazorBestPractices/docs/Architecture-Decisions.md:47` |
+| Database Health Check | Health probe that validates DB/store readiness. | `RevisionNotesDemo/Examples/RevisionNotes.StandardApi/Infrastructure/DatabaseHealthCheck.cs:6`<br>`RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/Infrastructure/DatabaseHealthCheck.cs:7` |
+| DDD (Domain-Driven Design) | Modeling around domain boundaries, invariants, and ubiquitous language. | `RevisionNotesDemo/Examples/RevisionNotes.Ddd.ModularMonolith/docs/Architecture-Decisions.md:4` |
+| Dead-Letter Strategy | Routing poison/unprocessable messages for later handling. | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/docs/Architecture-Decisions.md:34` |
+| Dependency Injection | Registering and resolving services via built-in container. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:44` |
+| Distributed Tracing | End-to-end request flow visibility across components. | `RevisionNotesDemo/Examples/RevisionNotes.Observability.Showcase/docs/Architecture-Decisions.md:4` |
+| Domain Event | Business event emitted from domain action/state change. | `RevisionNotesDemo/Examples/RevisionNotes.Ddd.ModularMonolith/Modules/Shared/DomainEvents.cs:5`<br>`RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/Events/Events.cs:3` |
+| EF Core | .NET ORM for data access and LINQ-based persistence. | `RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/docs/Architecture-Decisions.md:4` |
+| Event Replay | Rebuilding state by reprocessing historical events. | `RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/docs/Architecture-Decisions.md:7` |
+| Event Sourcing | Storing state changes as immutable events and reconstructing state. | `RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/docs/Architecture-Decisions.md:4` |
+| Exception Interceptor | gRPC interceptor centralizing error mapping/handling. | `RevisionNotesDemo/Examples/RevisionNotes.gRPC.Service/docs/Architecture-Decisions.md:27` |
+| Fallback | Returning alternate/cached response when primary dependency fails. | `RevisionNotesDemo/Examples/RevisionNotes.Resilience.ChaosDemo/Infrastructure/ChaosServices.cs:92`<br>`RevisionNotesDemo/Examples/RevisionNotes.ApiGateway.BFF/Infrastructure/BffServices.cs:56` |
+| Fan-Out | One request triggering multiple downstream calls that are later combined. | `RevisionNotesDemo/Examples/RevisionNotes.ApiGateway.BFF/docs/Architecture-Decisions.md:22` |
+| Fault Injection | Intentionally introducing failures to test resilience behavior. | `RevisionNotesDemo/Examples/RevisionNotes.Resilience.ChaosDemo/docs/Architecture-Decisions.md:22` |
+| Feature Folder | Organizing code by feature/use case instead of technical layers only. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/docs/Architecture-Decisions.md:24` |
+| Global Exception Handler | Centralized handler returning consistent error payloads. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Infrastructure/GlobalExceptionHandler.cs:5`<br>`RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/Infrastructure/GlobalExceptionHandler.cs:4` |
+| gRPC | High-performance RPC over HTTP/2 with protobuf contracts. | `RevisionNotesDemo/Examples/RevisionNotes.gRPC.Service/docs/Architecture-Decisions.md:21` |
+| Health Checks | Endpoint/probe mechanism for liveness and readiness. | `RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:47`<br>`RevisionNotesDemo/Examples/RevisionNotes.BackgroundJobs/docs/Architecture-Decisions.md:32` |
+| HMAC-SHA256 | Symmetric signing algorithm used for JWT token signatures. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Security/JwtTokenFactory.cs:25` |
+| HSTS | HTTP Strict Transport Security for HTTPS-only browser policy. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:81`<br>`RevisionNotesDemo/Examples/RevisionNotes.StandardApi/Program.cs:78` |
+| HTTP/2 | Transport protocol required for standard gRPC communication. | `RevisionNotesDemo/Examples/RevisionNotes.gRPC.Service/docs/Architecture-Decisions.md:15` |
+| Hub (SignalR) | Real-time endpoint for bi-directional client/server messaging. | `RevisionNotesDemo/Examples/RevisionNotes.RealTime.SignalR/Realtime/NotificationHub.cs:8` |
+| Idempotency | Ensuring repeated same request/event does not duplicate side effects. | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/docs/Architecture-Decisions.md:4`<br>`RevisionNotesDemo/Examples/RevisionNotes.Microservice.CatalogService/docs/Architecture-Decisions.md:4` |
+| IMemoryCache | In-process cache API for short-lived, fast cached data. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:48`<br>`RevisionNotesDemo/Examples/RevisionNotes.ApiGateway.BFF/Infrastructure/BffServices.cs:42` |
+| IMiddleware | Interface-based middleware component for reusable request pipeline behavior. | `RevisionNotesDemo/Examples/RevisionNotes.MultiTenant.SaaS/Tenants/TenantResolution.cs:10` |
+| In-Memory Database | Non-persistent test/demo DB provider for fast local runs. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/docs/Architecture-Decisions.md:29`<br>`RevisionNotesDemo/Examples/RevisionNotes.Microservice.CatalogService/docs/Architecture-Decisions.md:46` |
+| Integration Test | Testing with app host + real components (not pure unit). | `RevisionNotesDemo/Examples/RevisionNotes.Testing.Pyramid/docs/Architecture-Decisions.md:31` |
+| Interceptor (gRPC) | Pipeline extension for cross-cutting logic in gRPC calls. | `RevisionNotesDemo/Examples/RevisionNotes.gRPC.Service/docs/Architecture-Decisions.md:4` |
+| Interface | Contract-only abstraction independent of inheritance hierarchy. | `RevisionNotesDemo/Learning/CoreCSharpFeatures/AbstractClassVsInterface.cs:2` |
+| Invariant Globalization | AOT/trimming setting to reduce globalization footprint. | `RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/RevisionNotes.NativeAot.Api.csproj:8` |
+| IoT | Internet of Things context mentioned for edge/low-latency API scenarios. | `RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/docs/Architecture-Decisions.md:19` |
+| JTI | JWT ID claim used to uniquely identify issued tokens. | `RevisionNotesDemo/Examples/RevisionNotes.CleanArchitecture/Security/JwtTokenFactory.cs:18` |
+| JWT (JSON Web Token) | Signed token carrying claims for stateless auth. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Security/JwtTokenFactory.cs:10`<br>`RevisionNotesDemo/Examples/RevisionNotes.Identity.AuthServer/docs/Architecture-Decisions.md:4` |
+| Liveness Probe | Check that process is alive and should stay running. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:192`<br>`RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/Program.cs:15` |
+| Logging (Structured) | Key-value log events for filtering and diagnostics. | `RevisionNotesDemo/Examples/RevisionNotes.Observability.Showcase/docs/Architecture-Decisions.md:4`<br>`RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/Worker.cs:29` |
+| Meter | .NET metrics instrument source. | `RevisionNotesDemo/Examples/RevisionNotes.Observability.Showcase/docs/Architecture-Decisions.md:22` |
+| Microservice Boundary | Explicit service ownership around a focused domain capability. | `RevisionNotesDemo/Examples/RevisionNotes.Microservice.CatalogService/docs/Architecture-Decisions.md:21` |
+| Middleware | Reusable request pipeline component for cross-cutting behavior. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:86`<br>`RevisionNotesDemo/Examples/RevisionNotes.MultiTenant.SaaS/Tenants/TenantResolution.cs:10` |
+| Minimal API | Route-handler API style with low ceremony in ASP.NET Core. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/docs/Architecture-Decisions.md:4` |
+| Modular Monolith | Single deployable app with strong internal module boundaries. | `RevisionNotesDemo/Examples/RevisionNotes.Ddd.ModularMonolith/docs/Architecture-Decisions.md:4` |
+| Multi-Tenant Isolation | Separating data and behavior per tenant/customer. | `RevisionNotesDemo/Examples/RevisionNotes.MultiTenant.SaaS/docs/Architecture-Decisions.md:4` |
+| Native AOT | Publishing .NET app as native image with trimming constraints. | `RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/docs/Architecture-Decisions.md:4` |
+| Observability | Telemetry strategy across logs, metrics, traces, and health. | `RevisionNotesDemo/Examples/RevisionNotes.Observability.Showcase/docs/Architecture-Decisions.md:4` |
+| OIDC / OAuth2 | Standards for identity and delegated authorization/token flows. | `RevisionNotesDemo/Examples/RevisionNotes.Identity.AuthServer/docs/Architecture-Decisions.md:41` |
+| OpenAPI | Machine-readable API contract/spec documentation. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:74`<br>`RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/Program.cs:17` |
+| OpenIddict | Identity server framework mentioned as a production evolution path. | `RevisionNotesDemo/Examples/RevisionNotes.Identity.AuthServer/docs/Architecture-Decisions.md:42` |
+| Optimistic Concurrency | Detecting conflicting updates via version checks/tokens. | `RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/docs/Architecture-Decisions.md:12` |
+| Orchestrator | Central workflow coordinator executing saga steps. | `RevisionNotesDemo/Examples/RevisionNotes.Workflows.SagaOrchestration/Saga/SagaServices.cs:88` |
+| Outbox Pattern | Persisting integration events with data changes for reliable publish. | `RevisionNotesDemo/Examples/RevisionNotes.Microservice.CatalogService/docs/Architecture-Decisions.md:4` |
+| Output Caching | Caching HTTP responses at endpoint/transport layer. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/docs/Architecture-Decisions.md:37`<br>`RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:37` |
+| Poison Job | Background job that repeatedly fails and needs dead-letter strategy. | `RevisionNotesDemo/Examples/RevisionNotes.BackgroundJobs/docs/Architecture-Decisions.md:29` |
+| Poison Message | Queue/event message that cannot be processed successfully. | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/docs/Architecture-Decisions.md:34` |
+| Policy-Based Authorization | Named access policies applied at endpoint level. | `RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:4`<br>`RevisionNotesDemo/Examples/RevisionNotes.Workflows.SagaOrchestration/Program.cs:39` |
+| ProblemDetails | Standardized HTTP error response format in ASP.NET Core. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Infrastructure/GlobalExceptionHandler.cs:10` |
+| Projection | Read model materialized from event stream or domain events. | `RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/Infrastructure/EventStore.cs:48`<br>`RevisionNotesDemo/Examples/RevisionNotes.Ddd.ModularMonolith/Modules/Billing/BillingModule.cs:45` |
+| Protobuf | Contract definition format used by gRPC services. | `RevisionNotesDemo/Examples/RevisionNotes.gRPC.Service/docs/Architecture-Decisions.md:4` |
+| Query (CQRS) | Read-side operation optimized for retrieval/reporting. | `RevisionNotesDemo/Examples/RevisionNotes.EventSourcing.Cqrs/Program.cs:20` |
+| Queue Depth | Number of enqueued, unprocessed messages/jobs. | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/Worker.cs:7`<br>`RevisionNotesDemo/Examples/RevisionNotes.BackgroundJobs/Infrastructure/QueueInfrastructure.cs:7` |
+| Rate Limiting | Throttling requests to protect services from abuse/spikes. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/docs/Architecture-Decisions.md:4`<br>`RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:41` |
+| Readiness Probe | Check that app dependencies are ready to serve traffic. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:193`<br>`RevisionNotesDemo/Examples/RevisionNotes.Workflows.SagaOrchestration/Program.cs:48` |
+| Repository Pattern | Abstracting persistence operations behind interfaces. | `RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:31`<br>`RevisionNotesDemo/Examples/RevisionNotes.CleanArchitecture/Application/Orders/Contracts.cs:6` |
+| Resilience | Failure-handling strategy (retry, timeout, fallback, circuit breaker). | `RevisionNotesDemo/Examples/RevisionNotes.Resilience.ChaosDemo/docs/Architecture-Decisions.md:4` |
+| Retry Policy | Controlled retries for transient failures with bounded attempts. | `RevisionNotesDemo/Examples/RevisionNotes.EventDriven.Worker/docs/Architecture-Decisions.md:31`<br>`RevisionNotesDemo/Examples/RevisionNotes.Resilience.ChaosDemo/Infrastructure/ChaosServices.cs:100` |
+| RPC | Remote Procedure Call style communication model. | `RevisionNotesDemo/Examples/RevisionNotes.gRPC.Service/docs/Architecture-Decisions.md:11` |
+| SaaS | Software-as-a-Service multi-customer architecture model. | `RevisionNotesDemo/Examples/RevisionNotes.MultiTenant.SaaS/docs/Architecture-Decisions.md:4` |
+| Saga | Long-running distributed transaction pattern with compensation. | `RevisionNotesDemo/Examples/RevisionNotes.Workflows.SagaOrchestration/docs/Architecture-Decisions.md:4` |
+| Screen Reader | Assistive technology addressed in accessibility-first UI decisions. | `RevisionNotesDemo/Examples/RevisionNotes.BlazorBestPractices/docs/Architecture-Decisions.md:33` |
+| Secure Headers | Response headers reducing browser-side attack surface. | `RevisionNotesDemo/Examples/RevisionNotes.MinimalApi/Program.cs:102`<br>`RevisionNotesDemo/Examples/RevisionNotes.StandardApi/docs/Architecture-Decisions.md:27` |
+| Service-to-Service | Internal API communication between backend services. | `RevisionNotesDemo/Examples/RevisionNotes.gRPC.Service/docs/Architecture-Decisions.md:7` |
+| SignalR | ASP.NET Core framework for real-time web communication. | `RevisionNotesDemo/Examples/RevisionNotes.RealTime.SignalR/docs/Architecture-Decisions.md:21` |
+| Soft Delete | Marking rows as deleted while retaining history/audit data. | `RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/docs/Architecture-Decisions.md:31` |
+| Split Query | EF Core strategy to load related data via multiple SQL queries. | `RevisionNotesDemo/Examples/RevisionNotes.DataAccess.AdvancedEfCore/Data/ProductRepository.cs:44` |
+| Streaming (gRPC) | Continuous message flow in gRPC over a single call/session. | `RevisionNotesDemo/Examples/RevisionNotes.gRPC.Service/docs/Architecture-Decisions.md:19` |
+| Tenant Resolution | Determining tenant context from each request. | `RevisionNotesDemo/Examples/RevisionNotes.MultiTenant.SaaS/Tenants/TenantResolution.cs:3` |
+| Test Pyramid | Balancing unit/integration/contract tests for maintainability. | `RevisionNotesDemo/Examples/RevisionNotes.Testing.Pyramid/docs/Architecture-Decisions.md:4` |
+| Testcontainers | Containerized dependency testing approach referenced for harder integration tests. | `RevisionNotesDemo/Examples/RevisionNotes.Testing.Pyramid/docs/Architecture-Decisions.md:43` |
+| Timeout | Maximum allowed call duration before failing/aborting. | `RevisionNotesDemo/Examples/RevisionNotes.Resilience.ChaosDemo/Infrastructure/ChaosServices.cs:104` |
+| Trace/Metric/Log Correlation | Combining telemetry signals for diagnostics. | `RevisionNotesDemo/Examples/RevisionNotes.Observability.Showcase/docs/Architecture-Decisions.md:4` |
+| Trim Compatibility | Ensuring code paths remain safe under IL trimming/AOT. | `RevisionNotesDemo/Examples/RevisionNotes.NativeAot.Api/docs/Architecture-Decisions.md:4` |
+| Unit Test | Isolated test validating logic without full app host. | `RevisionNotesDemo/Examples/RevisionNotes.Testing.Pyramid/docs/Architecture-Decisions.md:19` |
+| UX Continuity | Maintaining usable responses/experience during downstream failures. | `RevisionNotesDemo/Examples/RevisionNotes.ApiGateway.BFF/docs/Architecture-Decisions.md:28` |
+| WASM | WebAssembly hosting model referenced as a Blazor alternative tradeoff. | `RevisionNotesDemo/Examples/RevisionNotes.BlazorBestPractices/docs/Architecture-Decisions.md:22` |
+| Worker Service | Background host process for scheduled/queued jobs. | `RevisionNotesDemo/Examples/RevisionNotes.BackgroundJobs/docs/Architecture-Decisions.md:4` |
+| X-Tenant-Id | Header used to resolve request tenant context in SaaS sample. | `RevisionNotesDemo/Examples/RevisionNotes.MultiTenant.SaaS/docs/Architecture-Decisions.md:22` |
+| Zero-Downtime Rollout | Deployment objective supported by split live/ready probes. | `RevisionNotesDemo/Examples/RevisionNotes.Observability.Showcase/docs/Architecture-Decisions.md:43` |

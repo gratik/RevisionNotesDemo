@@ -1,6 +1,9 @@
+using System.Diagnostics;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using RevisionNotes.StandardApi.Features.Todos;
 using RevisionNotes.StandardApi.Infrastructure;
@@ -60,18 +63,36 @@ builder.Services.AddRateLimiter(options =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddHealthChecks();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddHealthChecks()
+    .AddCheck("live", () => HealthCheckResult.Healthy(), tags: ["live"])
+    .AddCheck<DatabaseHealthCheck>("database", tags: ["ready"]);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/error");
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.Use(async (context, next) =>
+{
+    var sw = Stopwatch.StartNew();
+    await next();
+    sw.Stop();
+
+    app.Logger.LogInformation(
+        "HTTP {Method} {Path} -> {StatusCode} in {ElapsedMs}ms",
+        context.Request.Method,
+        context.Request.Path,
+        context.Response.StatusCode,
+        sw.ElapsedMilliseconds);
+});
+
 app.Use(async (context, next) =>
 {
     context.Response.Headers["X-Content-Type-Options"] = "nosniff";
@@ -93,15 +114,16 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapGet("/error", () => Results.Problem("An unhandled error occurred."));
-
 app.MapControllers();
 app.MapHealthChecks("/health");
+app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Tags.Contains("live") });
+app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
 
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await DbSeeder.SeedAsync(db);
+    app.Logger.LogInformation("Seeded standard API demo data");
 }
 
 app.Run();

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "RevisionNotes.gRPC.Service";
+
+package inventory;
+
+service InventoryService {
+  rpc GetItem (GetItemRequest) returns (GetItemReply);
+  rpc StreamLowStock (LowStockRequest) returns (stream StockEvent);
+}
+
+message GetItemRequest {
+  string sku = 1;
+}
+
+message GetItemReply {
+  string sku = 1;
+  string name = 2;
+  int32 available = 3;
+  double price = 4;
+}
+
+message LowStockRequest {
+  int32 threshold = 1;
+}
+
+message StockEvent {
+  string sku = 1;
+  int32 available = 2;
+  string message = 3;
+}

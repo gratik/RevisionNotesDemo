@@ -1,9 +1,12 @@
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RevisionNotes.BlazorBestPractices.Components;
 using RevisionNotes.BlazorBestPractices.Features.Tasks;
 using RevisionNotes.BlazorBestPractices.Infrastructure;
@@ -58,18 +61,36 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-builder.Services.AddHealthChecks();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddHealthChecks()
+    .AddCheck("live", () => HealthCheckResult.Healthy(), tags: ["live"])
+    .AddCheck<DatabaseHealthCheck>("database", tags: ["ready"]);
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    var sw = Stopwatch.StartNew();
+    await next();
+    sw.Stop();
+
+    app.Logger.LogInformation(
+        "HTTP {Method} {Path} -> {StatusCode} in {ElapsedMs}ms",
+        context.Request.Method,
+        context.Request.Path,
+        context.Response.StatusCode,
+        sw.ElapsedMilliseconds);
+});
 
 app.Use(async (context, next) =>
 {
@@ -133,6 +154,8 @@ taskApi.MapPost("/", async (
 .RequireRateLimiting("task-write");
 
 app.MapHealthChecks("/health");
+app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Tags.Contains("live") });
+app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
@@ -143,6 +166,7 @@ using (var scope = app.Services.CreateScope())
     var dbFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>();
     await using var db = await dbFactory.CreateDbContextAsync();
     await DbSeeder.SeedAsync(db);
+    app.Logger.LogInformation("Seeded blazor demo data");
 }
 
 app.Run();

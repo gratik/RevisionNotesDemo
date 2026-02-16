@@ -1,0 +1,6 @@
+@RevisionNotes.MultiTenant.SaaS_HostAddress = http://localhost:5068
+
+GET {{RevisionNotes.MultiTenant.SaaS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

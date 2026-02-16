@@ -1,5 +1,23 @@
 # Architecture Decisions - RevisionNotes.MinimalApi
 
+## WHAT IS THIS?
+This is a Minimal API reference showing concise endpoint design with JWT security, layered caching, rate limiting, and health diagnostics.
+
+## WHY IT MATTERS?
+- Minimal APIs are fast to build but can become inconsistent without conventions.
+- This demo shows how to keep low ceremony without sacrificing operational quality.
+
+## WHEN TO USE?
+- When building small-to-medium APIs where speed and clarity are priorities.
+- When you want explicit control of pipeline behavior with minimal framework overhead.
+
+## WHEN NOT TO USE?
+- When large teams need heavy controller/filter conventions across many endpoints.
+- When API complexity requires extensive action-level metadata and cross-cutting filters.
+
+## REAL-WORLD EXAMPLE?
+A lightweight backend for a mobile task-management app that needs secure auth, fast reads, and throttled write operations.
+
 ## ADR-01: Minimal API over controllers
 - Decision: Use Minimal API for concise endpoint composition.
 - Why: Lower ceremony, easier to teach endpoint pipeline behavior.

@@ -1,0 +1,6 @@
+@RevisionNotes.Identity.AuthServer_HostAddress = http://localhost:5265
+
+GET {{RevisionNotes.Identity.AuthServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

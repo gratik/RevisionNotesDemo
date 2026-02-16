@@ -1,0 +1,6 @@
+@RevisionNotes.DataAccess.AdvancedEfCore_HostAddress = http://localhost:5167
+
+GET {{RevisionNotes.DataAccess.AdvancedEfCore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

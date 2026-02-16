@@ -1,0 +1,6 @@
+@RevisionNotes.Observability.Showcase_HostAddress = http://localhost:5238
+
+GET {{RevisionNotes.Observability.Showcase_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

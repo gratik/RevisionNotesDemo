@@ -1,0 +1,6 @@
+@RevisionNotes.Ddd.ModularMonolith_HostAddress = http://localhost:5136
+
+GET {{RevisionNotes.Ddd.ModularMonolith_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

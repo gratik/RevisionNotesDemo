@@ -1,0 +1,6 @@
+@RevisionNotes.Testing.Pyramid_HostAddress = http://localhost:5019
+
+GET {{RevisionNotes.Testing.Pyramid_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

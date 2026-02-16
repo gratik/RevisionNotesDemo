@@ -1,0 +1,6 @@
+@RevisionNotes.CleanArchitecture_HostAddress = http://localhost:5072
+
+GET {{RevisionNotes.CleanArchitecture_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

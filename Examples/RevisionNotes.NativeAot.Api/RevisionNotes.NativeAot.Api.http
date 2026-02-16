@@ -1,0 +1,6 @@
+@RevisionNotes.NativeAot.Api_HostAddress = http://localhost:5093
+
+GET {{RevisionNotes.NativeAot.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

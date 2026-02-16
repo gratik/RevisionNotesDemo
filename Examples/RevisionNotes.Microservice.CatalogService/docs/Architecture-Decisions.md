@@ -1,5 +1,23 @@
 # Architecture Decisions - RevisionNotes.Microservice.CatalogService
 
+## WHAT IS THIS?
+This is a microservice-focused catalog API demo showing service boundaries, outbox-based event reliability, idempotency, and secure write operations.
+
+## WHY IT MATTERS?
+- Microservices fail in practice when boundaries and reliability patterns are vague.
+- This demo highlights core patterns needed for safe distributed behavior.
+
+## WHEN TO USE?
+- When catalog ownership should be isolated from other domains.
+- When asynchronous integration and independent deployment are required.
+
+## WHEN NOT TO USE?
+- When the product is early-stage and one modular monolith is still sufficient.
+- When operational maturity for distributed systems is not yet available.
+
+## REAL-WORLD EXAMPLE?
+An e-commerce platform where the catalog service publishes product-change events consumed by search indexing and recommendation services.
+
 ## ADR-01: Single-responsibility service boundary
 - Decision: Scope the service to catalog data only.
 - Why: Keeps ownership clear and deployment independent.

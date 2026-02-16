@@ -1,0 +1,6 @@
+@RevisionNotes.EventSourcing.Cqrs_HostAddress = http://localhost:5003
+
+GET {{RevisionNotes.EventSourcing.Cqrs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

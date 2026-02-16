@@ -1,0 +1,6 @@
+@RevisionNotes.ApiGateway.BFF_HostAddress = http://localhost:5021
+
+GET {{RevisionNotes.ApiGateway.BFF_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

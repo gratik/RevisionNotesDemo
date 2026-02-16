@@ -1,9 +1,12 @@
+using System.Diagnostics;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RevisionNotes.MinimalApi.Features.Todos;
@@ -63,18 +66,36 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-builder.Services.AddHealthChecks();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddHealthChecks()
+    .AddCheck("live", () => HealthCheckResult.Healthy(), tags: ["live"])
+    .AddCheck<DatabaseHealthCheck>("database", tags: ["ready"]);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/error");
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    var sw = Stopwatch.StartNew();
+    await next();
+    sw.Stop();
+
+    app.Logger.LogInformation(
+        "HTTP {Method} {Path} -> {StatusCode} in {ElapsedMs}ms",
+        context.Request.Method,
+        context.Request.Path,
+        context.Response.StatusCode,
+        sw.ElapsedMilliseconds);
+});
 
 app.Use(async (context, next) =>
 {
@@ -96,8 +117,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.MapGet("/error", () => Results.Problem("An unhandled error occurred."));
 
 app.MapPost("/auth/token", ([FromBody] LoginRequest request, IOptions<JwtIssuerOptions> jwtOptions, JwtTokenFactory tokenFactory, IConfiguration configuration) =>
 {
@@ -170,11 +189,14 @@ todos.MapPut("/{id:int}", async (
 .RequireRateLimiting("write-policy");
 
 app.MapHealthChecks("/health");
+app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = check => check.Tags.Contains("live") });
+app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
 
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await DbSeeder.SeedAsync(db);
+    app.Logger.LogInformation("Seeded minimal API demo data");
 }
 
 app.Run();
