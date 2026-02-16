@@ -8,7 +8,7 @@
 
 ## Overview
 
-This page documents the $title concept and explains the problem it addresses, recommended approach, and practical tradeoffs.
+Execution plan analysis practices provide a repeatable workflow for identifying root causes and validating performance improvements.
 
 ## Why It Matters
 
@@ -28,10 +28,45 @@ This page documents the $title concept and explains the problem it addresses, re
 - [SQL Server Index](../README.md)
 - [Data Access Guide](../../Data-Access.md)
 
----
+## Detailed Guidance
+
+Execution plan analysis guidance provides a repeatable path from symptom to root cause with verifiable tuning outcomes.
+
+### Design Notes
+- Define success criteria for Execution Plan Analysis Lab before implementation work begins.
+- Keep boundaries explicit so Execution Plan Analysis Lab decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Execution Plan Analysis Lab in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Execution Plan Analysis Lab decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Execution Plan Analysis Lab as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Execution Plan Analysis Lab is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Execution Plan Analysis Lab are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
 
 ## Interview Answer Block
-
 - 30-second answer: I explain the goal of this SQL Server concept, show the safe default pattern, and call out one high-impact failure mode.
 - 2-minute deep dive: I define the tradeoffs, show when the pattern is preferred, and describe validation signals (latency, reads, locks, or plan stability).
 - Common follow-up: What is the biggest mistake teams make here?
@@ -53,3 +88,8 @@ This page documents the $title concept and explains the problem it addresses, re
   - One risk and mitigation
   - One measurable validation signal
 - Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.
+
+
+
+
+

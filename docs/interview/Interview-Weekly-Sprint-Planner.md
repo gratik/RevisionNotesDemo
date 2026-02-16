@@ -34,8 +34,45 @@ Use this planner to run structured 7-day interview preparation sprints.
 3. Which answer type still lacks metrics/tradeoffs?
 4. What changes in next sprint plan?
 
-## Interview Answer Block
+## Detailed Guidance
 
+Interview Weekly Sprint Planner guidance focuses on turning this topic into explicit, measurable engineering decisions rather than abstract rules.
+
+### Design Notes
+- Define success criteria for Interview Weekly Sprint Planner before implementation work begins.
+- Keep boundaries explicit so Interview Weekly Sprint Planner decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Interview Weekly Sprint Planner in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Interview Weekly Sprint Planner decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Interview Weekly Sprint Planner as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Interview Weekly Sprint Planner is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Interview Weekly Sprint Planner are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
+
+## Interview Answer Block
 - 30-second answer: The weekly sprint planner makes interview preparation repeatable with daily focus, measurable outputs, and role alignment.
 - 2-minute deep dive: I run a 7-day cycle across answer quality, timed execution, role mocks, scoring, and final polish, then use dashboard trends to plan the next sprint.
 - Common follow-up: What if you only have three days?
@@ -57,3 +94,5 @@ Use this planner to run structured 7-day interview preparation sprints.
   - one measurable goal
   - one risk and mitigation for the sprint
 - Self-check score (0-3 each): realism, role fit, measurable planning.
+
+

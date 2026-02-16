@@ -27,8 +27,45 @@ This folder groups interview-focused assets for fast, role-aligned preparation.
 - [Interview Progress Log](Interview-Progress-Log.md)
 - [Interview Question-to-Module Map](Interview-Question-Module-Map.md)
 
-## Interview Answer Block
+## Detailed Guidance
 
+Interview Docs Hub guidance focuses on turning this topic into explicit, measurable engineering decisions rather than abstract rules.
+
+### Design Notes
+- Define success criteria for Interview Docs Hub before implementation work begins.
+- Keep boundaries explicit so Interview Docs Hub decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Interview Docs Hub in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Interview Docs Hub decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Interview Docs Hub as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Interview Docs Hub is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Interview Docs Hub are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
+
+## Interview Answer Block
 - 30-second answer: The interview hub centralizes all preparation assets into one predictable structure for faster navigation.
 - 2-minute deep dive: I use this hub to choose role track, run timed drills, score mock rounds, and close weak signals iteratively.
 - Common follow-up: How should beginners start?
@@ -50,3 +87,5 @@ This folder groups interview-focused assets for fast, role-aligned preparation.
   - one goal per asset
   - one measurable target for the round
 - Self-check score (0-3 each): prioritization, clarity, measurability.
+
+

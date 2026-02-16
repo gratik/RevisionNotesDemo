@@ -50,8 +50,45 @@ Use this dashboard to track interview readiness by role with measurable progress
 - Consistent use of metrics and tradeoffs in deep-dive responses.
 - Comfortable 90-second answers on top 8 anchor topics.
 
-## Interview Answer Block
+## Detailed Guidance
 
+Interview Readiness Dashboard guidance focuses on turning this topic into explicit, measurable engineering decisions rather than abstract rules.
+
+### Design Notes
+- Define success criteria for Interview Readiness Dashboard before implementation work begins.
+- Keep boundaries explicit so Interview Readiness Dashboard decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Interview Readiness Dashboard in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Interview Readiness Dashboard decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Interview Readiness Dashboard as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Interview Readiness Dashboard is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Interview Readiness Dashboard are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
+
+## Interview Answer Block
 - 30-second answer: The dashboard turns interview prep into a measurable process with role-specific score tracking and targeted improvements.
 - 2-minute deep dive: I log each mock score, identify recurring weak signals, apply focused fixes, and track trend until readiness criteria are met.
 - Common follow-up: How do you avoid gaming the score?
@@ -73,3 +110,5 @@ Use this dashboard to track interview readiness by role with measurable progress
   - one trend direction
   - one targeted fix with due date
 - Self-check score (0-3 each): accuracy, prioritization quality, actionable clarity.
+
+

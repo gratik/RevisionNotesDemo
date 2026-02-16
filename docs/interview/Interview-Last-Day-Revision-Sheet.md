@@ -48,8 +48,45 @@ Use this as a final high-signal pass the day before interviews.
 4. 10 min: Do one prompt from `Interview-Whiteboard-Prompts.md`.
 5. 5-10 min: Note three weak spots and one improvement each.
 
-## Interview Answer Block
+## Detailed Guidance
 
+Interview Last-Day Revision Sheet guidance focuses on turning this topic into explicit, measurable engineering decisions rather than abstract rules.
+
+### Design Notes
+- Define success criteria for Interview Last-Day Revision Sheet before implementation work begins.
+- Keep boundaries explicit so Interview Last-Day Revision Sheet decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Interview Last-Day Revision Sheet in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Interview Last-Day Revision Sheet decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Interview Last-Day Revision Sheet as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Interview Last-Day Revision Sheet is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Interview Last-Day Revision Sheet are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
+
+## Interview Answer Block
 - 30-second answer: The last-day sheet is a high-signal filter for concepts, metrics, and tradeoffs that interviewers test most often.
 - 2-minute deep dive: I use this sheet to rehearse concise technical narratives, measurable outcomes, and failure/recovery reasoning under time pressure.
 - Common follow-up: What if you forget details mid-interview?
@@ -71,3 +108,5 @@ Use this as a final high-signal pass the day before interviews.
   - One tradeoff statement
   - One measurable proof point
 - Self-check score (0-3 each): clarity, technical depth, measurable justification.
+
+

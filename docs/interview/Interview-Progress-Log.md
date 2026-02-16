@@ -35,8 +35,45 @@ Use this log to track each mock session and make progress measurable across week
 3. Update readiness dashboard weekly.
 4. Keep weak-signal backlog to top 3 active items.
 
-## Interview Answer Block
+## Detailed Guidance
 
+Interview Progress Log guidance focuses on turning this topic into explicit, measurable engineering decisions rather than abstract rules.
+
+### Design Notes
+- Define success criteria for Interview Progress Log before implementation work begins.
+- Keep boundaries explicit so Interview Progress Log decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Interview Progress Log in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Interview Progress Log decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Interview Progress Log as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Interview Progress Log is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Interview Progress Log are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
+
+## Interview Answer Block
 - 30-second answer: A progress log makes interview preparation evidence-driven by recording what improved and what still blocks readiness.
 - 2-minute deep dive: I track scores, strength/gap patterns, and next actions per session, then use weekly summaries to adjust role focus and drill intensity.
 - Common follow-up: How do you keep the log useful instead of noisy?
@@ -58,3 +95,5 @@ Use this log to track each mock session and make progress measurable across week
   - one measurable next action
   - one weekly focus priority
 - Self-check score (0-3 each): evidence quality, actionability, clarity.
+
+

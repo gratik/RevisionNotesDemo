@@ -71,4 +71,41 @@ public class OrderSubmittedHandler
 
 ---
 
+## Detailed Guidance
+
+DDD guidance focuses on modeling behavior-rich domains with explicit invariants and clear aggregate boundaries.
+
+### Design Notes
+- Define success criteria for Aggregate Design Rules before implementation work begins.
+- Keep boundaries explicit so Aggregate Design Rules decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Aggregate Design Rules in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Aggregate Design Rules decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Aggregate Design Rules as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Aggregate Design Rules is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Aggregate Design Rules are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
 

@@ -52,8 +52,45 @@ Use this page to calibrate answer quality under pressure.
 
 ---
 
-## Interview Answer Block
+## Detailed Guidance
 
+Interview Bad vs Strong Answers guidance focuses on turning this topic into explicit, measurable engineering decisions rather than abstract rules.
+
+### Design Notes
+- Define success criteria for Interview Bad vs Strong Answers before implementation work begins.
+- Keep boundaries explicit so Interview Bad vs Strong Answers decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Interview Bad vs Strong Answers in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Interview Bad vs Strong Answers decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Interview Bad vs Strong Answers as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Interview Bad vs Strong Answers is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Interview Bad vs Strong Answers are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
+
+## Interview Answer Block
 - 30-second answer: This topic covers Interview answer quality calibration and focuses on clear decisions, practical tradeoffs, and production-safe defaults.
 - 2-minute deep dive: Start with the core problem, explain the implementation boundary, show one failure mode, and describe the mitigation or optimization strategy.
 - Common follow-up: How would you apply this in a real system with constraints?
@@ -75,3 +112,5 @@ Use this page to calibrate answer quality under pressure.
   - One risk and mitigation
   - One measurable validation signal
 - Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.
+
+

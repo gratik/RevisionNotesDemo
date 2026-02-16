@@ -8,7 +8,7 @@
 
 ## Overview
 
-This page documents the $title concept and explains the problem it addresses, recommended approach, and practical tradeoffs.
+Operational monitoring guidance defines the telemetry, alerting thresholds, and runbook actions needed to keep SQL workloads reliable in production.
 
 ## Why It Matters
 
@@ -28,10 +28,45 @@ This page documents the $title concept and explains the problem it addresses, re
 - [SQL Server Index](../README.md)
 - [Data Access Guide](../../Data-Access.md)
 
----
+## Detailed Guidance
+
+Monitoring runbook guidance focuses on actionable telemetry, alert calibration, and incident response consistency.
+
+### Design Notes
+- Define success criteria for Operational Monitoring Runbook before implementation work begins.
+- Keep boundaries explicit so Operational Monitoring Runbook decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Operational Monitoring Runbook in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Operational Monitoring Runbook decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Operational Monitoring Runbook as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Operational Monitoring Runbook is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Operational Monitoring Runbook are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
 
 ## Interview Answer Block
-
 - 30-second answer: I explain the goal of this SQL Server concept, show the safe default pattern, and call out one high-impact failure mode.
 - 2-minute deep dive: I define the tradeoffs, show when the pattern is preferred, and describe validation signals (latency, reads, locks, or plan stability).
 - Common follow-up: What is the biggest mistake teams make here?
@@ -53,3 +88,8 @@ This page documents the $title concept and explains the problem it addresses, re
   - One risk and mitigation
   - One measurable validation signal
 - Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.
+
+
+
+
+

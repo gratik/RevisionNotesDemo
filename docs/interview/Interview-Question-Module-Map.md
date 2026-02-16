@@ -40,8 +40,45 @@ Use this map to convert common interview prompts into focused study and practice
 | Platform / DevOps Engineer | deployment safety, health checks, rollback triggers, telemetry gating |
 | Solutions Architect | boundary design, consistency guarantees, cross-service failure strategy |
 
-## Interview Answer Block
+## Detailed Guidance
 
+Interview Question-to-Module Map guidance focuses on turning this topic into explicit, measurable engineering decisions rather than abstract rules.
+
+### Design Notes
+- Define success criteria for Interview Question-to-Module Map before implementation work begins.
+- Keep boundaries explicit so Interview Question-to-Module Map decisions do not leak accidental complexity into adjacent layers.
+- Prefer simpler implementations first, then optimize based on measured constraints.
+- Make failure behavior explicit (timeouts, retries, validation, rollback, or compensation) where applicable.
+
+### When To Use
+- When introducing or refactoring Interview Question-to-Module Map in production-facing code.
+- When performance, correctness, or maintainability depends on consistent Interview Question-to-Module Map decisions.
+- When design reviews require concrete tradeoffs and validation signals.
+
+### Anti-Patterns To Avoid
+- Applying Interview Question-to-Module Map as a checklist item without tying it to workload and constraints.
+- Large, multi-axis changes that make regression root-cause analysis difficult.
+- Shipping without measurable before/after signals for the chosen approach.
+
+## Practical Example
+
+- Choose one high-impact path where Interview Question-to-Module Map is currently weak or inconsistent.
+- Apply one bounded improvement and document the expected behavior change.
+- Validate with tests and runtime metrics, then capture rollback conditions.
+
+## Validation Checklist
+
+- Design assumptions for Interview Question-to-Module Map are documented and reviewable.
+- Tests cover both happy path and at least one realistic failure path.
+- Metrics/logging expose the primary risk this topic addresses.
+- Operational ownership is clear if behavior regresses in production.
+
+## Cross References
+
+- [Subject Overview](README.md)
+- [Docs Index](../README.md)
+
+## Interview Answer Block
 - 30-second answer: This map links interview prompts directly to the best study module and runnable example so practice stays targeted.
 - 2-minute deep dive: For each question type, I route to one primary doc and one executable reference, then rehearse a five-part answer with tradeoffs and metrics.
 - Common follow-up: How do you use this under time pressure?
@@ -63,3 +100,5 @@ Use this map to convert common interview prompts into focused study and practice
   - one failure mode and mitigation per answer
   - one measurable validation signal per answer
 - Self-check score (0-3 each): relevance, technical depth, measurable clarity.
+
+
