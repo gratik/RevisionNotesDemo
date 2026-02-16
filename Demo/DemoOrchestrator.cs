@@ -431,6 +431,7 @@ internal static class SecuritySectionRunner
     {
         ManagedIdentityAndAuthentication.RunAll();
         OAuth2FlowsInDepth.RunAll();
+        EncryptionExamplesRunner.RunAll();
         EncryptionAtRestAndInTransit.RunAll();
         CertificateManagementAndTLS.RunAll();
         CookieSessionAndTokenManagement.RunAll();

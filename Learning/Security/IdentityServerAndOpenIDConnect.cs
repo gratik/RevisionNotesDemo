@@ -40,7 +40,10 @@ public static class IdentityServerAndOpenIDConnect
         ShowProtocolRoles();
         ShowTokenDesign();
         ShowFlowSelection();
+        ShowDiscoveryAndValidation();
+        ShowClientRegistrationPractices();
         ShowImplementationRisks();
+        ShowOperationalChecklist();
     }
 
     private static void ShowProtocolRoles()
@@ -70,12 +73,51 @@ public static class IdentityServerAndOpenIDConnect
         Console.WriteLine("- Device Code for limited-input devices\n");
     }
 
+    private static void ShowDiscoveryAndValidation()
+    {
+        Console.WriteLine("4) DISCOVERY + TOKEN VALIDATION");
+        Console.WriteLine("- Use /.well-known/openid-configuration for issuer metadata");
+        Console.WriteLine("- Cache JWKS keys and re-fetch when key id (kid) changes");
+        Console.WriteLine("- Validate: issuer, audience, expiry, signature algorithm");
+        Console.WriteLine("- Reject tokens with alg='none' or mismatched signing key\n");
+
+        Console.WriteLine("Sample validation settings:");
+        Console.WriteLine("  options.TokenValidationParameters = new TokenValidationParameters");
+        Console.WriteLine("  {");
+        Console.WriteLine("    ValidateIssuer = true,");
+        Console.WriteLine("    ValidateAudience = true,");
+        Console.WriteLine("    ValidateLifetime = true,");
+        Console.WriteLine("    ValidateIssuerSigningKey = true");
+        Console.WriteLine("  };");
+        Console.WriteLine();
+    }
+
+    private static void ShowClientRegistrationPractices()
+    {
+        Console.WriteLine("5) CLIENT REGISTRATION PRACTICES");
+        Console.WriteLine("- Web/Mobile apps: public clients + PKCE, no shared secret");
+        Console.WriteLine("- Backend services: confidential clients with rotated secrets");
+        Console.WriteLine("- Enforce exact redirect URIs (no wildcards)");
+        Console.WriteLine("- Separate scopes per API and per environment");
+        Console.WriteLine("- Use signed front-channel logout and back-channel logout where possible\n");
+    }
+
     private static void ShowImplementationRisks()
     {
-        Console.WriteLine("4) IMPLEMENTATION RISKS");
+        Console.WriteLine("6) IMPLEMENTATION RISKS");
         Console.WriteLine("- Broad wildcard redirect URIs");
         Console.WriteLine("- Over-privileged default scopes");
         Console.WriteLine("- Long token lifetime without revocation support");
         Console.WriteLine("- Missing key rotation for signing certificates\n");
+    }
+
+    private static void ShowOperationalChecklist()
+    {
+        Console.WriteLine("7) OPERATIONAL CHECKLIST");
+        Console.WriteLine("- Access tokens <= 60 minutes");
+        Console.WriteLine("- Refresh token rotation enabled");
+        Console.WriteLine("- Signing key rotation documented and tested");
+        Console.WriteLine("- Security events logged: login, consent, token failure, admin changes");
+        Console.WriteLine("- Break-glass admin access tested quarterly\n");
     }
 }

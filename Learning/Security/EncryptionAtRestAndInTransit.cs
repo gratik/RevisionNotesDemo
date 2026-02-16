@@ -17,8 +17,6 @@
 // Healthcare database: Patient records encrypted at rest (AES-256). Patient accesses via HTTPS (TLS 1.3). Even if database stolen, encrypted. Even if network intercepted, TLS protects.
 // ==============================================================================
 
-using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -26,6 +24,12 @@ namespace RevisionNotesDemo.Security;
 
 public class EncryptionAtRestAndInTransit
 {
+    private const int Aes256KeySizeBytes = 32;
+    private const int GcmNonceSizeBytes = 12;
+    private const int GcmTagSizeBytes = 16;
+
+    private sealed record EncryptedField(byte[] Ciphertext, byte[] Nonce, byte[] Tag);
+
     public static void RunAll()
     {
         Console.WriteLine("\n╔════════════════════════════════════════════════════╗");
@@ -34,7 +38,9 @@ public class EncryptionAtRestAndInTransit
 
         Overview();
         EncryptionAtRest();
+        RunFieldLevelEncryptionExample();
         EncryptionInTransit();
+        ShowTlsEnforcementExample();
         KeyManagement();
         BestPractices();
     }
@@ -70,6 +76,24 @@ public class EncryptionAtRestAndInTransit
         Console.WriteLine("  Optional: Customer-managed keys (CMK) for compliance\n");
     }
 
+    private static void RunFieldLevelEncryptionExample()
+    {
+        Console.WriteLine("🧪 FIELD-LEVEL ENCRYPTION EXAMPLE (AES-GCM):\n");
+
+        var key = RandomNumberGenerator.GetBytes(Aes256KeySizeBytes);
+        var sensitiveValue = "PatientDiagnosis=Type2Diabetes";
+
+        var encrypted = EncryptField(sensitiveValue, key);
+        var decrypted = DecryptField(encrypted, key);
+
+        Console.WriteLine($"  Plaintext:  {sensitiveValue}");
+        Console.WriteLine($"  Ciphertext: {Convert.ToBase64String(encrypted.Ciphertext)}");
+        Console.WriteLine($"  Nonce:      {Convert.ToBase64String(encrypted.Nonce)}");
+        Console.WriteLine($"  Tag:        {Convert.ToBase64String(encrypted.Tag)}");
+        Console.WriteLine($"  Decrypted:  {decrypted}");
+        Console.WriteLine($"  Match:      {sensitiveValue == decrypted}\n");
+    }
+
     private static void EncryptionInTransit()
     {
         Console.WriteLine("🔒 ENCRYPTION IN TRANSIT:\n");
@@ -97,6 +121,25 @@ public class EncryptionAtRestAndInTransit
         Console.WriteLine("    // Verify thumbprint matches known value");
         Console.WriteLine("    return knownThumbprints.Contains(thumbprint);");
         Console.WriteLine("  };\n");
+    }
+
+    private static void ShowTlsEnforcementExample()
+    {
+        Console.WriteLine("🧪 TLS ENFORCEMENT EXAMPLE (ASP.NET Core):\n");
+
+        Console.WriteLine("  builder.WebHost.ConfigureKestrel(options =>");
+        Console.WriteLine("  {");
+        Console.WriteLine("    options.ConfigureHttpsDefaults(https =>");
+        Console.WriteLine("      https.SslProtocols = System.Security.Authentication.SslProtocols.Tls13);");
+        Console.WriteLine("  });");
+        Console.WriteLine("  app.UseHsts();");
+        Console.WriteLine("  app.UseHttpsRedirection();\n");
+
+        Console.WriteLine("  mTLS for internal APIs:");
+        Console.WriteLine("  services.AddAuthentication()");
+        Console.WriteLine("    .AddCertificate();");
+        Console.WriteLine("  app.UseAuthentication();");
+        Console.WriteLine("  app.UseAuthorization();\n");
     }
 
     private static void KeyManagement()
@@ -147,5 +190,31 @@ public class EncryptionAtRestAndInTransit
         Console.WriteLine("  • GDPR: Encryption required for data processing");
         Console.WriteLine("  • PCI-DSS: Strong encryption for cardholder data");
         Console.WriteLine("  • HIPAA: Encryption for protected health information\n");
+    }
+
+    private static EncryptedField EncryptField(string plaintext, byte[] key)
+    {
+        if (key.Length != Aes256KeySizeBytes)
+        {
+            throw new ArgumentException("Key must be 256 bits (32 bytes).", nameof(key));
+        }
+
+        var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
+        var nonce = RandomNumberGenerator.GetBytes(GcmNonceSizeBytes);
+        var ciphertext = new byte[plaintextBytes.Length];
+        var tag = new byte[GcmTagSizeBytes];
+
+        using var aesGcm = new AesGcm(key, GcmTagSizeBytes);
+        aesGcm.Encrypt(nonce, plaintextBytes, ciphertext, tag);
+
+        return new EncryptedField(ciphertext, nonce, tag);
+    }
+
+    private static string DecryptField(EncryptedField encrypted, byte[] key)
+    {
+        var plaintext = new byte[encrypted.Ciphertext.Length];
+        using var aesGcm = new AesGcm(key, GcmTagSizeBytes);
+        aesGcm.Decrypt(encrypted.Nonce, encrypted.Ciphertext, encrypted.Tag, plaintext);
+        return Encoding.UTF8.GetString(plaintext);
     }
 }

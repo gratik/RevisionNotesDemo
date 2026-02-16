@@ -28,13 +28,18 @@
 - OWASPTop10WithExamples.cs - Topic implementation and demonstration code
 - SecretRotationAndVaultPatterns.cs - Topic implementation and demonstration code
 - SecureAPIDesignPatterns.cs - Topic implementation and demonstration code
-- SecureCodingPractices.cs - Topic implementation and demonstration code
 
 Run examples from the project root:
 
 ```bash
 dotnet run
 ```
+
+## Additional reference examples
+
+- AuthenticationExamples.cs - Deep-dive authentication patterns and code snippets
+- AuthorizationExamples.cs - Deep-dive authorization patterns and code snippets
+- SecureCodingPractices.cs - Defensive secure-coding examples and anti-patterns
 
 ## Bad vs good examples summary
 

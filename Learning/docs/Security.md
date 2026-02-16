@@ -2,9 +2,9 @@
 
 ## Metadata
 - Owner: Maintainers
-- Last updated: February 15, 2026
+- Last updated: February 16, 2026
 - Prerequisites: Authentication and authorization basics
-- Related examples: Learning/Security/AuthenticationExamples.cs, Learning/Security/SecureAPIDesignPatterns.cs
+- Related examples: Learning/Security/AuthenticationExamples.cs, Learning/Security/EncryptionExamples.cs, Learning/Security/EncryptionAtRestAndInTransit.cs, Learning/Security/IdentityServerAndOpenIDConnect.cs
 
 
 > Part of: [C# & OOP Revision Notes - Comprehensive Demonstration Project](../../README.md)
@@ -477,9 +477,11 @@ public void DeleteUser(int userId)
 ## Related Files
 
 - [Security/AuthenticationExamples.cs](../Security/AuthenticationExamples.cs) - JWT, Cookie, OAuth patterns
+- [Security/AuthorizationExamples.cs](../Security/AuthorizationExamples.cs) - Role, claim, policy, and resource authorization patterns
 - [Security/EncryptionExamples.cs](../Security/EncryptionExamples.cs) - AES, RSA, password hashing, Data Protection API
+- [Security/EncryptionAtRestAndInTransit.cs](../Security/EncryptionAtRestAndInTransit.cs) - Data-at-rest and TLS-in-transit strategy with key management
+- [Security/IdentityServerAndOpenIDConnect.cs](../Security/IdentityServerAndOpenIDConnect.cs) - IdP roles, OIDC flow selection, and token validation checks
 - [Security/SecureCodingPractices.cs](../Security/SecureCodingPractices.cs) - Input validation, SQL injection prevention
-- [Security/EncryptionExamples.cs](../Security/EncryptionExamples.cs) - Hashing, HMAC, and digital-signature fundamentals
 
 ---
 
