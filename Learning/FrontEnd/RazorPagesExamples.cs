@@ -35,7 +35,7 @@ public static class RazorPagesExamples
     public static void RunDemo()
     {
         Console.WriteLine("Razor Pages examples are illustrative only.");
-        Console.WriteLine("See Learning/docs/Front-End-DotNet-UI.md for details.");
+        Console.WriteLine("See docs/Front-End-DotNet-UI.md for details.");
     }
 
     /// <summary>

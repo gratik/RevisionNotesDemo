@@ -35,7 +35,7 @@ public static class VueApiIntegrationExamples
     public static void RunDemo()
     {
         Console.WriteLine("Vue + .NET API integration examples are illustrative only.");
-        Console.WriteLine("See Learning/docs/DotNet-API-Vue.md for the full guide.");
+        Console.WriteLine("See docs/DotNet-API-Vue.md for the full guide.");
     }
 
     /// <summary>

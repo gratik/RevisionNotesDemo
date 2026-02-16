@@ -29,5 +29,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/DotNet-Concepts.md)
-- [Related](../docs/Configuration.md)
+- [Primary](../../docs/DotNet-Concepts.md)
+- [Related](../../docs/Configuration.md)

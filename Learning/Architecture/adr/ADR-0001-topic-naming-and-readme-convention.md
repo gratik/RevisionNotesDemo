@@ -18,7 +18,7 @@ Topic-level content was uneven in naming and onboarding quality. Some folders ha
   - `## Bad vs good examples summary`
   - `## Related docs`
 - Topic folder names remain concise and PascalCase where possible.
-- Documentation-only folders (for example `Learning/docs`) are not required to follow the topic README template.
+- Documentation-only folders (for example `docs`) are not required to follow the topic README template.
 
 ## Consequences
 

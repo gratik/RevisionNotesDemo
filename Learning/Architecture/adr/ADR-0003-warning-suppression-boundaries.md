@@ -14,8 +14,8 @@ Educational samples intentionally include patterns that trigger analyzers. Witho
 - Suppressions must be scoped as narrowly as possible.
 - All suppressions require clear justifications.
 - Suppression inventory must be documented in:
-  - `Learning/docs/Build-Warning-Triage.md`
-  - `Learning/docs/Suppression-Audit.md`
+  - `docs/Build-Warning-Triage.md`
+  - `docs/Suppression-Audit.md`
 - CI warning gate enforces `-warnaserror` for:
   - `RevisionNotesDemo.csproj`
   - `RevisionNotesDemo.UnitTests.csproj`

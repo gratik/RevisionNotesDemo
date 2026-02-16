@@ -35,6 +35,6 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Deployment-DevOps.md)
-- [Related](../docs/HealthChecks.md)
+- [Primary](../../docs/Deployment-DevOps.md)
+- [Related](../../docs/HealthChecks.md)
 

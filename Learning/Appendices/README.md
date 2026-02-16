@@ -31,6 +31,6 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Appendix-Pattern-Decision-Guide.md)
-- [Related](../docs/Appendix-Quick-Reference.md)
+- [Primary](../../docs/Appendix-Pattern-Decision-Guide.md)
+- [Related](../../docs/Appendix-Quick-Reference.md)
 

@@ -32,5 +32,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Async-Multithreading.md)
-- [Related](../docs/Performance.md)
+- [Primary](../../docs/Async-Multithreading.md)
+- [Related](../../docs/Performance.md)

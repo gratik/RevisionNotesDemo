@@ -35,5 +35,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/OOP-Principles.md)
-- [Related](../docs/Design-Patterns.md)
+- [Primary](../../docs/OOP-Principles.md)
+- [Related](../../docs/Design-Patterns.md)

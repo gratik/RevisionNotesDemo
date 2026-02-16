@@ -29,5 +29,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/End-to-End-Case-Study.md)
-- [Related](../docs/Domain-Driven-Design.md)
+- [Primary](../../docs/End-to-End-Case-Study.md)
+- [Related](../../docs/Domain-Driven-Design.md)

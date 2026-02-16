@@ -32,5 +32,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Memory-Management.md)
-- [Related](../docs/Performance.md)
+- [Primary](../../docs/Memory-Management.md)
+- [Related](../../docs/Performance.md)

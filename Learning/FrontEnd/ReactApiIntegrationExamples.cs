@@ -35,7 +35,7 @@ public static class ReactApiIntegrationExamples
     public static void RunDemo()
     {
         Console.WriteLine("React + .NET API integration examples are illustrative only.");
-        Console.WriteLine("See Learning/docs/DotNet-API-React.md for the full guide.");
+        Console.WriteLine("See docs/DotNet-API-React.md for the full guide.");
     }
 
     /// <summary>

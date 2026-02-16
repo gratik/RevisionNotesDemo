@@ -38,6 +38,6 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Azure-Hosting.md)
-- [Related](../docs/Deployment-DevOps.md)
+- [Primary](../../docs/Azure-Hosting.md)
+- [Related](../../docs/Deployment-DevOps.md)
 

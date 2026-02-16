@@ -30,5 +30,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/LINQ-Queries.md)
-- [Related](../docs/Data-Access.md)
+- [Primary](../../docs/LINQ-Queries.md)
+- [Related](../../docs/Data-Access.md)

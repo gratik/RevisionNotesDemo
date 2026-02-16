@@ -29,5 +29,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/HealthChecks.md)
-- [Related](../docs/Logging-Observability.md)
+- [Primary](../../docs/HealthChecks.md)
+- [Related](../../docs/Logging-Observability.md)

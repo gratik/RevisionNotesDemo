@@ -24,8 +24,8 @@ development: runtime unification, tooling, and feature cadence.
 ## Related Files
 
 - [DependencyInjectionDemo.cs](DependencyInjectionDemo.cs)
-- [Modern C# Guide](../docs/Modern-CSharp.md)
-- [Performance Guide](../docs/Performance.md)
+- [Modern C# Guide](../../docs/Modern-CSharp.md)
+- [Performance Guide](../../docs/Performance.md)
 
 ---
 

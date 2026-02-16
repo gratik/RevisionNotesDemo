@@ -49,5 +49,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Security.md)
-- [Related](../docs/Web-API-MVC.md)
+- [Primary](../../docs/Security.md)
+- [Related](../../docs/Web-API-MVC.md)

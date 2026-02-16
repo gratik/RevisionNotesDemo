@@ -33,6 +33,6 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Testing.md)
-- [Related](../docs/Build-Warning-Triage.md)
+- [Primary](../../docs/Testing.md)
+- [Related](../../docs/Build-Warning-Triage.md)
 

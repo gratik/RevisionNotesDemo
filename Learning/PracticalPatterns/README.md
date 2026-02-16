@@ -36,5 +36,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Practical-Patterns.md)
-- [Related](../docs/Web-API-MVC.md)
+- [Primary](../../docs/Practical-Patterns.md)
+- [Related](../../docs/Web-API-MVC.md)

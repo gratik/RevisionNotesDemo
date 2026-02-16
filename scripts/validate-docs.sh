@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DOCS_DIR="$ROOT_DIR/Learning/docs"
+DOCS_DIR="$ROOT_DIR/docs"
 
 if [[ ! -d "$DOCS_DIR" ]]; then
   echo "ERROR: docs directory not found: $DOCS_DIR"
@@ -94,7 +94,7 @@ while IFS= read -r doc_page; do
   fi
 
   if ! grep -Fxq "$doc_page" "$indexed_refs_file"; then
-    echo "ORPHAN DOC: $doc_page is not linked from README.md, Learning/docs/README.md, or Learning/docs/Learning-Path.md"
+    echo "ORPHAN DOC: $doc_page is not linked from README.md, docs/README.md, or docs/Learning-Path.md"
     error_count=$((error_count + 1))
   fi
 done < <(find "$DOCS_DIR" -type f -name '*.md' | sort)

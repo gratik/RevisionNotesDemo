@@ -17,7 +17,8 @@ Use these canonical files in `Learning/DataAccess`:
 - `ReadReplicasAndCQRS.cs`
 - `RedisPatterns.cs`
 - `TimeSeriesDatabases.cs`
-- `TransactionPatterns.cs`
+- `SqlServer/TransactionAndIsolationPatterns.cs`
+- `EntityFramework/EfCoreTransactionPatterns.cs`
 
 Run examples from the project root:
 
@@ -33,6 +34,6 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Data-Access.md)
-- [Related](../docs/Distributed-Consistency.md)
-- [Structure inventory](../docs/Project-Structure-Inventory.md)
+- [Primary](../../docs/Data-Access.md)
+- [Related](../../docs/Distributed-Consistency.md)
+- [Structure inventory](../../docs/Project-Structure-Inventory.md)

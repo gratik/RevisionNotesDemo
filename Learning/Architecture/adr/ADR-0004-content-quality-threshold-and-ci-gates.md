@@ -16,7 +16,7 @@ Content scale increased across docs and topic modules. Manual review alone is no
 - Docs validation must fail on:
   - broken internal links
   - missing local file references
-  - orphaned pages in `Learning/docs`
+  - orphaned pages in `docs`
 - Content-structure validation must fail on:
   - missing required topic README sections
   - missing DataAccess canonical counterpart for Database reference files

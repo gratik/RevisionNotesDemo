@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DOCS_DIR="$ROOT_DIR/Learning/docs"
+DOCS_DIR="$ROOT_DIR/docs"
 error_count=0
 
 required_sections=(

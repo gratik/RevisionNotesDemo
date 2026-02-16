@@ -35,7 +35,7 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Design-Patterns.md)
-- [Related](../docs/Domain-Driven-Design.md)
+- [Primary](../../docs/Design-Patterns.md)
+- [Related](../../docs/Domain-Driven-Design.md)
 - [ADRs](adr/README.md)
 

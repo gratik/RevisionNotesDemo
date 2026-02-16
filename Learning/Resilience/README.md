@@ -31,6 +31,6 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Resilience.md)
-- [Related](../docs/Performance.md)
+- [Primary](../../docs/Resilience.md)
+- [Related](../../docs/Performance.md)
 

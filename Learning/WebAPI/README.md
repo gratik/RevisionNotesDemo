@@ -34,6 +34,6 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Web-API-MVC.md)
-- [Related](../docs/API-Documentation.md)
+- [Primary](../../docs/Web-API-MVC.md)
+- [Related](../../docs/API-Documentation.md)
 

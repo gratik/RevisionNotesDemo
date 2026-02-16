@@ -29,5 +29,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/RealTime.md)
-- [Related](../docs/Web-API-MVC.md)
+- [Primary](../../docs/RealTime.md)
+- [Related](../../docs/Web-API-MVC.md)

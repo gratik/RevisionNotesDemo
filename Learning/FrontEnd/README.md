@@ -37,7 +37,7 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Front-End-DotNet-UI.md)
-- [Related](../docs/Web-API-MVC.md)
-- [Related](../docs/DotNet-API-React.md)
-- [Related](../docs/DotNet-API-Vue.md)
+- [Primary](../../docs/Front-End-DotNet-UI.md)
+- [Related](../../docs/Web-API-MVC.md)
+- [Related](../../docs/DotNet-API-React.md)
+- [Related](../../docs/DotNet-API-Vue.md)

@@ -34,5 +34,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Core-CSharp.md)
-- [Related](../docs/Modern-CSharp.md)
+- [Primary](../../docs/Core-CSharp.md)
+- [Related](../../docs/Modern-CSharp.md)

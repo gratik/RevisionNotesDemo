@@ -29,5 +29,5 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Advanced-CSharp.md)
-- [Related](../docs/Core-CSharp.md)
+- [Primary](../../docs/Advanced-CSharp.md)
+- [Related](../../docs/Core-CSharp.md)

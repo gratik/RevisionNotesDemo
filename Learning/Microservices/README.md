@@ -38,6 +38,6 @@ dotnet run
 
 ## Related docs
 
-- [Primary](../docs/Message-Architecture.md)
-- [Related](../docs/Distributed-Consistency.md)
+- [Primary](../../docs/Message-Architecture.md)
+- [Related](../../docs/Distributed-Consistency.md)
 
