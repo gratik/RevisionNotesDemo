@@ -25,7 +25,7 @@ This page documents the $title concept and explains the problem it addresses, re
 ## Source Example
 
 - [Code: ExecutionPlanAnalysisLab.cs](../../../Learning/DataAccess/SqlServer/ExecutionPlanAnalysisLab.cs)
-- [SQL Server Index](README.md)
+- [SQL Server Index](../README.md)
 - [Data Access Guide](../../Data-Access.md)
 
 ---

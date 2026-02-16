@@ -68,7 +68,7 @@ RevisionNotesDemo/
 - Scope: multi-topic educational reference with runnable demonstrations
 - Quality gates: docs validator, metadata validator, content-structure validator, warning gate
 
-For navigation by level and estimated study time, use [Learning Path](Learning-Path.md) and [Docs Index](README.md).
+For navigation by level and estimated study time, use [Learning Path](Learning-Path.md) and [Docs Index](../README.md).
 
 ---
 
@@ -95,3 +95,5 @@ For navigation by level and estimated study time, use [Learning Path](Learning-P
   - One risk and mitigation
   - One measurable validation signal
 - Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.
+
+

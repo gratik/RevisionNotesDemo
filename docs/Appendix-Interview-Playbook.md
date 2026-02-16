@@ -100,3 +100,5 @@ See the executable appendix demo:
   - One risk and mitigation
   - One measurable validation signal
 - Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.
+
+

@@ -13,21 +13,21 @@ Start here:
 
 ## Foundations
 
-- [OOP Principles](OOP-Principles.md) - Beginner - 60 min
-- [Core C#](Core-CSharp.md) - Beginner - 90 min
-- [DotNet Concepts](DotNet-Concepts.md) - Beginner - 60 min
-- [Modern C#](Modern-CSharp.md) - Intermediate - 75 min
-- [LINQ Queries](LINQ-Queries.md) - Beginner - 60 min
-- [Memory Management](Memory-Management.md) - Intermediate - 60 min
-- [Async Multithreading](Async-Multithreading.md) - Intermediate - 90 min
-- [Advanced C#](Advanced-CSharp.md) - Advanced - 75 min
+- [OOP Principles](OOP-Principles/README.md) - Beginner - 60 min
+- [Core C#](Core-CSharp/README.md) - Beginner - 90 min
+- [DotNet Concepts](DotNet-Concepts/README.md) - Beginner - 60 min
+- [Modern C#](Modern-CSharp/README.md) - Intermediate - 75 min
+- [LINQ Queries](LINQ-Queries/README.md) - Beginner - 60 min
+- [Memory Management](Memory-Management/README.md) - Intermediate - 60 min
+- [Async Multithreading](Async-Multithreading/README.md) - Intermediate - 90 min
+- [Advanced C#](Advanced-CSharp/README.md) - Advanced - 75 min
 
 ## Backend and API
 
-- [Configuration](Configuration.md) - Beginner - 45 min
-- [Web API and MVC](Web-API-MVC.md) - Intermediate - 90 min
-- [API Documentation](API-Documentation.md) - Intermediate - 45 min
-- [Data Access](Data-Access.md) - Intermediate - 75 min
+- [Configuration](Configuration/README.md) - Beginner - 45 min
+- [Web API and MVC](Web-API-MVC/README.md) - Intermediate - 90 min
+- [API Documentation](API-Documentation/README.md) - Intermediate - 45 min
+- [Data Access](Data-Access/README.md) - Intermediate - 75 min
 - [SQL Server Docs Index](Data-Access/SqlServer/README.md) - Advanced - 20 min
 - [SQL Server Queries and Operations](Data-Access/SqlServer/SqlServerQueriesAndOperations.md) - Advanced - 20 min
 - [Table Design Fundamentals](Data-Access/SqlServer/TableDesignFundamentals.md) - Intermediate - 15 min
@@ -46,32 +46,32 @@ Start here:
 - [MERGE and Upsert Patterns](Data-Access/SqlServer/MergeAndUpsertPatterns.md) - Advanced - 15 min
 - [SQL Graph Data Transfer Patterns](Data-Access/SqlServer/SqlGraphDataTransferPatterns.md) - Advanced - 20 min
 - [Transaction and Isolation Patterns](Data-Access/SqlServer/TransactionAndIsolationPatterns.md) - Advanced - 20 min
-- [Entity Framework](Entity-Framework.md) - Intermediate - 90 min
-- [Security](Security.md) - Advanced - 120 min
-- [Testing](Testing.md) - Intermediate - 90 min
-- [Practical Patterns](Practical-Patterns.md) - Intermediate - 75 min
-- [RealTime](RealTime.md) - Intermediate - 45 min
-- [gRPC](gRPC.md) - Advanced - 60 min
-- [Health Checks](HealthChecks.md) - Beginner - 30 min
-- [Logging and Observability](Logging-Observability.md) - Intermediate - 75 min
-- [End-to-End Case Study](End-to-End-Case-Study.md) - Advanced - 90 min
+- [Entity Framework](Entity-Framework/README.md) - Intermediate - 90 min
+- [Security](Security/README.md) - Advanced - 120 min
+- [Testing](Testing/README.md) - Intermediate - 90 min
+- [Practical Patterns](Practical-Patterns/README.md) - Intermediate - 75 min
+- [RealTime](RealTime/README.md) - Intermediate - 45 min
+- [gRPC](gRPC/README.md) - Advanced - 60 min
+- [Health Checks](HealthChecks/README.md) - Beginner - 30 min
+- [Logging and Observability](Logging-Observability/README.md) - Intermediate - 75 min
+- [End-to-End Case Study](End-to-End-Case-Study/README.md) - Advanced - 90 min
 
 ## Architecture and Scale
 
-- [Design Patterns](Design-Patterns.md) - Intermediate - 120 min
-- [Domain-Driven Design](Domain-Driven-Design.md) - Advanced - 90 min
-- [Distributed Consistency](Distributed-Consistency.md) - Advanced - 75 min
-- [Resilience](Resilience.md) - Advanced - 60 min
-- [Performance](Performance.md) - Advanced - 75 min
-- [Message Architecture](Message-Architecture.md) - Advanced - 75 min
-- [Deployment and DevOps](Deployment-DevOps.md) - Intermediate - 75 min
-- [Azure Hosting](Azure-Hosting.md) - Advanced - 90 min
-- [Build Warning Triage](Build-Warning-Triage.md) - Intermediate - 25 min
-- [Suppression Audit](Suppression-Audit.md) - Intermediate - 20 min
-- [Front-End DotNet UI](Front-End-DotNet-UI.md) - Intermediate - 90 min
-- [.NET API to React Front End](DotNet-API-React.md) - Intermediate - 50 min
-- [.NET API to Vue Front End](DotNet-API-Vue.md) - Intermediate - 50 min
-- [Interview Preparation](Interview-Preparation.md) - Beginner - 60 min
+- [Design Patterns](Design-Patterns/README.md) - Intermediate - 120 min
+- [Domain-Driven Design](Domain-Driven-Design/README.md) - Advanced - 90 min
+- [Distributed Consistency](Distributed-Consistency/README.md) - Advanced - 75 min
+- [Resilience](Resilience/README.md) - Advanced - 60 min
+- [Performance](Performance/README.md) - Advanced - 75 min
+- [Message Architecture](Message-Architecture/README.md) - Advanced - 75 min
+- [Deployment and DevOps](Deployment-DevOps/README.md) - Intermediate - 75 min
+- [Azure Hosting](Azure-Hosting/README.md) - Advanced - 90 min
+- [Build Warning Triage](Build-Warning-Triage/README.md) - Intermediate - 25 min
+- [Suppression Audit](Suppression-Audit/README.md) - Intermediate - 20 min
+- [Front-End DotNet UI](Front-End-DotNet-UI/README.md) - Intermediate - 90 min
+- [.NET API to React Front End](DotNet-API-React/README.md) - Intermediate - 50 min
+- [.NET API to Vue Front End](DotNet-API-Vue/README.md) - Intermediate - 50 min
+- [Interview Preparation](Interview-Preparation/README.md) - Beginner - 60 min
 - [Interview Docs Hub](interview/README.md) - Beginner - 10 min
 - [Interview Answer Blocks](interview/Interview-Answer-Blocks.md) - Intermediate - 35 min
 - [Interview Bad vs Strong Answers](interview/Interview-Bad-vs-Strong-Answers.md) - Intermediate - 25 min
@@ -126,3 +126,4 @@ Start here:
   - One risk and mitigation
   - One measurable validation signal
 - Self-check score (0-3 each): correctness, tradeoff clarity, communication clarity.
+

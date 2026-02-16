@@ -45,5 +45,6 @@ These are discoverable as docs and examples but are not separate runtime section
 
 Use docs index and learning path for navigation:
 
-- [Docs Index](README.md)
+- [Docs Index](../README.md)
 - [Learning Path](Learning-Path.md)
+
