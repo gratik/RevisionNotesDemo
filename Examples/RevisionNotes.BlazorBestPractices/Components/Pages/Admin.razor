@@ -1,0 +1,8 @@
+@page "/admin"
+@attribute [Authorize(Policy = "AdminOnly")]
+
+<PageTitle>Admin</PageTitle>
+
+<h1>Admin Area</h1>
+<p>This route requires an authenticated admin role.</p>
+<p>Use the Demo Sign-In button in the navigation to enter this page.</p>

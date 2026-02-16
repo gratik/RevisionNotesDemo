@@ -46,7 +46,6 @@ Start here:
 - [Resilience](Resilience.md) - Advanced - 60 min
 - [Performance](Performance.md) - Advanced - 75 min
 - [Message Architecture](Message-Architecture.md) - Advanced - 75 min
-- [End-to-End Case Study](End-to-End-Case-Study.md) - Advanced - 90 min
 - [Deployment and DevOps](Deployment-DevOps.md) - Intermediate - 75 min
 - [Azure Hosting](Azure-Hosting.md) - Advanced - 90 min
 - [Build Warning Triage](Build-Warning-Triage.md) - Intermediate - 25 min
@@ -76,6 +75,7 @@ Start here:
 - [Content Improvement Plan](Content-Improvement-Plan.md) - Intermediate - 20 min
 - [Topic README Template](Topic-README-Template.md) - Beginner - 15 min
 - [Project Structure and Inventory](Project-Structure-Inventory.md) - Beginner - 20 min
+- [Runtime Section Map](Runtime-Section-Map.md) - Beginner - 10 min
 
 ## Appendices
 

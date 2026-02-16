@@ -44,13 +44,12 @@ This path organizes the documentation into three focused tracks.
 4. [Resilience](Resilience.md) - Level: Advanced - Estimated time: 60 min
 5. [Performance](Performance.md) - Level: Advanced - Estimated time: 75 min
 6. [Message Architecture](Message-Architecture.md) - Level: Advanced - Estimated time: 75 min
-7. [End-to-End Case Study](End-to-End-Case-Study.md) - Level: Advanced - Estimated time: 90 min
-8. [Deployment and DevOps](Deployment-DevOps.md) - Level: Intermediate - Estimated time: 75 min
-9. [Azure Hosting](Azure-Hosting.md) - Level: Advanced - Estimated time: 90 min
-10. [Front-End DotNet UI](Front-End-DotNet-UI.md) - Level: Intermediate - Estimated time: 90 min
-11. [.NET API to React Front End](DotNet-API-React.md) - Level: Intermediate - Estimated time: 50 min
-12. [.NET API to Vue Front End](DotNet-API-Vue.md) - Level: Intermediate - Estimated time: 50 min
-13. [Interview Preparation](Interview-Preparation.md) - Level: Beginner - Estimated time: 60 min
+7. [Deployment and DevOps](Deployment-DevOps.md) - Level: Intermediate - Estimated time: 75 min
+8. [Azure Hosting](Azure-Hosting.md) - Level: Advanced - Estimated time: 90 min
+9. [Front-End DotNet UI](Front-End-DotNet-UI.md) - Level: Intermediate - Estimated time: 90 min
+10. [.NET API to React Front End](DotNet-API-React.md) - Level: Intermediate - Estimated time: 50 min
+11. [.NET API to Vue Front End](DotNet-API-Vue.md) - Level: Intermediate - Estimated time: 50 min
+12. [Interview Preparation](Interview-Preparation.md) - Level: Beginner - Estimated time: 60 min
 
 ## How To Use
 
@@ -67,6 +66,7 @@ This path organizes the documentation into three focused tracks.
 ## Orientation Assets
 
 1. [Project Structure and Inventory](Project-Structure-Inventory.md) - Level: Beginner - Estimated time: 20 min
+2. [Runtime Section Map](Runtime-Section-Map.md) - Level: Beginner - Estimated time: 10 min
 
 ## Interview Drills
 

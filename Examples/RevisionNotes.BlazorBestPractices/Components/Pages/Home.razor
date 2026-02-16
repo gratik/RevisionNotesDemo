@@ -1,0 +1,72 @@
+@page "/"
+@inject ITaskRepository TaskRepository
+@inject ICachedTaskQueryService CachedTaskService
+
+<PageTitle>Blazor Best Practice Dashboard</PageTitle>
+
+<h1>Task Dashboard</h1>
+<p class="lede">Accessible UI + secure backend defaults + cached data access.</p>
+
+<form @onsubmit="CreateTask" class="task-form" aria-label="Create task form">
+    <label for="task-title">Task title</label>
+    <input id="task-title" @bind="newTitle" required maxlength="120" />
+
+    <label class="checkbox-row" for="priority">
+        <input id="priority" type="checkbox" @bind="isHighPriority" />
+        Mark as high priority
+    </label>
+
+    <button type="submit">Add Task</button>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(statusMessage))
+{
+    <p role="status" aria-live="polite">@statusMessage</p>
+}
+
+<ul class="task-list" aria-label="Task list">
+    @foreach (var task in tasks)
+    {
+        <li>
+            <button class="task-toggle" @onclick="() => Toggle(task.Id)">
+                <span>@(task.IsCompleted ? "[Done]" : "[Open]")</span>
+                <span>@task.Title</span>
+                @if (task.IsHighPriority)
+                {
+                    <span class="badge" aria-label="High priority">High priority</span>
+                }
+            </button>
+        </li>
+    }
+</ul>
+
+@code {
+    private string newTitle = string.Empty;
+    private bool isHighPriority;
+    private string? statusMessage;
+    private IReadOnlyList<TaskResponse> tasks = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        tasks = await CachedTaskService.GetAllAsync(CancellationToken.None);
+    }
+
+    private async Task CreateTask()
+    {
+        await TaskRepository.CreateAsync(new CreateTaskRequest(newTitle, isHighPriority), CancellationToken.None);
+        CachedTaskService.Invalidate();
+        tasks = await CachedTaskService.GetAllAsync(CancellationToken.None);
+
+        newTitle = string.Empty;
+        isHighPriority = false;
+        statusMessage = "Task added.";
+    }
+
+    private async Task Toggle(int id)
+    {
+        await TaskRepository.ToggleAsync(id, CancellationToken.None);
+        CachedTaskService.Invalidate();
+        tasks = await CachedTaskService.GetAllAsync(CancellationToken.None);
+        statusMessage = "Task status updated.";
+    }
+}

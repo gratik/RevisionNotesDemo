@@ -1,5 +1,7 @@
 # Data Access Guide
 
+Canonical source note: `Learning/DataAccess` is the single source of truth for runnable data-access examples. `Learning/Database` is reference-only.
+
 ## Learning goals
 
 - Understand the main concepts covered in DataAccess.
@@ -39,4 +41,3 @@ dotnet run
 
 - [Primary](../docs/Data-Access.md)
 - [Related](../docs/Entity-Framework.md)
-

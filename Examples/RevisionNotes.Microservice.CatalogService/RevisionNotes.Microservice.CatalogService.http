@@ -1,0 +1,6 @@
+@RevisionNotes.Microservice.CatalogService_HostAddress = http://localhost:5240
+
+GET {{RevisionNotes.Microservice.CatalogService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

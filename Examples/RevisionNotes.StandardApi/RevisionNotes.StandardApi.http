@@ -1,0 +1,6 @@
+@RevisionNotes.StandardApi_HostAddress = http://localhost:5011
+
+GET {{RevisionNotes.StandardApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

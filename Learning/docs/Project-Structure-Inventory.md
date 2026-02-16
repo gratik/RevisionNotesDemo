@@ -43,8 +43,8 @@ RevisionNotesDemo/
 - `Learning/Architecture/` - Architecture decisions and end-to-end delivery examples
 - `Learning/DevOps/` - CI/CD, Terraform, Kubernetes, Helm, workflows
 - `Learning/Observability/` - Logs, metrics, traces, health heartbeat patterns
-- `Learning/DataAccess/` - Canonical runnable data-access implementation track
-- `Learning/Database/` - Reference-only database catalog aligned to canonical DataAccess
+- `Learning/DataAccess/` - Canonical runnable data-access implementation track (single source of truth)
+- `Learning/Database/` - Reference-only index that redirects to canonical `Learning/DataAccess/` examples
 - `Learning/Appendices/` - Quick-reference and interview-focused companion material
 
 ## Organization Principles

@@ -1,0 +1,67 @@
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+}
+
+.skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+    background: #ffffff;
+    color: #111111;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #111111;
+    z-index: 9999;
+}
+
+.lede {
+    color: #3a3a3a;
+}
+
+.task-form {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 30rem;
+    margin-bottom: 1rem;
+}
+
+.task-form input[type="text"],
+.task-form input:not([type]) {
+    border: 1px solid #9a9a9a;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+}
+
+.task-toggle {
+    width: 100%;
+    text-align: left;
+    border: 1px solid #cccccc;
+    border-radius: 0.3rem;
+    padding: 0.65rem;
+    background: #fafafa;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.badge {
+    margin-left: auto;
+    background: #004b8d;
+    color: white;
+    border-radius: 999px;
+    padding: 0.15rem 0.55rem;
+    font-size: 0.75rem;
+}

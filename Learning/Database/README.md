@@ -1,24 +1,23 @@
-# Database Guide
+# Database Reference Guide
 
-## Learning goals
+## Purpose
 
-- Understand the main concepts covered in Database.
-- Compare baseline and recommended implementation approaches.
-- Apply the patterns in runnable project examples.
+`Learning/Database` is a reference-only index.
+All canonical, runnable database implementations live in `Learning/DataAccess`.
 
-## Prerequisites
+## Where to study and run code
 
-- Database fundamentals
-- Read/write scaling concepts
+Use these canonical files in `Learning/DataAccess`:
 
-## Runnable examples
-
-- DatabaseShardingAndScaling.cs - Topic implementation and demonstration code
-- GraphDatabasePatterns.cs - Topic implementation and demonstration code
-- MongoDBWithDotNet.cs - Topic implementation and demonstration code
-- ReadReplicasAndCQRS.cs - Topic implementation and demonstration code
-- RedisPatterns.cs - Topic implementation and demonstration code
-- TimeSeriesDatabases.cs - Topic implementation and demonstration code
+- `AdoNetPatterns.cs`
+- `DapperExamples.cs`
+- `DatabaseShardingAndScaling.cs`
+- `GraphDatabasePatterns.cs`
+- `MongoDBWithDotNet.cs`
+- `ReadReplicasAndCQRS.cs`
+- `RedisPatterns.cs`
+- `TimeSeriesDatabases.cs`
+- `TransactionPatterns.cs`
 
 Run examples from the project root:
 
@@ -26,14 +25,14 @@ Run examples from the project root:
 dotnet run
 ```
 
-## Bad vs good examples summary
+## Why this split exists
 
-- Bad: brittle or overly coupled approach that reduces maintainability.
-- Good: clear, testable, and production-oriented implementation pattern.
-- Why it matters: consistent patterns improve readability, reliability, and onboarding speed.
+- Prevents duplicated topic implementations with diverging guidance.
+- Keeps one canonical learning path for runnable examples.
+- Preserves a dedicated database navigation entry for discoverability.
 
 ## Related docs
 
 - [Primary](../docs/Data-Access.md)
 - [Related](../docs/Distributed-Consistency.md)
-
+- [Structure inventory](../docs/Project-Structure-Inventory.md)

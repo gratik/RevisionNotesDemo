@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,9 +30,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Examples/**" />
     <Compile Remove="Learning/Testing/**/*.cs" />
     <Compile Remove="Learning/Database/**/*.cs" />
     <Compile Remove="Tests/**/*.cs" />
+    <None Remove="Examples/**" />
+    <None Remove="Tests/**" />
+    <Content Remove="Examples/**" />
+    <Content Remove="Tests/**" />
+    <EmbeddedResource Remove="Examples/**" />
+    <EmbeddedResource Remove="Tests/**" />
     <None Include="Learning/Database/**/*.cs" />
   </ItemGroup>
 

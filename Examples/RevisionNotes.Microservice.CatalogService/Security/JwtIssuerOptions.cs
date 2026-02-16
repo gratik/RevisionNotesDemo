@@ -1,0 +1,9 @@
+namespace RevisionNotes.Microservice.CatalogService.Security;
+
+public sealed class JwtIssuerOptions
+{
+    public string Issuer { get; init; } = "revision-notes-catalog-service";
+    public string Audience { get; init; } = "revision-notes-clients";
+    public string SigningKey { get; init; } = "ReplaceWithLongRandomSigningKey-DevelopmentOnly";
+    public int TokenLifetimeMinutes { get; init; } = 30;
+}

@@ -23,15 +23,15 @@ public static class DemoOrchestrator
 {
     private static readonly IReadOnlyList<DemoSection> Sections =
     [
-        new("oop", "PART 1: OOP PRINCIPLES", ["1", "oop", "principles"], OopSectionRunner.RunAsync),
+        new("oop", "PART 1: OOP PRINCIPLES", ["1", "oop", "principles", "oopprinciples"], OopSectionRunner.RunAsync),
         new("clean-code", "PART 2: KISS, DRY, YAGNI, TDA", ["2", "clean-code", "kiss", "dry", "yagni", "tda"], CleanCodeSectionRunner.RunAsync),
-        new("creational", "PART 3: DESIGN PATTERNS - CREATIONAL", ["3", "creational"], CreationalPatternsSectionRunner.RunAsync),
-        new("structural", "PART 4: DESIGN PATTERNS - STRUCTURAL", ["4", "structural"], StructuralPatternsSectionRunner.RunAsync),
-        new("behavioral", "PART 5: DESIGN PATTERNS - BEHAVIORAL", ["5", "behavioral"], BehavioralPatternsSectionRunner.RunAsync),
-        new("memory", "PART 6: MEMORY MANAGEMENT", ["6", "memory"], MemorySectionRunner.RunAsync),
-        new("async", "PART 7: MULTITHREADING & ASYNC", ["7", "async", "multithreading"], AsyncSectionRunner.RunAsync),
-        new("dotnet", "PART 8: .NET FRAMEWORK CONCEPTS", ["8", "dotnet", "core-csharp", "linq", "advanced-csharp"], DotNetConceptsSectionRunner.RunAsync),
-        new("practical", "PART 9: PRACTICAL SCENARIOS", ["9", "practical"], PracticalSectionRunner.RunAsync),
+        new("creational", "PART 3: DESIGN PATTERNS - CREATIONAL", ["3", "creational", "designpatterns-creational"], CreationalPatternsSectionRunner.RunAsync),
+        new("structural", "PART 4: DESIGN PATTERNS - STRUCTURAL", ["4", "structural", "designpatterns-structural"], StructuralPatternsSectionRunner.RunAsync),
+        new("behavioral", "PART 5: DESIGN PATTERNS - BEHAVIORAL", ["5", "behavioral", "designpatterns-behavioral"], BehavioralPatternsSectionRunner.RunAsync),
+        new("memory", "PART 6: MEMORY MANAGEMENT", ["6", "memory", "memorymanagement"], MemorySectionRunner.RunAsync),
+        new("async", "PART 7: MULTITHREADING & ASYNC", ["7", "async", "multithreading", "asyncmultithreading"], AsyncSectionRunner.RunAsync),
+        new("dotnet", "PART 8: .NET FRAMEWORK CONCEPTS", ["8", "dotnet", "core-csharp", "linq", "advanced-csharp", "corecsharpfeatures", "linqandqueries", "advancedcsharp"], DotNetConceptsSectionRunner.RunAsync),
+        new("practical", "PART 9: PRACTICAL SCENARIOS", ["9", "practical", "practicalpatterns"], PracticalSectionRunner.RunAsync),
         new("appendices", "PART 10: APPENDICES", ["10", "appendices"], AppendicesSectionRunner.RunAsync),
         new("cloud", "PART 11: CLOUD & AZURE HOSTING", ["11", "azure"], CloudSectionRunner.RunAsync),
         new("microservices", "PART 12: MICROSERVICES", ["12", "services"], MicroservicesSectionRunner.RunAsync),
@@ -40,6 +40,27 @@ public static class DemoOrchestrator
         new("observability", "PART 15: OBSERVABILITY", ["15", "monitoring", "telemetry"], ObservabilitySectionRunner.RunAsync),
         new("security", "PART 16: SECURITY", ["16", "sec"], SecuritySectionRunner.RunAsync)
     ];
+
+    private static readonly IReadOnlyDictionary<string, string> SectionFolders =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["oop"] = "Learning/OOPPrinciples",
+            ["clean-code"] = "Learning/OOPPrinciples",
+            ["creational"] = "Learning/DesignPatterns/Creational",
+            ["structural"] = "Learning/DesignPatterns/Structural",
+            ["behavioral"] = "Learning/DesignPatterns/Behavioral",
+            ["memory"] = "Learning/MemoryManagement",
+            ["async"] = "Learning/AsyncMultithreading",
+            ["dotnet"] = "Learning/CoreCSharpFeatures + Learning/LINQAndQueries + Learning/AdvancedCSharp",
+            ["practical"] = "Learning/PracticalPatterns + Learning/Models",
+            ["appendices"] = "Learning/Appendices",
+            ["cloud"] = "Learning/Cloud",
+            ["microservices"] = "Learning/Microservices",
+            ["architecture"] = "Learning/Architecture",
+            ["devops"] = "Learning/DevOps",
+            ["observability"] = "Learning/Observability",
+            ["security"] = "Learning/Security"
+        };
 
     public static async Task RunAsync(string[] args)
     {
@@ -104,8 +125,11 @@ public static class DemoOrchestrator
 
         foreach (var section in Sections)
         {
-            Console.WriteLine($"  - {section.Key}");
+            var folder = SectionFolders.TryGetValue(section.Key, out var value) ? value : "Learning/";
+            Console.WriteLine($"  - {section.Key} ({folder})");
         }
+
+        Console.WriteLine("Tip: folder-name aliases are supported (example: --section memorymanagement).");
     }
 }
 

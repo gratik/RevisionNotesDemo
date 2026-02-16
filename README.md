@@ -33,6 +33,7 @@ dotnet run
 Detailed folder inventory, organization principles, examples, and project stats are maintained in:
 
 - [Project Structure and Inventory](Learning/docs/Project-Structure-Inventory.md)
+- [Runtime Section Map](Learning/docs/Runtime-Section-Map.md)
 
 ## Quality Gates
 
@@ -69,6 +70,8 @@ Detailed folder inventory, organization principles, examples, and project stats 
 - [Build Warning Triage](Learning/docs/Build-Warning-Triage.md)
 - [Suppression Audit](Learning/docs/Suppression-Audit.md)
 - [Project Structure and Inventory](Learning/docs/Project-Structure-Inventory.md)
+- [Runtime Section Map](Learning/docs/Runtime-Section-Map.md)
+- [Examples Overview](Examples/README.md)
 
 ## License
 
