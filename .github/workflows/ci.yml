@@ -15,19 +15,15 @@ jobs:
 
       - name: Validate docs (links, references, orphan pages)
         run: ./scripts/validate-docs.sh
-        working-directory: RevisionNotesDemo
 
       - name: Validate docs metadata
         run: ./scripts/validate-doc-metadata.sh
-        working-directory: RevisionNotesDemo
 
       - name: Validate interview sections
         run: ./scripts/validate-interview-sections.sh
-        working-directory: RevisionNotesDemo
 
       - name: Validate content structure (topic README + ownership boundaries)
         run: ./scripts/validate-content-structure.sh
-        working-directory: RevisionNotesDemo
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -36,34 +32,26 @@ jobs:
 
       - name: Restore app
         run: dotnet restore RevisionNotesDemo.csproj
-        working-directory: RevisionNotesDemo
 
       - name: Restore test examples
         run: dotnet restore Tests/RevisionNotesDemo.TestingExamples/RevisionNotesDemo.TestingExamples.csproj
-        working-directory: RevisionNotesDemo
 
       - name: Restore unit tests
         run: dotnet restore Tests/RevisionNotesDemo.UnitTests/RevisionNotesDemo.UnitTests.csproj
-        working-directory: RevisionNotesDemo
 
       - name: Build app
         run: dotnet build RevisionNotesDemo.csproj --configuration Release --no-restore
-        working-directory: RevisionNotesDemo
 
       - name: Build test examples
         run: dotnet build Tests/RevisionNotesDemo.TestingExamples/RevisionNotesDemo.TestingExamples.csproj --configuration Release --no-restore
-        working-directory: RevisionNotesDemo
 
       - name: Build unit tests
         run: dotnet build Tests/RevisionNotesDemo.UnitTests/RevisionNotesDemo.UnitTests.csproj --configuration Release --no-restore
-        working-directory: RevisionNotesDemo
 
       - name: Warning gate (treat warnings as errors)
         run: |
           dotnet build RevisionNotesDemo.csproj --configuration Release --no-restore -warnaserror
           dotnet build Tests/RevisionNotesDemo.UnitTests/RevisionNotesDemo.UnitTests.csproj --configuration Release --no-restore -warnaserror
-        working-directory: RevisionNotesDemo
 
       - name: Run unit tests
         run: dotnet test Tests/RevisionNotesDemo.UnitTests/RevisionNotesDemo.UnitTests.csproj --configuration Release --no-build --verbosity normal
-        working-directory: RevisionNotesDemo
