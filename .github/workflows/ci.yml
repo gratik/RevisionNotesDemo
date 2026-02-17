@@ -14,16 +14,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate docs (links, references, orphan pages)
-        run: ./scripts/validate-docs.sh
+        run: bash ./scripts/validate-docs.sh
 
       - name: Validate docs metadata
-        run: ./scripts/validate-doc-metadata.sh
+        run: bash ./scripts/validate-doc-metadata.sh
 
       - name: Validate interview sections
-        run: ./scripts/validate-interview-sections.sh
+        run: bash ./scripts/validate-interview-sections.sh
 
       - name: Validate content structure (topic README + ownership boundaries)
-        run: ./scripts/validate-content-structure.sh
+        run: bash ./scripts/validate-content-structure.sh
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
