@@ -4,6 +4,10 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DOCS_DIR="$ROOT_DIR/docs"
 error_count=0
+HAS_RG=0
+if command -v rg >/dev/null 2>&1; then
+  HAS_RG=1
+fi
 
 trim() {
   local value="$1"
@@ -13,17 +17,39 @@ trim() {
 
 echo "Running doc metadata checks..."
 
+contains_pattern() {
+  local pattern="$1"
+  local file="$2"
+
+  if [[ "$HAS_RG" -eq 1 ]]; then
+    rg -q "$pattern" "$file"
+  else
+    grep -Eq "$pattern" "$file"
+  fi
+}
+
+first_match() {
+  local pattern="$1"
+  local file="$2"
+
+  if [[ "$HAS_RG" -eq 1 ]]; then
+    rg -m1 "$pattern" "$file" || true
+  else
+    grep -Em1 "$pattern" "$file" || true
+  fi
+}
+
 while IFS= read -r file; do
-  if ! rg -q '^## Metadata$' "$file"; then
+  if ! contains_pattern '^## Metadata$' "$file"; then
     echo "MISSING METADATA SECTION: $file"
     error_count=$((error_count + 1))
     continue
   fi
 
-  owner_line="$(rg -m1 '^- Owner:' "$file" || true)"
-  updated_line="$(rg -m1 '^- Last updated:' "$file" || true)"
-  prereq_line="$(rg -m1 '^- Prerequisites:' "$file" || true)"
-  related_line="$(rg -m1 '^- Related examples:' "$file" || true)"
+  owner_line="$(first_match '^- Owner:' "$file")"
+  updated_line="$(first_match '^- Last updated:' "$file")"
+  prereq_line="$(first_match '^- Prerequisites:' "$file")"
+  related_line="$(first_match '^- Related examples:' "$file")"
 
   for line_name in owner_line updated_line prereq_line related_line; do
     if [[ -z "${!line_name}" ]]; then
@@ -43,7 +69,7 @@ while IFS= read -r file; do
     continue
   fi
 
-  if ! echo "$updated" | rg -q '^[A-Za-z]+ [0-9]{1,2}, [0-9]{4}$'; then
+  if ! echo "$updated" | grep -Eq '^[A-Za-z]+ [0-9]{1,2}, [0-9]{4}$'; then
     echo "INVALID DATE FORMAT: $file -> '$updated' (expected 'Month D, YYYY')"
     error_count=$((error_count + 1))
   fi
