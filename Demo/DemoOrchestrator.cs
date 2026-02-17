@@ -8,12 +8,15 @@ using RevisionNotesDemo.DevOps;
 using RevisionNotesDemo.DesignPatterns.Behavioral;
 using RevisionNotesDemo.DesignPatterns.Creational;
 using RevisionNotesDemo.DesignPatterns.Structural;
+using RevisionNotesDemo.EngineeringProcess;
+using RevisionNotesDemo.IoTEngineering;
 using RevisionNotesDemo.LINQAndQueries;
 using RevisionNotesDemo.MemoryManagement;
 using RevisionNotesDemo.Microservices;
 using RevisionNotesDemo.Models;
 using RevisionNotesDemo.OOPPrinciples;
 using RevisionNotesDemo.Observability;
+using RevisionNotesDemo.OperationalExcellence;
 using RevisionNotesDemo.PracticalPatterns;
 using RevisionNotesDemo.Security;
 
@@ -38,7 +41,10 @@ public static class DemoOrchestrator
         new("architecture", "PART 13: ARCHITECTURE", ["13", "arch"], ArchitectureSectionRunner.RunAsync),
         new("devops", "PART 14: DEVOPS", ["14", "ci-cd", "deployment"], DevOpsSectionRunner.RunAsync),
         new("observability", "PART 15: OBSERVABILITY", ["15", "monitoring", "telemetry"], ObservabilitySectionRunner.RunAsync),
-        new("security", "PART 16: SECURITY", ["16", "sec"], SecuritySectionRunner.RunAsync)
+        new("security", "PART 16: SECURITY", ["16", "sec"], SecuritySectionRunner.RunAsync),
+        new("iot", "PART 17: IOT ENGINEERING", ["17", "iot-engineering", "devices"], IoTEngineeringSectionRunner.RunAsync),
+        new("operations", "PART 18: OPERATIONAL EXCELLENCE", ["18", "ops", "operational-excellence"], OperationalExcellenceSectionRunner.RunAsync),
+        new("engineering-process", "PART 19: ENGINEERING PROCESS", ["19", "eng-process", "delivery-process"], EngineeringProcessSectionRunner.RunAsync)
     ];
 
     private static readonly IReadOnlyDictionary<string, string> SectionFolders =
@@ -59,7 +65,10 @@ public static class DemoOrchestrator
             ["architecture"] = "Learning/Architecture",
             ["devops"] = "Learning/DevOps",
             ["observability"] = "Learning/Observability",
-            ["security"] = "Learning/Security"
+            ["security"] = "Learning/Security",
+            ["iot"] = "Learning/IoTEngineering",
+            ["operations"] = "Learning/OperationalExcellence",
+            ["engineering-process"] = "Learning/EngineeringProcess"
         };
 
     public static async Task RunAsync(string[] args)
@@ -323,6 +332,7 @@ internal static class PracticalSectionRunner
     public static async Task RunAsync()
     {
         OptionsPatternDemo.RunDemo();
+        BackgroundWorkersInDotNet.RunAll();
         await BackgroundServicesDemo.RunDemoAsync();
         ValidationPatternsDemo.RunDemo();
         MappingPatternsDemo.RunDemo();
@@ -357,6 +367,9 @@ internal static class CloudSectionRunner
         AzureDockerHostingPatterns.RunAll();
         AzureFunctionsWithDocker.RunAll();
         AzureMicroservicesHosting.RunAll();
+        AzureServiceBusPatterns.RunAll();
+        AzureEventHubPatterns.RunAll();
+        AzureEventGridPatterns.RunAll();
         AzureStorageAndDataHosting.RunAll();
         AzureDeploymentAndDevOps.RunAll();
         return Task.CompletedTask;
@@ -445,3 +458,42 @@ internal static class SecuritySectionRunner
         return Task.CompletedTask;
     }
 }
+
+internal static class IoTEngineeringSectionRunner
+{
+    public static Task RunAsync()
+    {
+        AzureIoTHubPatterns.RunAll();
+        MQTTAndAMQPPatterns.RunAll();
+        DeviceProvisioningAndIdentity.RunAll();
+        DeviceTwinAndDirectMethods.RunAll();
+        IoTEdgeAndOfflinePatterns.RunAll();
+        TelemetryIngestionPipeline.RunAll();
+        return Task.CompletedTask;
+    }
+}
+
+internal static class OperationalExcellenceSectionRunner
+{
+    public static Task RunAsync()
+    {
+        IncidentResponseRunbook.RunAll();
+        SLOSLIErrorBudget.RunAll();
+        OnCallAndEscalationPatterns.RunAll();
+        return Task.CompletedTask;
+    }
+}
+
+internal static class EngineeringProcessSectionRunner
+{
+    public static Task RunAsync()
+    {
+        BacklogRefinementAndTicketDesign.RunAll();
+        CodeReviewStandards.RunAll();
+        DefinitionOfDoneAndAcceptanceCriteria.RunAll();
+        TechnicalDocumentationStandards.RunAll();
+        return Task.CompletedTask;
+    }
+}
+
+

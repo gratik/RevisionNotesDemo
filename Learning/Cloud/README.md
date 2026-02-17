@@ -21,6 +21,9 @@
 - AzureFunctionsWithDocker.cs - Topic implementation and demonstration code
 - AzureKeyVaultSecrets.cs - Topic implementation and demonstration code
 - AzureMicroservicesHosting.cs - Topic implementation and demonstration code
+- AzureServiceBusPatterns.cs - Topic implementation and demonstration code
+- AzureEventHubPatterns.cs - Topic implementation and demonstration code
+- AzureEventGridPatterns.cs - Topic implementation and demonstration code
 - AzureStorageAndDataHosting.cs - Topic implementation and demonstration code
 - AzureStoragePatterns.cs - Topic implementation and demonstration code
 
@@ -40,4 +43,5 @@ dotnet run
 
 - [Primary](../../docs/Azure-Hosting.md)
 - [Related](../../docs/Deployment-DevOps.md)
+
 

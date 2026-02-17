@@ -15,6 +15,10 @@
 
 - IntegrationTestingExamples.cs - Topic implementation and demonstration code
 - MockingInDepthExamples.cs - Topic implementation and demonstration code
+- TddForBacklogTickets.cs - Topic implementation and demonstration code
+- ContractTestingForMessaging.cs - Topic implementation and demonstration code
+- FailurePathTesting.cs - Topic implementation and demonstration code
+- PerformanceRegressionChecks.cs - Topic implementation and demonstration code
 - TestDataBuildersExamples.cs - Topic implementation and demonstration code
 - TestingAsyncCodeExamples.cs - Topic implementation and demonstration code
 - TestingFrameworksComparison.cs - Topic implementation and demonstration code
@@ -35,4 +39,3 @@ dotnet run
 
 - [Primary](../../docs/Testing.md)
 - [Related](../../docs/Build-Warning-Triage.md)
-

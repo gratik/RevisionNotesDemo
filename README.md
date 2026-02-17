@@ -25,7 +25,7 @@ dotnet run
 
 - Foundations: [OOP Principles](docs/OOP-Principles.md), [Core C#](docs/Core-CSharp.md), [Modern C#](docs/Modern-CSharp.md)
 - Backend/API: [Web API & MVC](docs/Web-API-MVC.md), [Data Access](docs/Data-Access.md), [Security](docs/Security.md), [Testing](docs/Testing.md)
-- Scale and delivery: [Design Patterns](docs/Design-Patterns.md), [Distributed Consistency](docs/Distributed-Consistency.md), [Deployment and DevOps](docs/Deployment-DevOps.md), [Azure Hosting](docs/Azure-Hosting.md)
+- Scale and delivery: [Design Patterns](docs/Design-Patterns.md), [Distributed Consistency](docs/Distributed-Consistency.md), [Deployment and DevOps](docs/Deployment-DevOps.md), [Azure Hosting](docs/Azure-Hosting.md), [IoT Engineering](docs/IoT-Engineering.md), [Operational Excellence](docs/Operational-Excellence.md), [Engineering Process](docs/Engineering-Process.md)
 - Integrated example: [End-to-End Case Study](docs/End-to-End-Case-Study.md)
 
 ## Project Structure and Inventory

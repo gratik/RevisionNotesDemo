@@ -16,11 +16,16 @@ This landing page summarizes the Message-Architecture documentation area and lin
 ## Key Topics
 
 - [Azure-Service-Bus](Message-Architecture/Azure-Service-Bus.md)
+- [Event-Hubs](Message-Architecture/Event-Hubs.md)
+- [Event-Grid](Message-Architecture/Event-Grid.md)
+- [Background-Workers-in-DotNet](Message-Architecture/Background-Workers-in-DotNet.md)
 - [Background-Processing-with-IHostedService](Message-Architecture/Background-Processing-with-IHostedService.md)
 - [Best-Practices](Message-Architecture/Best-Practices.md)
 - [Common-Pitfalls](Message-Architecture/Common-Pitfalls.md)
 - [Core-Concepts](Message-Architecture/Core-Concepts.md)
 - [Event-Driven-Patterns](Message-Architecture/Event-Driven-Patterns.md)
+- [Contract-First-Messaging](Message-Architecture/Contract-First-Messaging.md)
+- [Failure-Recovery-Testing](Message-Architecture/Failure-Recovery-Testing.md)
 - [RabbitMQ-Fundamentals](Message-Architecture/RabbitMQ-Fundamentals.md)
 - [When-to-Use-Message-Queues](Message-Architecture/When-to-Use-Message-Queues.md)
 - [Why-Message-Based-Architecture](Message-Architecture/Why-Message-Based-Architecture.md)
@@ -68,4 +73,6 @@ Distributed systems guidance focuses on idempotent workflows, eventual consisten
 
 - [Subject Overview](README.md)
 - [Docs Index](../README.md)
+
+
 

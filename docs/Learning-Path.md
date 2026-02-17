@@ -46,10 +46,13 @@ This path organizes the documentation into three focused tracks.
 6. [Message Architecture](Message-Architecture.md) - Level: Advanced - Estimated time: 75 min
 7. [Deployment and DevOps](Deployment-DevOps.md) - Level: Intermediate - Estimated time: 75 min
 8. [Azure Hosting](Azure-Hosting.md) - Level: Advanced - Estimated time: 90 min
-9. [Front-End DotNet UI](Front-End-DotNet-UI.md) - Level: Intermediate - Estimated time: 90 min
-10. [.NET API to React Front End](DotNet-API-React.md) - Level: Intermediate - Estimated time: 50 min
-11. [.NET API to Vue Front End](DotNet-API-Vue.md) - Level: Intermediate - Estimated time: 50 min
-12. [Interview Preparation](Interview-Preparation.md) - Level: Beginner - Estimated time: 60 min
+9. [IoT Engineering](IoT-Engineering.md) - Level: Advanced - Estimated time: 75 min
+10. [Operational Excellence](Operational-Excellence.md) - Level: Advanced - Estimated time: 60 min
+11. [Engineering Process](Engineering-Process.md) - Level: Intermediate - Estimated time: 45 min
+12. [Front-End DotNet UI](Front-End-DotNet-UI.md) - Level: Intermediate - Estimated time: 90 min
+13. [.NET API to React Front End](DotNet-API-React.md) - Level: Intermediate - Estimated time: 50 min
+14. [.NET API to Vue Front End](DotNet-API-Vue.md) - Level: Intermediate - Estimated time: 50 min
+15. [Interview Preparation](Interview-Preparation.md) - Level: Beginner - Estimated time: 60 min
 
 ## How To Use
 

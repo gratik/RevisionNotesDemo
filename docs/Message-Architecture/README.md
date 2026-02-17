@@ -1016,10 +1016,17 @@ Generated: 2026-02-14
 - [When to Use Message Queues](When-to-Use-Message-Queues.md)
 - [RabbitMQ Fundamentals](RabbitMQ-Fundamentals.md)
 - [Azure Service Bus](Azure-Service-Bus.md)
+- [Event Hubs](Event-Hubs.md)
+- [Event Grid](Event-Grid.md)
+- [Background Workers in .NET](Background-Workers-in-DotNet.md)
 - [Background Processing with IHostedService](Background-Processing-with-IHostedService.md)
 - [Event-Driven Patterns](Event-Driven-Patterns.md)
+- [Contract-First Messaging](Contract-First-Messaging.md)
+- [Failure-Recovery Testing](Failure-Recovery-Testing.md)
 - [Best Practices](Best-Practices.md)
 - [Common Pitfalls](Common-Pitfalls.md)
+
+
 
 
 

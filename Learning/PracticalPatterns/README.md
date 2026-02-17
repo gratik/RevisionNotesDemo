@@ -15,6 +15,7 @@
 
 - ApiOptimization.cs - Topic implementation and demonstration code
 - BackgroundServicesDemo.cs - Topic implementation and demonstration code
+- BackgroundWorkersInDotNet.cs - Topic implementation and demonstration code
 - CachingImplementation.cs - Topic implementation and demonstration code
 - GlobalExceptionHandling.cs - Topic implementation and demonstration code
 - MappingPatterns.cs - Topic implementation and demonstration code
@@ -38,3 +39,4 @@ dotnet run
 
 - [Primary](../../docs/Practical-Patterns.md)
 - [Related](../../docs/Web-API-MVC.md)
+

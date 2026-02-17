@@ -720,6 +720,10 @@ Generated: 2026-02-14
 - [Data-Driven Tests](Data-Driven-Tests.md)
 - [Test Data Builders](Test-Data-Builders.md)
 - [Integration Testing](Integration-Testing.md)
+- [TDD for Backlog Tickets](TDD-for-Backlog-Tickets.md)
+- [Contract Testing for Messaging](Contract-Testing-for-Messaging.md)
+- [Failure Path Testing](Failure-Path-Testing.md)
+- [Performance Regression Checks](Performance-Regression-Checks.md)
 - [Best Practices](Best-Practices.md)
 - [Common Pitfalls](Common-Pitfalls.md)
 

@@ -179,9 +179,14 @@ Practical guide for hosting modern .NET workloads on Azure using Docker, Azure F
 - [Docker Hosting Patterns](Docker-Hosting-Patterns.md)
 - [Azure Functions with Docker](Azure-Functions-with-Docker.md)
 - [Hosting Microservices on Azure](Hosting-Microservices-on-Azure.md)
+- [Azure Service Bus Patterns](Azure-Service-Bus-Patterns.md)
+- [Azure Event Hubs Patterns](Azure-Event-Hubs-Patterns.md)
+- [Azure Event Grid Patterns](Azure-Event-Grid-Patterns.md)
 - [Azure Storage Strategy](Azure-Storage-Strategy.md)
 - [Deployment and DevOps on Azure](Deployment-and-DevOps-on-Azure.md)
 - [Reference Example Files](Reference-Example-Files.md)
 - [Related Docs](Related-Docs.md)
+
+
 
 

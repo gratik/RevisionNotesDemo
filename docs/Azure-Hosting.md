@@ -21,6 +21,9 @@ This landing page summarizes the Azure-Hosting documentation area and links into
 - [Deployment-and-DevOps-on-Azure](Azure-Hosting/Deployment-and-DevOps-on-Azure.md)
 - [Docker-Hosting-Patterns](Azure-Hosting/Docker-Hosting-Patterns.md)
 - [Hosting-Microservices-on-Azure](Azure-Hosting/Hosting-Microservices-on-Azure.md)
+- [Azure-Service-Bus-Patterns](Azure-Hosting/Azure-Service-Bus-Patterns.md)
+- [Azure-Event-Hubs-Patterns](Azure-Hosting/Azure-Event-Hubs-Patterns.md)
+- [Azure-Event-Grid-Patterns](Azure-Hosting/Azure-Event-Grid-Patterns.md)
 - [Reference-Example-Files](Azure-Hosting/Reference-Example-Files.md)
 - [Related-Docs](Azure-Hosting/Related-Docs.md)
 
@@ -67,4 +70,6 @@ Delivery/platform guidance focuses on safe change velocity through policy gates,
 
 - [Subject Overview](README.md)
 - [Docs Index](../README.md)
+
+
 

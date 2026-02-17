@@ -26,6 +26,9 @@ This page maps runtime sections to learning folders so learners can quickly loca
 - `devops` -> `Learning/DevOps`
 - `observability` -> `Learning/Observability`
 - `security` -> `Learning/Security`
+- `iot` -> `Learning/IoTEngineering`
+- `operations` -> `Learning/OperationalExcellence`
+- `engineering-process` -> `Learning/EngineeringProcess`
 
 ## Topics Not Run As Standalone Sections
 

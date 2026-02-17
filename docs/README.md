@@ -66,6 +66,9 @@ Start here:
 - [Message Architecture](Message-Architecture/README.md) - Advanced - 75 min
 - [Deployment and DevOps](Deployment-DevOps/README.md) - Intermediate - 75 min
 - [Azure Hosting](Azure-Hosting/README.md) - Advanced - 90 min
+- [IoT Engineering](IoT-Engineering/README.md) - Advanced - 75 min
+- [Operational Excellence](Operational-Excellence/README.md) - Advanced - 60 min
+- [Engineering Process](Engineering-Process/README.md) - Intermediate - 45 min
 - [Build Warning Triage](Build-Warning-Triage/README.md) - Intermediate - 25 min
 - [Suppression Audit](Suppression-Audit/README.md) - Intermediate - 20 min
 - [Front-End DotNet UI](Front-End-DotNet-UI/README.md) - Intermediate - 90 min
