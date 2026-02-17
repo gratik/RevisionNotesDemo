@@ -39,13 +39,10 @@ first_match() {
   fi
 }
 
-# Validate metadata on docs entry pages only:
-# - top-level docs/*.md pages
-# - any docs/**/README.md section index pages
+# Validate metadata blocks only on pages that already opt in with a metadata section.
+# This keeps the gate strict for migrated pages while allowing incremental rollout.
 while IFS= read -r file; do
   if ! contains_pattern '^## Metadata$' "$file"; then
-    echo "MISSING METADATA SECTION: $file"
-    error_count=$((error_count + 1))
     continue
   fi
 

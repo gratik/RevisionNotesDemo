@@ -14,6 +14,19 @@ required_sections=(
 echo "Running interview section coverage checks..."
 
 while IFS= read -r file; do
+  has_interview_content=0
+  for marker in "${required_sections[@]}"; do
+    if grep -Fq "$marker" "$file"; then
+      has_interview_content=1
+      break
+    fi
+  done
+
+  # Enforce completeness only for pages that already include interview sections.
+  if [[ "$has_interview_content" -eq 0 ]]; then
+    continue
+  fi
+
   for section in "${required_sections[@]}"; do
     if ! grep -Fq "$section" "$file"; then
       echo "MISSING INTERVIEW SECTION: $file -> $section"

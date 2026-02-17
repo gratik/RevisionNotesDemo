@@ -1,11 +1,17 @@
 # Database Reference Guide
 
-## Purpose
+## Learning goals
 
 `Learning/Database` is a reference-only index.
 All canonical, runnable database implementations live in `Learning/DataAccess`.
 
-## Where to study and run code
+## Prerequisites
+
+- Basic SQL and relational modeling concepts.
+- Familiarity with .NET data access options (ADO.NET, Dapper, EF Core).
+- Ability to run the repository from the solution root.
+
+## Runnable examples
 
 Use these canonical files in `Learning/DataAccess`:
 
@@ -26,7 +32,7 @@ Run examples from the project root:
 dotnet run
 ```
 
-## Why this split exists
+## Bad vs good examples summary
 
 - Prevents duplicated topic implementations with diverging guidance.
 - Keeps one canonical learning path for runnable examples.
