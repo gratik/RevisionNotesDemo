@@ -12,7 +12,10 @@ fi
 error_count=0
 all_refs_file="$(mktemp)"
 indexed_refs_file="$(mktemp)"
-trap 'rm -f "$all_refs_file" "$indexed_refs_file"' EXIT
+reachable_refs_file="$(mktemp)"
+queue_file="$(mktemp)"
+next_queue_file="$(mktemp)"
+trap 'rm -f "$all_refs_file" "$indexed_refs_file" "$reachable_refs_file" "$queue_file" "$next_queue_file"' EXIT
 
 extract_links() {
   local file="$1"
@@ -75,17 +78,53 @@ done < <(find "$ROOT_DIR/Learning" -type f -name '*.md' | sort)
 
 echo "Running orphan docs checks..."
 
-# Collect docs indexed from primary navigation files.
+# Seed recursive reachability from primary navigation files.
 for index_file in "$ROOT_DIR/README.md" "$DOCS_DIR/README.md" "$DOCS_DIR/Learning-Path.md"; do
-  while IFS= read -r raw_link; do
-    [[ -z "$raw_link" ]] && continue
-    resolved="$(resolve_link "$index_file" "$raw_link" || true)"
-    [[ -z "${resolved:-}" ]] && continue
-    printf '%s\n' "$resolved" >> "$indexed_refs_file"
-  done < <(extract_links "$index_file")
+  printf '%s\n' "$index_file" >> "$indexed_refs_file"
 done
 
-sort -u "$indexed_refs_file" -o "$indexed_refs_file"
+while IFS= read -r seed_file; do
+  [[ -z "$seed_file" ]] && continue
+  if [[ -f "$seed_file" && "$seed_file" == *.md ]]; then
+    printf '%s\n' "$seed_file" >> "$reachable_refs_file"
+    printf '%s\n' "$seed_file" >> "$queue_file"
+  fi
+done < "$indexed_refs_file"
+
+sort -u "$reachable_refs_file" -o "$reachable_refs_file"
+sort -u "$queue_file" -o "$queue_file"
+
+# Recursively walk markdown links so nested topic pages are considered reachable.
+while [[ -s "$queue_file" ]]; do
+  : > "$next_queue_file"
+
+  while IFS= read -r current_file; do
+    [[ -z "$current_file" ]] && continue
+    [[ ! -f "$current_file" ]] && continue
+    [[ "$current_file" != *.md ]] && continue
+
+    while IFS= read -r raw_link; do
+      [[ -z "$raw_link" ]] && continue
+      resolved="$(resolve_link "$current_file" "$raw_link" || true)"
+      [[ -z "${resolved:-}" ]] && continue
+      [[ ! -f "$resolved" ]] && continue
+      [[ "$resolved" != *.md ]] && continue
+
+      if ! grep -Fxq "$resolved" "$reachable_refs_file"; then
+        printf '%s\n' "$resolved" >> "$reachable_refs_file"
+        printf '%s\n' "$resolved" >> "$next_queue_file"
+      fi
+    done < <(extract_links "$current_file")
+  done < "$queue_file"
+
+  if [[ ! -s "$next_queue_file" ]]; then
+    break
+  fi
+
+  sort -u "$reachable_refs_file" -o "$reachable_refs_file"
+  sort -u "$next_queue_file" -o "$next_queue_file"
+  cp "$next_queue_file" "$queue_file"
+done
 
 while IFS= read -r doc_page; do
   base="$(basename "$doc_page")"
@@ -93,8 +132,8 @@ while IFS= read -r doc_page; do
     continue
   fi
 
-  if ! grep -Fxq "$doc_page" "$indexed_refs_file"; then
-    echo "ORPHAN DOC: $doc_page is not linked from README.md, docs/README.md, or docs/Learning-Path.md"
+  if ! grep -Fxq "$doc_page" "$reachable_refs_file"; then
+    echo "ORPHAN DOC: $doc_page is not reachable from README.md, docs/README.md, or docs/Learning-Path.md"
     error_count=$((error_count + 1))
   fi
 done < <(find "$DOCS_DIR" -type f -name '*.md' | sort)
