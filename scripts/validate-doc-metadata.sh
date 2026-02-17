@@ -39,6 +39,9 @@ first_match() {
   fi
 }
 
+# Validate metadata on docs entry pages only:
+# - top-level docs/*.md pages
+# - any docs/**/README.md section index pages
 while IFS= read -r file; do
   if ! contains_pattern '^## Metadata$' "$file"; then
     echo "MISSING METADATA SECTION: $file"
@@ -88,7 +91,12 @@ while IFS= read -r file; do
       error_count=$((error_count + 1))
     fi
   done
-done < <(find "$DOCS_DIR" -type f -name '*.md' | sort)
+done < <(
+  {
+    find "$DOCS_DIR" -maxdepth 1 -type f -name '*.md'
+    find "$DOCS_DIR" -type f -name 'README.md'
+  } | sort -u
+)
 
 if [[ "$error_count" -gt 0 ]]; then
   echo "Doc metadata validation failed with $error_count issue(s)."
