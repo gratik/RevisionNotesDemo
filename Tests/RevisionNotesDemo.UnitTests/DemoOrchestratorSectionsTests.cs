@@ -34,6 +34,6 @@ public class DemoOrchestratorSectionsTests
         Assert.Equal("oop", keys[0]);
         Assert.Equal("appendices", keys[9]);
         Assert.Equal("cloud", keys[10]);
-        Assert.Equal("security", keys[^1]);
+        Assert.Equal("engineering-process", keys[^1]);
     }
 }
