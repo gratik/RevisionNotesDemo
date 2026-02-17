@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: ASP.NET Core request pipeline and routing fundamentals.
+- Related examples: docs/Web-API-MVC/README.md
 > Subject: [Web-API-MVC](../README.md)
 
 ## Controller API Examples
@@ -104,19 +102,19 @@ public async Task<ActionResult<User>> Create(CreateUserRequest request)
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Controller API Examples is about ASP.NET endpoint architecture patterns. It matters because architecture choices affect testability, throughput, and maintainability.
+- Use it when selecting minimal API, controller API, or MVC by problem shape.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Controller API Examples solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: developer speed vs explicit control and extensibility.
+- Close with one failure mode and mitigation: mixing styles without clear boundaries.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Controller API Examples but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Controller API Examples, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Controller API Examples and map it to one concrete implementation in this module.
+- 3 minutes: compare Controller API Examples with an alternative, then walk through one failure mode and mitigation.

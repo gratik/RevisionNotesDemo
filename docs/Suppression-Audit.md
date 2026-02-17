@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Analyzer warnings, code quality policy, and CI enforcement basics.
+- Related examples: docs/Suppression-Audit/README.md
 This landing page summarizes the Suppression-Audit documentation area and links into topic-level guides.
 
 ## Start Here
@@ -73,19 +71,19 @@ Delivery/platform guidance focuses on safe change velocity through policy gates,
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Suppression-Audit is about governance of warning and analyzer suppressions. It matters because controlled suppressions protect long-term code quality.
+- Use it when auditing suppression reasons and expiration policies.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Suppression-Audit solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: short-term unblock vs long-term maintenance debt.
+- Close with one failure mode and mitigation: permanent suppressions with no review cadence.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Suppression-Audit but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Suppression-Audit, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Suppression-Audit and map it to one concrete implementation in this module.
+- 3 minutes: compare Suppression-Audit with an alternative, then walk through one failure mode and mitigation.

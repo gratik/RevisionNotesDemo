@@ -19,19 +19,19 @@ Practical guidance for building reliable IoT systems in .NET with Azure, coverin
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- IoT Engineering for .NET is about device-to-cloud architecture and telemetry processing. It matters because IoT systems require robust identity, ingestion, and reliability controls.
+- Use it when designing secure telemetry pipelines at scale.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem IoT Engineering for .NET solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: device simplicity vs backend processing complexity.
+- Close with one failure mode and mitigation: weak device identity and offline handling strategy.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines IoT Engineering for .NET but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose IoT Engineering for .NET, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define IoT Engineering for .NET and map it to one concrete implementation in this module.
+- 3 minutes: compare IoT Engineering for .NET with an alternative, then walk through one failure mode and mitigation.

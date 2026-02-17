@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Classes/interfaces, dependency inversion basics, and unit testing fundamentals.
+- Related examples: docs/OOP-Principles/README.md
 > Subject: [OOP-Principles](../README.md)
 
 ## Single Responsibility Principle (SRP)
@@ -118,19 +116,19 @@ Single Responsibility Principle (SRP) should emphasize compile-time safety, read
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Single Responsibility Principle (SRP) is about object-oriented design boundaries and responsibilities. It matters because good boundaries reduce coupling and improve testability.
+- Use it when designing services and entities with clear responsibilities.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Single Responsibility Principle (SRP) solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: extensibility vs added abstraction layers.
+- Close with one failure mode and mitigation: applying principles mechanically without considering domain context.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Single Responsibility Principle (SRP) but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Single Responsibility Principle (SRP), what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Single Responsibility Principle (SRP) and map it to one concrete implementation in this module.
+- 3 minutes: compare Single Responsibility Principle (SRP) with an alternative, then walk through one failure mode and mitigation.

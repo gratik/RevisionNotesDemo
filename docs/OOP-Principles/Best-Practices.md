@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Classes/interfaces, dependency inversion basics, and unit testing fundamentals.
+- Related examples: docs/OOP-Principles/README.md
 > Subject: [OOP-Principles](../README.md)
 
 ## Best Practices
@@ -72,19 +70,19 @@ Best Practices should emphasize compile-time safety, readability, and maintainab
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Best Practices is about object-oriented design boundaries and responsibilities. It matters because good boundaries reduce coupling and improve testability.
+- Use it when designing services and entities with clear responsibilities.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Best Practices solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: extensibility vs added abstraction layers.
+- Close with one failure mode and mitigation: applying principles mechanically without considering domain context.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Best Practices but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Best Practices, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Best Practices and map it to one concrete implementation in this module.
+- 3 minutes: compare Best Practices with an alternative, then walk through one failure mode and mitigation.

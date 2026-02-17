@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Strong Core C# fundamentals and familiarity with reflection, delegates, and generics.
+- Related examples: docs/Advanced-CSharp/README.md
 > Subject: [Advanced-CSharp](../README.md)
 
 ## Reflection Basics
@@ -107,19 +105,19 @@ var list = Activator.CreateInstance(genericType);  // List<int>
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Reflection Basics is about runtime and advanced type-system behavior in C#. It matters because it helps solve specialized problems without sacrificing reliability.
+- Use it when building framework-like components and diagnostics tooling.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Reflection Basics solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: powerful features vs maintainability for less-experienced maintainers.
+- Close with one failure mode and mitigation: using advanced mechanisms where straightforward code would be clearer.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Reflection Basics but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Reflection Basics, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Reflection Basics and map it to one concrete implementation in this module.
+- 3 minutes: compare Reflection Basics with an alternative, then walk through one failure mode and mitigation.

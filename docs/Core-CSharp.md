@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Core C# syntax, object-oriented fundamentals, and basic collection usage.
+- Related examples: docs/Core-CSharp/README.md
 This landing page summarizes the Core-CSharp documentation area and links into topic-level guides.
 
 ## Start Here
@@ -76,19 +74,19 @@ Core-CSharp guidance focuses on turning this topic into explicit, measurable eng
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Core-CSharp is about core C# language features and API design. It matters because it directly affects correctness, readability, and maintainability.
+- Use it when designing reusable domain and application abstractions.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Core-CSharp solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: flexibility vs API complexity.
+- Close with one failure mode and mitigation: over-abstracting simple code paths; keep public contracts intentional.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Core-CSharp but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Core-CSharp, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Core-CSharp and map it to one concrete implementation in this module.
+- 3 minutes: compare Core-CSharp with an alternative, then walk through one failure mode and mitigation.

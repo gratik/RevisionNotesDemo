@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: HTTP API fundamentals, OpenAPI basics, and endpoint versioning awareness.
+- Related examples: docs/API-Documentation/README.md
 > Subject: [API-Documentation](../README.md)
 
 ## Basic Swagger Setup
@@ -108,19 +106,19 @@ API guidance focuses on contract stability, secure input/output handling, and pr
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Basic Swagger Setup is about API contract clarity and discoverability. It matters because clear docs reduce integration defects and support overhead.
+- Use it when aligning backend changes with consumer expectations.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Basic Swagger Setup solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: detailed documentation vs ongoing maintenance overhead.
+- Close with one failure mode and mitigation: docs drifting from real runtime behavior.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Basic Swagger Setup but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Basic Swagger Setup, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Basic Swagger Setup and map it to one concrete implementation in this module.
+- 3 minutes: compare Basic Swagger Setup with an alternative, then walk through one failure mode and mitigation.

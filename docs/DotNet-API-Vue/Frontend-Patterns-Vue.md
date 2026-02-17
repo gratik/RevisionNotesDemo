@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: REST API patterns and Vue component/state fundamentals.
+- Related examples: docs/DotNet-API-Vue/README.md
 > Subject: [DotNet-API-Vue](../README.md)
 
 ## Frontend Patterns (Vue)
@@ -108,19 +106,19 @@ API guidance focuses on contract stability, secure input/output handling, and pr
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Frontend Patterns (Vue) is about backend/frontend integration design for Vue clients. It matters because consistent contracts reduce frontend complexity and defects.
+- Use it when implementing API patterns that scale with Vue feature growth.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Frontend Patterns (Vue) solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: strict contracts vs rapid iteration flexibility.
+- Close with one failure mode and mitigation: frontend workarounds due to ambiguous backend conventions.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Frontend Patterns (Vue) but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Frontend Patterns (Vue), what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Frontend Patterns (Vue) and map it to one concrete implementation in this module.
+- 3 minutes: compare Frontend Patterns (Vue) with an alternative, then walk through one failure mode and mitigation.

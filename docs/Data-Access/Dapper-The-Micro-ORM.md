@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: SQL fundamentals, connection lifecycle, and transaction basics.
+- Related examples: docs/Data-Access/README.md
 > Subject: [Data-Access](../README.md)
 
 ## Dapper: The Micro-ORM
@@ -109,19 +107,19 @@ var newId = parameters.Get<int>("@OutputId");
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Dapper: The Micro-ORM is about data persistence and query strategy selection. It matters because it drives correctness, latency, and transactional integrity.
+- Use it when choosing between EF Core, Dapper, and ADO.NET by workload.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Dapper: The Micro-ORM solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: abstraction convenience vs explicit SQL control.
+- Close with one failure mode and mitigation: ignoring transaction and indexing behavior in production paths.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Dapper: The Micro-ORM but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Dapper: The Micro-ORM, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Dapper: The Micro-ORM and map it to one concrete implementation in this module.
+- 3 minutes: compare Dapper: The Micro-ORM with an alternative, then walk through one failure mode and mitigation.

@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Tasks/async-await basics and thread-safety fundamentals.
+- Related examples: docs/Async-Multithreading/README.md
 This landing page summarizes the Async-Multithreading documentation area and links into topic-level guides.
 
 ## Start Here
@@ -77,19 +75,19 @@ Async-Multithreading guidance focuses on turning this topic into explicit, measu
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Async-Multithreading is about concurrency and asynchronous flow control. It matters because it determines responsiveness and resource efficiency under load.
+- Use it when handling I/O workloads safely in APIs and background jobs.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Async-Multithreading solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: parallelism gains vs coordination complexity.
+- Close with one failure mode and mitigation: blocking async code paths and causing deadlocks or thread starvation.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Async-Multithreading but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Async-Multithreading, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Async-Multithreading and map it to one concrete implementation in this module.
+- 3 minutes: compare Async-Multithreading with an alternative, then walk through one failure mode and mitigation.

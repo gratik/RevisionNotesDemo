@@ -17,19 +17,19 @@ Senior-level execution practices for backlog shaping, reviews, quality gates, an
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Engineering Process for Senior .NET Delivery is about team practices for predictable delivery quality. It matters because process quality affects defect rates and delivery flow.
+- Use it when improving review, planning, and definition-of-done consistency.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Engineering Process for Senior .NET Delivery solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: governance structure vs execution speed.
+- Close with one failure mode and mitigation: process checklists with weak ownership and feedback loops.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Engineering Process for Senior .NET Delivery but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Engineering Process for Senior .NET Delivery, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Engineering Process for Senior .NET Delivery and map it to one concrete implementation in this module.
+- 3 minutes: compare Engineering Process for Senior .NET Delivery with an alternative, then walk through one failure mode and mitigation.

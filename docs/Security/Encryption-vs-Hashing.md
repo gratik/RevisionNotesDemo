@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: AuthN/AuthZ basics, secret management, and secure coding fundamentals.
+- Related examples: docs/Security/README.md
 > Subject: [Security](../README.md)
 
 ## Encryption vs Hashing
@@ -73,19 +71,19 @@ Security guidance focuses on defensive defaults, threat-aware design, and verifi
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Encryption vs Hashing is about application and API security controls. It matters because security failures are high-impact and expensive to remediate.
+- Use it when implementing defense-in-depth across authentication and authorization.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Encryption vs Hashing solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: security strictness vs developer and user ergonomics.
+- Close with one failure mode and mitigation: treating security as a one-time feature instead of an ongoing practice.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Encryption vs Hashing but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Encryption vs Hashing, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Encryption vs Hashing and map it to one concrete implementation in this module.
+- 3 minutes: compare Encryption vs Hashing with an alternative, then walk through one failure mode and mitigation.

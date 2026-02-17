@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Value/reference type basics and runtime execution model familiarity.
+- Related examples: docs/Memory-Management/README.md
 > Subject: [Memory-Management](../README.md)
 
 ## IDisposable and Resource Management
@@ -111,19 +109,19 @@ Performance guidance focuses on bottleneck-first optimization supported by repre
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- IDisposable and Resource Management is about allocation, lifetime, and garbage collection behavior. It matters because memory patterns directly affect latency, throughput, and stability.
+- Use it when reducing allocation pressure in hot execution paths.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem IDisposable and Resource Management solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: micro-optimizations vs maintainable code.
+- Close with one failure mode and mitigation: premature optimization without profiling evidence.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines IDisposable and Resource Management but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose IDisposable and Resource Management, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define IDisposable and Resource Management and map it to one concrete implementation in this module.
+- 3 minutes: compare IDisposable and Resource Management with an alternative, then walk through one failure mode and mitigation.

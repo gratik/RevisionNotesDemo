@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Working familiarity with API, data, observability, and deployment basics.
+- Related examples: docs/End-to-End-Case-Study/README.md
 > Subject: [End-to-End-Case-Study](../README.md)
 
 ## Common Failure Modes
@@ -57,19 +55,19 @@ Common Failure Modes guidance focuses on turning this topic into explicit, measu
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Common Failure Modes is about holistic architecture and delivery decision-making. It matters because end-to-end framing exposes cross-cutting tradeoffs.
+- Use it when walking from requirements to production-ready implementation choices.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Common Failure Modes solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: completeness vs complexity and delivery time.
+- Close with one failure mode and mitigation: solving components in isolation without system-level constraints.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Common Failure Modes but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Common Failure Modes, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Common Failure Modes and map it to one concrete implementation in this module.
+- 3 minutes: compare Common Failure Modes with an alternative, then walk through one failure mode and mitigation.

@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Core domain modeling concepts and layered architecture familiarity.
+- Related examples: docs/Domain-Driven-Design/README.md
 > Subject: [Domain-Driven-Design](../README.md)
 
 ## Core Concepts
@@ -117,19 +115,19 @@ public class Order : AggregateRoot<OrderId>
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Core Concepts is about domain modeling and bounded-context design. It matters because domain boundaries reduce ambiguity and integration friction.
+- Use it when mapping business language into explicit aggregates and workflows.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Core Concepts solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: model purity vs practical delivery constraints.
+- Close with one failure mode and mitigation: anemic models and leaky bounded-context boundaries.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Core Concepts but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Core Concepts, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Core Concepts and map it to one concrete implementation in this module.
+- 3 minutes: compare Core Concepts with an alternative, then walk through one failure mode and mitigation.

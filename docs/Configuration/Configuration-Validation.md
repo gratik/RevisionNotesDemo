@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: ASP.NET configuration providers and environment layering basics.
+- Related examples: docs/Configuration/README.md
 > Subject: [Configuration](../README.md)
 
 ## Configuration Validation
@@ -84,19 +82,19 @@ Configuration Validation guidance focuses on turning this topic into explicit, m
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Configuration Validation is about environment-aware application configuration strategy. It matters because configuration errors cause major runtime failures.
+- Use it when safely managing settings across local, CI, and production.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Configuration Validation solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: centralized config controls vs deployment flexibility.
+- Close with one failure mode and mitigation: missing validation and secret handling discipline.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Configuration Validation but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Configuration Validation, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Configuration Validation and map it to one concrete implementation in this module.
+- 3 minutes: compare Configuration Validation with an alternative, then walk through one failure mode and mitigation.

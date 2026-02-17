@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Object-oriented design fundamentals and refactoring familiarity.
+- Related examples: docs/Design-Patterns/README.md
 > Subject: [Design-Patterns](../README.md)
 
 ## Behavioral Patterns
@@ -178,19 +176,19 @@ var result = chain.Validate("test@example.com");
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Behavioral Patterns is about reusable design solutions for recurring software problems. It matters because pattern choice shapes long-term extensibility and readability.
+- Use it when selecting pattern structure to simplify complex behavior.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Behavioral Patterns solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: architectural consistency vs accidental overengineering.
+- Close with one failure mode and mitigation: forcing patterns where straightforward code is enough.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Behavioral Patterns but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Behavioral Patterns, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Behavioral Patterns and map it to one concrete implementation in this module.
+- 3 minutes: compare Behavioral Patterns with an alternative, then walk through one failure mode and mitigation.

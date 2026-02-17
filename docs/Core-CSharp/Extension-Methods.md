@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Core C# syntax, object-oriented fundamentals, and basic collection usage.
+- Related examples: docs/Core-CSharp/README.md
 > Subject: [Core-CSharp](../README.md)
 
 ## Extension Methods
@@ -108,19 +106,19 @@ Extension method guidance focuses on improving discoverability and reuse without
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Extension Methods is about core C# language features and API design. It matters because it directly affects correctness, readability, and maintainability.
+- Use it when designing reusable domain and application abstractions.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Extension Methods solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: flexibility vs API complexity.
+- Close with one failure mode and mitigation: over-abstracting simple code paths; keep public contracts intentional.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Extension Methods but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Extension Methods, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Extension Methods and map it to one concrete implementation in this module.
+- 3 minutes: compare Extension Methods with an alternative, then walk through one failure mode and mitigation.

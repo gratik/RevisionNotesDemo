@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Relational data modeling and basic LINQ provider behavior.
+- Related examples: docs/Entity-Framework/README.md
 > Subject: [Entity-Framework](../README.md)
 
 ## Migrations
@@ -97,19 +95,19 @@ Migrations guidance focuses on turning this topic into explicit, measurable engi
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Migrations is about ORM-based data modeling and persistence. It matters because query shape and tracking behavior strongly affect performance.
+- Use it when building data access layers with maintainable domain mappings.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Migrations solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: developer productivity vs query/control precision.
+- Close with one failure mode and mitigation: N+1 queries and incorrect tracking strategy.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Migrations but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Migrations, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Migrations and map it to one concrete implementation in this module.
+- 3 minutes: compare Migrations with an alternative, then walk through one failure mode and mitigation.

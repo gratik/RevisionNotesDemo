@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Comfort with core module topics and deliberate timed practice.
+- Related examples: docs/Interview-Preparation/README.md
 > Subject: [Interview-Preparation](../README.md)
 
 ## Coding Challenges
@@ -190,19 +188,19 @@ public bool IsValid(string s)
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Coding Challenges is about communication structure for technical interviews. It matters because clear articulation of tradeoffs improves interview signal quality.
+- Use it when translating implementation knowledge into concise answers.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Coding Challenges solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: brevity vs sufficient technical depth.
+- Close with one failure mode and mitigation: memorized answers that ignore problem context.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Coding Challenges but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Coding Challenges, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Coding Challenges and map it to one concrete implementation in this module.
+- 3 minutes: compare Coding Challenges with an alternative, then walk through one failure mode and mitigation.

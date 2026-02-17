@@ -92,19 +92,19 @@ Runtime Section Map guidance focuses on turning this topic into explicit, measur
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Runtime Section Map is about navigation and structure mapping across runtime topics. It matters because clear map pages speed onboarding and content discovery.
+- Use it when linking related runtime concepts for targeted study plans.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Runtime Section Map solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: high-level mapping vs depth in each referenced section.
+- Close with one failure mode and mitigation: stale maps that no longer reflect actual content structure.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Runtime Section Map but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Runtime Section Map, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Runtime Section Map and map it to one concrete implementation in this module.
+- 3 minutes: compare Runtime Section Map with an alternative, then walk through one failure mode and mitigation.

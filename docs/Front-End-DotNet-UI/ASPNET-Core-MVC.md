@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Frontend fundamentals and basic .NET web/UI application structure.
+- Related examples: docs/Front-End-DotNet-UI/README.md
 > Subject: [Front-End-DotNet-UI](../README.md)
 
 ## ASP.NET Core MVC
@@ -90,19 +88,19 @@ API guidance focuses on contract stability, secure input/output handling, and pr
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- ASP.NET Core MVC is about .NET UI stack patterns and frontend integration choices. It matters because UI architecture affects usability, testability, and delivery speed.
+- Use it when choosing the right .NET UI approach for product constraints.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem ASP.NET Core MVC solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: rapid UI iteration vs maintainable component structure.
+- Close with one failure mode and mitigation: tight coupling between UI and data access concerns.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines ASP.NET Core MVC but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose ASP.NET Core MVC, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define ASP.NET Core MVC and map it to one concrete implementation in this module.
+- 3 minutes: compare ASP.NET Core MVC with an alternative, then walk through one failure mode and mitigation.

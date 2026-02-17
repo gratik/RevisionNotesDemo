@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Distributed call patterns, timeout semantics, and transient fault basics.
+- Related examples: docs/Resilience/README.md
 > Subject: [Resilience](../README.md)
 
 ## Retry Pattern
@@ -97,19 +95,19 @@ Resilience guidance focuses on bounded degradation, dependency isolation, and me
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Retry Pattern is about fault handling and recovery design. It matters because resilience patterns preserve service quality during failures.
+- Use it when protecting dependencies with retries, circuit breakers, and timeouts.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Retry Pattern solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: improved availability vs added control-flow complexity.
+- Close with one failure mode and mitigation: stacking policies without understanding interaction effects.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Retry Pattern but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Retry Pattern, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Retry Pattern and map it to one concrete implementation in this module.
+- 3 minutes: compare Retry Pattern with an alternative, then walk through one failure mode and mitigation.

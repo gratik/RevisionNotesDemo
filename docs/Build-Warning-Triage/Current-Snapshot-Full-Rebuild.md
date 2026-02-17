@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Compiler/analyzer warning basics and CI policy familiarity.
+- Related examples: docs/Build-Warning-Triage/README.md
 > Subject: [Build-Warning-Triage](../README.md)
 
 ## Current Snapshot (Full Rebuild)
@@ -57,19 +55,19 @@ Delivery/platform guidance focuses on safe change velocity through policy gates,
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Current Snapshot (Full Rebuild) is about build quality and warning governance. It matters because warning debt compounds and hides real regressions.
+- Use it when establishing warning policies that teams can sustain.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Current Snapshot (Full Rebuild) solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: strict quality gates vs short-term delivery pressure.
+- Close with one failure mode and mitigation: blanket suppression without triage rationale.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Current Snapshot (Full Rebuild) but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Current Snapshot (Full Rebuild), what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Current Snapshot (Full Rebuild) and map it to one concrete implementation in this module.
+- 3 minutes: compare Current Snapshot (Full Rebuild) with an alternative, then walk through one failure mode and mitigation.

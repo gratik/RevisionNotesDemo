@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: WebSocket/SignalR basics, auth context propagation, and scaling fundamentals.
+- Related examples: docs/RealTime/README.md
 This landing page summarizes the RealTime documentation area and links into topic-level guides.
 
 ## Start Here
@@ -79,19 +77,19 @@ Realtime communication guidance focuses on contract evolution, latency budgets, 
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- RealTime is about stateful real-time communication patterns. It matters because real-time paths amplify scale and connection-lifecycle concerns.
+- Use it when broadcasting live updates to connected clients safely.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem RealTime solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: low-latency delivery vs connection/session management overhead.
+- Close with one failure mode and mitigation: assuming connection permanence and ignoring reconnection flows.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines RealTime but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose RealTime, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define RealTime and map it to one concrete implementation in this module.
+- 3 minutes: compare RealTime with an alternative, then walk through one failure mode and mitigation.

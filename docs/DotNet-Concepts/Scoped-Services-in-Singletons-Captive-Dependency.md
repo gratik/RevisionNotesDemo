@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Basic ASP.NET Core app structure and service registration syntax.
+- Related examples: docs/DotNet-Concepts/README.md
 > Subject: [DotNet-Concepts](../README.md)
 
 ## Scoped Services in Singletons (Captive Dependency)
@@ -93,19 +91,19 @@ Scoped Services in Singletons (Captive Dependency) guidance focuses on turning t
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Scoped Services in Singletons (Captive Dependency) is about .NET platform and dependency injection fundamentals. It matters because these concepts determine startup wiring and runtime behavior.
+- Use it when configuring robust service registration and app composition.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Scoped Services in Singletons (Captive Dependency) solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: centralized container control vs over-reliance on DI magic.
+- Close with one failure mode and mitigation: lifetime mismatches causing subtle runtime bugs.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Scoped Services in Singletons (Captive Dependency) but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Scoped Services in Singletons (Captive Dependency), what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Scoped Services in Singletons (Captive Dependency) and map it to one concrete implementation in this module.
+- 3 minutes: compare Scoped Services in Singletons (Captive Dependency) with an alternative, then walk through one failure mode and mitigation.

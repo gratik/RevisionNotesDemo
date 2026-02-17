@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: Profiling basics, memory allocation awareness, and async flow fundamentals.
+- Related examples: docs/Performance/README.md
 > Subject: [Performance](../README.md)
 
 ## String Building Performance
@@ -101,19 +99,19 @@ Delivery/platform guidance focuses on safe change velocity through policy gates,
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- String Building Performance is about throughput and latency optimization in .NET workloads. It matters because performance bottlenecks directly impact user experience and cost.
+- Use it when profiling and tuning high-traffic endpoints or background workers.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem String Building Performance solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: raw speed improvements vs code clarity and maintenance cost.
+- Close with one failure mode and mitigation: optimizing without measuring baseline and regression impact.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines String Building Performance but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose String Building Performance, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define String Building Performance and map it to one concrete implementation in this module.
+- 3 minutes: compare String Building Performance with an alternative, then walk through one failure mode and mitigation.

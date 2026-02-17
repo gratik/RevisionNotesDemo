@@ -3,10 +3,8 @@
 ## Metadata
 - Owner: RevisionNotes Maintainers
 - Last updated: February 17, 2026
-- Prerequisites: See module README for sequencing guidance.
-- Related examples: README.md
-
-
+- Prerequisites: ASP.NET Core request pipeline and routing fundamentals.
+- Related examples: docs/Web-API-MVC/README.md
 This landing page summarizes the Web-API-MVC documentation area and links into topic-level guides.
 
 ## Start Here
@@ -77,19 +75,19 @@ API guidance focuses on contract stability, secure input/output handling, and pr
 
 ## Interview Answer Block
 30-second answer:
-- Summarize the core concept in one sentence and name one practical use case.
+- Web-API-MVC is about ASP.NET endpoint architecture patterns. It matters because architecture choices affect testability, throughput, and maintainability.
+- Use it when selecting minimal API, controller API, or MVC by problem shape.
 
 2-minute answer:
-- Explain the concept, key tradeoffs, and one implementation detail or pitfall.
-
+- Start with the problem Web-API-MVC solves in this module and the baseline implementation approach.
+- Discuss a key tradeoff: developer speed vs explicit control and extensibility.
+- Close with one failure mode and mitigation: mixing styles without clear boundaries.
 ## Interview Bad vs Strong Answer
 Bad answer:
-- Gives a definition only without tradeoffs, examples, or failure modes.
+- Defines Web-API-MVC but skips constraints, alternatives, and production impact.
 
 Strong answer:
-- Defines the concept, compares alternatives, and cites a concrete production scenario.
-
+- Explains when to choose Web-API-MVC, what to compare it against, and how to validate it in tests/operations.
 ## Interview Timed Drill
-- 60 seconds: define the topic and one reason it matters.
-- 3 minutes: explain architecture, tradeoffs, and one troubleshooting example.
-
+- 60 seconds: define Web-API-MVC and map it to one concrete implementation in this module.
+- 3 minutes: compare Web-API-MVC with an alternative, then walk through one failure mode and mitigation.
