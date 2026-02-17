@@ -428,6 +428,7 @@ internal static class ObservabilitySectionRunner
 {
     public static Task RunAsync()
     {
+        OpenTelemetryAndApplicationInsightsIntegration.RunAll();
         StructuredLoggingAdvanced.RunAll();
         PrometheusAndGrafana.RunAll();
         OpenTelemetrySetup.RunAll();

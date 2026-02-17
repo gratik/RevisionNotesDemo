@@ -1,0 +1,20 @@
+@host = https://localhost:7207
+@correlationId = demo-correlation-123
+
+### Ping
+GET {{host}}/observability/ping
+X-Correlation-ID: {{correlationId}}
+
+### Checkout flow (HTTP propagation + optional Service Bus publish)
+POST {{host}}/api/orders/ORD-1001/checkout
+X-Correlation-ID: {{correlationId}}
+
+### Simulate Service Bus consumer continuation
+POST {{host}}/api/demo/servicebus/consume
+Content-Type: application/json
+
+{
+  "body": "checkout:ORD-1001",
+  "correlationId": "{{correlationId}}",
+  "traceParent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+}

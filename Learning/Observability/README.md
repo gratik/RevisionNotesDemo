@@ -16,6 +16,7 @@
 - ApplicationInsightsIntegration.cs - Topic implementation and demonstration code
 - DistributedTracingJaegerZipkin.cs - Topic implementation and demonstration code
 - HealthChecksAndHeartbeats.cs - Topic implementation and demonstration code
+- OpenTelemetryAndApplicationInsightsIntegration.cs - Topic implementation and demonstration code
 - OpenTelemetrySetup.cs - Topic implementation and demonstration code
 - PrometheusAndGrafana.cs - Topic implementation and demonstration code
 - StructuredLoggingAdvanced.cs - Topic implementation and demonstration code
@@ -36,4 +37,3 @@ dotnet run
 
 - [Primary](../../docs/Logging-Observability.md)
 - [Related](../../docs/HealthChecks.md)
-

@@ -424,6 +424,7 @@ if (user == null)
 - [Logging/ILoggerDeepDive.cs](../../Learning/Logging/ILoggerDeepDive.cs)
 - [Logging/StructuredLogging.cs](../../Learning/Logging/StructuredLogging.cs)
 - [Logging/LoggingBestPractices.cs](../../Learning/Logging/LoggingBestPractices.cs)
+- [Examples/RevisionNotes.Observability.AzureMonitor/Program.cs](../../Examples/RevisionNotes.Observability.AzureMonitor/Program.cs)
 
 ---
 
@@ -476,6 +477,12 @@ Generated: 2026-02-14
 - [Log Levels](Log-Levels.md)
 - [Structured Logging](Structured-Logging.md)
 - [Log Scopes and Correlation](Log-Scopes-and-Correlation.md)
+- [OpenTelemetry vs Application Insights](OpenTelemetry-vs-Application-Insights.md)
+- [OpenTelemetry and Application Insights Integration](OpenTelemetry-and-Application-Insights-Integration.md)
+- [Correlation ID and W3C Trace Context](Correlation-ID-and-W3C-Trace-Context.md)
+- [HTTP and Service Bus Propagation](HTTP-and-ServiceBus-Propagation.md)
+- [Application Insights KQL Correlation Queries](Application-Insights-KQL-Correlation-Queries.md)
+- [Azure Deployment Topology for Observability](Azure-Deployment-Topology-for-Observability.md)
 - [Performance Considerations](Performance-Considerations.md)
 - [Event IDs for Categorization](Event-IDs-for-Categorization.md)
 - [Logging in Different Scenarios](Logging-in-Different-Scenarios.md)

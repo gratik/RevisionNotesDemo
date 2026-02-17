@@ -1,6 +1,6 @@
 # Examples Portfolio
 
-This solution now includes twenty standalone architecture examples:
+This solution now includes twenty-one standalone architecture examples:
 
 1. `RevisionNotes.BlazorBestPractices`
    - Path: `Examples/RevisionNotes.BlazorBestPractices`
@@ -82,6 +82,10 @@ This solution now includes twenty standalone architecture examples:
    - Path: `Examples/RevisionNotes.NativeAot.Api`
    - Focus: Native AOT deployment patterns, trimming-friendly API design, and lightweight security
 
+21. `RevisionNotes.Observability.AzureMonitor`
+   - Path: `Examples/RevisionNotes.Observability.AzureMonitor`
+   - Focus: OpenTelemetry + Application Insights integration, correlation headers, and HTTP/Service Bus propagation
+
 ## Run each project
 
 ```bash
@@ -105,6 +109,7 @@ dotnet run --project Examples/RevisionNotes.ApiGateway.BFF/RevisionNotes.ApiGate
 dotnet run --project Examples/RevisionNotes.EventSourcing.Cqrs/RevisionNotes.EventSourcing.Cqrs.csproj
 dotnet run --project Examples/RevisionNotes.Workflows.SagaOrchestration/RevisionNotes.Workflows.SagaOrchestration.csproj
 dotnet run --project Examples/RevisionNotes.NativeAot.Api/RevisionNotes.NativeAot.Api.csproj
+dotnet run --project Examples/RevisionNotes.Observability.AzureMonitor/RevisionNotes.Observability.AzureMonitor.csproj
 ```
 
 Each project contains:
