@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using Azure.Monitor.OpenTelemetry.Exporter;
-using Microsoft.ApplicationInsights.Extensibility;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -23,8 +22,6 @@ builder.Services.AddHttpClient("downstream", client =>
 
 builder.Services.AddSingleton<ServiceBusCorrelationPublisher>();
 builder.Services.AddSingleton<ServiceBusCorrelationConsumerDemo>();
-
-builder.Services.AddApplicationInsightsTelemetry();
 
 var connectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
 var useConsoleExporter = builder.Configuration.GetValue("Observability:UseConsoleExporter", true);
